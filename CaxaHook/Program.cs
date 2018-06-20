@@ -20,9 +20,10 @@ namespace CaxaHook
             int PID=-1;
             foreach (var disk in new ManagementObjectSearcher(new SelectQuery("Select * from Win32_Process")).Get())
             {
-                if (disk["Name"].ToString().StartsWith("Em"))
+                if (disk["Name"].ToString()== "CDRAFT_M.exe")
                 {
                     PID = int.Parse(disk["ProcessId"].ToString());
+                    break;
                 }
             }
            
@@ -51,36 +52,24 @@ namespace CaxaHook
         [UnmanagedFunctionPointer(CallingConvention.StdCall,
             CharSet = CharSet.Unicode,
             SetLastError = true)]
-        delegate IntPtr HookCreateFile(
-            String InFileName,
-            UInt32 InDesiredAccess,
-            UInt32 InShareMode,
-            IntPtr InSecurityAttributes,
-            UInt32 InCreationDisposition,
-            UInt32 InFlagsAndAttributes,
-            IntPtr InTemplateFile);
+        delegate IntPtr HookMoveFileEx(
+            String OldFile,
+            String NewFile,
+            UInt32 dwFlags);
 
         // just use a P-Invoke implementation to get native API access from C# (this step is not necessary for C++.NET)
         [DllImport("kernel32.dll",
             CharSet = CharSet.Unicode,
             SetLastError = true,
             CallingConvention = CallingConvention.StdCall)]
-        static extern IntPtr CreateFile(
-            String InFileName,
-            UInt32 InDesiredAccess,
-            UInt32 InShareMode,
-            IntPtr InSecurityAttributes,
-            UInt32 InCreationDisposition,
-            UInt32 InFlagsAndAttributes,
-            IntPtr InTemplateFile);
-        static IntPtr CreateFile_Hooked(
-            String InFileName,
-            UInt32 InDesiredAccess,
-            UInt32 InShareMode,
-            IntPtr InSecurityAttributes,
-            UInt32 InCreationDisposition,
-            UInt32 InFlagsAndAttributes,
-            IntPtr InTemplateFile)
+        static extern IntPtr MoveFileEx(
+            String OldFile,
+            String NewFile,
+            UInt32 dwFlags);
+        static IntPtr MoveFileEx_Hooked(
+            String OldFile,
+            String NewFile,
+            UInt32 dwFlags)
         {
 
             try
@@ -98,14 +87,10 @@ namespace CaxaHook
             }
 
             // call original API...
-            return CreateFile(
-                InFileName,
-                InDesiredAccess,
-                InShareMode,
-                InSecurityAttributes,
-                InCreationDisposition,
-                InFlagsAndAttributes,
-                InTemplateFile);
+            return MoveFileEx(
+                OldFile,
+                NewFile,
+                dwFlags);
         }
 
         public Hook(int pID)
@@ -113,7 +98,7 @@ namespace CaxaHook
             this.pID = pID;
             var address = LocalHook.GetProcAddress("kernel32.dll", "CreateFileW");
 
-            var hook = LocalHook.Create(address, new HookCreateFile(CreateFile_Hooked), null);
+            var hook = LocalHook.Create(address, new HookMoveFileEx(MoveFileEx_Hooked), null);
            // hook.ThreadACL.SetInclusiveACL(new int[RemoteHooking.GetCurrentThreadId()]);
             // hook.ThreadACL.SetExclusiveACL(new int[pID]);
             //   hook.Dispose();
@@ -163,7 +148,7 @@ namespace CaxaHook
     {
         public void IsInstalled(Int32 InClientPID)
         {
-           // Console.WriteLine(InClientPID);
+           Console.WriteLine(InClientPID);
         }
 
         public void OnCreateFile(Int32 InClientPID, String[] InFileNames)
@@ -184,6 +169,11 @@ namespace CaxaHook
         public void Ping(int pid)
         {
           //  Console.WriteLine(pid);
+        }
+
+        public void info(string pwcsName, int grfMode, int stgfmt, int grfAttrs, IntPtr pStgOptions, IntPtr pSecurityDescriptor, ref Guid riid, ref object ppObjectOpen)
+        {
+            Console.WriteLine();
         }
     }
 }
