@@ -16,7 +16,7 @@ namespace CaxaHook
         public void IsInstalled(Int32 InClientPID)
         {
             Console.WriteLine(InClientPID);
-            Class1.Form1.label1.Text = InClientPID.ToString();
+            Class1.Form1.Invoke(new Action(() => { Class1.Form1.label1.Text = InClientPID.ToString(); })); 
         }
 
         public void OnCreateFile(Int32 InClientPID, String[] InFileNames)

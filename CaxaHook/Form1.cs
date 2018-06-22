@@ -42,7 +42,7 @@ namespace CaxaHook
         {
             try
             {
-
+                EasyHook.Config.DependencyPath = @"C:\Users\cdj68\AppData\Local\CaxaAutoSave";
                 string injectionLibrary =
                     Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location),
                         "CaxaInject.dll");
