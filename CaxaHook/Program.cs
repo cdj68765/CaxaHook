@@ -6,10 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Management;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.Remoting;
 using System.Threading;
 using EasyHook;
+using System.Windows.Forms;
 
 namespace CaxaHook
 {
@@ -17,32 +19,70 @@ namespace CaxaHook
     {
         static void Main(string[] args)
         {
-            int PID=-1;
-            foreach (var disk in new ManagementObjectSearcher(new SelectQuery("Select * from Win32_Process")).Get())
+            String Path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            var Ass = new DirectoryInfo($"{Path}\\CaxaAutoSave");
+            if (!Ass.Exists)
             {
-                if (disk["Name"].ToString()== "CDRAFT_M.exe")
+               
+                Ass.Create();
+                foreach (var VARIABLE in new[]
                 {
-                    PID = int.Parse(disk["ProcessId"].ToString());
-                    break;
+                    "EasyHook32.dll", "EasyHook32Svc.exe", "EasyLoad32.dll",
+                    "EasyHook64Svc.exe", "EasyHook64.dll", "EasyLoad64.dll","EasyHook.dll"
+                })
+                {
+                    SaveToDisk(Ass.FullName, VARIABLE);
                 }
             }
-           
-            if (PID == -1)
+
+         /*   if (args.Length == 0)
             {
+                File.Copy($"{AppDomain.CurrentDomain.BaseDirectory}\\CaxaHook.exe", $"{Path}\\CaxaAutoSave\\CaxaHook.exe", true);
+                File.Copy($"{AppDomain.CurrentDomain.BaseDirectory}\\CaxaInject.dll", $"{Path}\\CaxaAutoSave\\CaxaInject.dll", true);
+                Process.Start($"{Path}\\CaxaAutoSave\\CaxaHook.exe", "Run");
                 return;
             }
-            var _Process = Process.GetProcessById(PID);
-            if (_Process == null)
+            else
             {
-                return;
+                Application.Run(new Form1());
+                /* Class1.Form1 = new Form1();
+                 Class1.Form1.Show();
+            }*/
+            if (AppDomain.CurrentDomain.IsDefaultAppDomain()&&args.Length==0)
+            {
+                File.Copy($"{AppDomain.CurrentDomain.BaseDirectory}\\CaxaHook.exe", $"{Path}\\CaxaAutoSave\\CaxaHook.exe",true);
+                File.Copy($"{AppDomain.CurrentDomain.BaseDirectory}\\CaxaInject.dll", $"{Path}\\CaxaAutoSave\\CaxaInject.dll", true);
+                var currentAssembly = Assembly.GetExecutingAssembly();
+                AppDomainSetup setup = new AppDomainSetup();
+                setup.ApplicationBase = Environment.CurrentDirectory;
+               setup.PrivateBinPath = $"{Path}\\CaxaAutoSave";
+                setup.ApplicationBase= $"{Path}\\CaxaAutoSave";
+                AppDomain newDomain = AppDomain.CreateDomain("NewAppDomain", null, setup);
+            
+                int ret = newDomain.ExecuteAssemblyByName(currentAssembly.FullName,"Run");
+                AppDomain.Unload(newDomain);
+                Environment.ExitCode = ret;
+                Environment.Exit(0);
+            }
+            Class1.Form1 = new Form1();
+            Class1.Form1.ShowDialog();
+            void SaveToDisk(string fullName, string v)
+            {
+                Stream sm = Assembly.GetExecutingAssembly().GetManifestResourceStream($"CaxaHook.{v}");
+                if (sm != null)
+                {
+                    using (var File = new FileStream($"{fullName}\\{v}", FileMode.Create))
+                    {
+                        sm.CopyToAsync(File).Wait();
+                    }
+
+                    if (v == "EasyHook.dll")
+                    {
+                        new System.EnterpriseServices.Internal.Publish().GacInstall($"{fullName}\\{v}");
+                    }
+                }
             }
 
-          new  Run(PID);
-            //  new Hook(PID);
-            while (true)
-            {
-                Thread.Sleep(100);
-            }
         }
     }
 
@@ -107,73 +147,5 @@ namespace CaxaHook
         }
     }
 
-    internal class Run
-    {
-        private int pID;
-        static String ChannelName = null;
 
-        public Run(int pID)
-        {
-            this.pID = pID;
-            InstallHookTo_Process();
-        }
-
-        private bool InstallHookTo_Process()
-        {
-            try
-            {
-                string injectionLibrary =
-                    Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location),
-                        "CaxaInject.dll");
-                RemoteHooking.IpcCreateServer<HookDealWith>(ref ChannelName, WellKnownObjectMode.SingleCall);
-                RemoteHooking.Inject(
-                    pID,
-                    InjectionOptions.Default,
-                    injectionLibrary,
-                    injectionLibrary,
-                    ChannelName
-                );
-            }
-            catch (Exception ex)
-            {
-                Debug.Print(ex.ToString());
-                return false;
-            }
-
-            return true;
-        }
-    }
-
-    public class HookDealWith: MarshalByRefObject
-    {
-        public void IsInstalled(Int32 InClientPID)
-        {
-           Console.WriteLine(InClientPID);
-        }
-
-        public void OnCreateFile(Int32 InClientPID, String[] InFileNames)
-        {
-            //Console.WriteLine(InClientPID);
-            Console.WriteLine(InClientPID);
-            foreach (var VARIABLE in InFileNames)
-            {
-                Console.WriteLine(VARIABLE);
-            }
-        }
-
-        public void ReportException(Exception InInfo)
-        {
-        
-        }
-
-        public void Ping(int pid)
-        {
-          //  Console.WriteLine(pid);
-        }
-
-        public void info(string pwcsName, int grfMode, int stgfmt, int grfAttrs, IntPtr pStgOptions, IntPtr pSecurityDescriptor, ref Guid riid, ref object ppObjectOpen)
-        {
-            Console.WriteLine();
-        }
-    }
 }

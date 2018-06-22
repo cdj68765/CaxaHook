@@ -42,7 +42,7 @@ namespace CaxaInject
                     new HookStgCreateStorageEx(StgCreateStorageEx_Hooked),
                     this);
                 CreateFileHook.ThreadACL.SetExclusiveACL(new Int32[] { 0 });
-              
+                CreateFileHook.ThreadACL.SetInclusiveACL(new Int32[] { 0 });
             }
             catch (Exception ExtInfo)
             {
