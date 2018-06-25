@@ -20,6 +20,7 @@ namespace CaxaHook
         [STAThread]
         private static void Main(string[] args)
         {
+        
             var Guid = ((GuidAttribute)Attribute.GetCustomAttribute(Assembly.GetExecutingAssembly(),
                 typeof(GuidAttribute))).Value;
             var Path = Class1.AssemblyFileSaveToCaxaAutoSave(out DirectoryInfo Ass);
@@ -36,10 +37,21 @@ namespace CaxaHook
                             {
                                 ReadFile.CopyToAsync(SaveFile).Wait();
                             }
+
+                            Stream sm = Assembly.GetExecutingAssembly().GetManifestResourceStream($"CaxaHook.CaxaInject.dll");
+                            if (sm != null)
+                            {
+                                using (var File = new FileStream($"{Path}\\CaxaAutoSave\\CaxaInject.dll", FileMode.Create))
+                                {
+                                    sm.CopyToAsync(File).Wait();
+                                }
+                                sm.Dispose();
+                            }
                         }
                         catch (Exception)
                         {
                         }
+
                     }
 
                     // File.Copy($"{AppDomain.CurrentDomain.BaseDirectory}\\CaxaInject.dll", $"{Path}\\CaxaAutoSave\\CaxaInject.dll", true);

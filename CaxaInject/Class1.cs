@@ -13,15 +13,12 @@ namespace CaxaInject
     {
         private CaxaHook.HookDealWith Interface;
         private LocalHook CreateFileHook;
-        private Stack<String> Queue = new Stack<String>();
 
         public Main(
             RemoteHooking.IContext InContext,
             String InChannelName)
         {
-            // connect to host...
             Interface = RemoteHooking.IpcConnectClient<CaxaHook.HookDealWith>(InChannelName);
-            //  Interface.Ping();
         }
 
         public void Run(
@@ -34,44 +31,48 @@ namespace CaxaInject
                     LocalHook.GetProcAddress("kernel32.dll", "MoveFileExW"),
                     new HookMoveFileEx(MoveFileEx_Hooked),
                     this);
-
-                CreateFileHook.ThreadACL.SetInclusiveACL(new Int32[] { 0 });
-                //  CreateFileHook.ThreadACL.SetInclusiveACL(new Int32[] { 0 });
             }
             catch (Exception ExtInfo)
             {
                 Interface.ReportException(ExtInfo);
                 return;
             }
-
             Interface.IsInstalled(RemoteHooking.GetCurrentThreadId());
-            RemoteHooking.WakeUpProcess();
             try
             {
                 while (true)
                 {
                     Thread.Sleep(500);
-                    if (Queue.Count > 0)
+                    if (Interface.CheckHook(out bool Uninstall))
                     {
-                        String[] Package = null;
-
-                        lock (Queue)
+                        if (!CreateFileHook.ThreadACL.IsExclusive)
                         {
-                            Package = Queue.ToArray();
-
-                            Queue.Clear();
+                            CreateFileHook.ThreadACL.SetExclusiveACL(new Int32[] {0});
+                            Interface.info("Hook");
                         }
-
-                        //  Interface.OnCreateFile(RemoteHooking.GetCurrentProcessId(), Package);
                     }
                     else
                     {
-                        //  Interface.Ping(RemoteHooking.GetCurrentThreadId());
+                        if (!CreateFileHook.ThreadACL.IsInclusive)
+                        {
+                            CreateFileHook.ThreadACL.SetInclusiveACL(new Int32[] {0});
+                            Interface.info("UnHook");
+                        }
+                    }
+
+                    if (Uninstall)
+                    {
+                        CreateFileHook.ThreadACL.SetInclusiveACL(new Int32[] {0});
+                        CreateFileHook.Dispose();
+                        LocalHook.Release();
                     }
                 }
             }
-            catch
+            catch (Exception ExtInfo)
             {
+                CreateFileHook.Dispose();
+                LocalHook.Release();
+                Interface.ReportException(ExtInfo);
             }
         }
 
@@ -99,28 +100,20 @@ namespace CaxaInject
         {
             try
             {
-                Main This = (Main)HookRuntimeInfo.Callback;
+                Main This = (Main) HookRuntimeInfo.Callback;
 
-                lock (This.Queue)
+                if (OldFile.EndsWith("$"))
                 {
-                    if (OldFile.EndsWith("$"))
-                    {
-                        NewFile = This.Interface.SaveChange(NewFile);
-                    }
-                    else if (OldFile.EndsWith("exb"))
-                    {
-                        return new IntPtr(0);
-                    }
-
-                    /*This.Queue.Push("[" + RemoteHooking.GetCurrentProcessId() + ":" +
-                        RemoteHooking.GetCurrentThreadId() + "]: \"" + InFileName + "\"");
-                    InFileName = InFileName.Replace("C", "D");*/
+                    NewFile = This.Interface.SaveChange(NewFile);
+                }
+                else if (OldFile.EndsWith("exb"))
+                {
+                    return new IntPtr(0);
                 }
             }
             catch
             {
             }
-
             return MoveFileExW(
                 OldFile,
                 NewFile,

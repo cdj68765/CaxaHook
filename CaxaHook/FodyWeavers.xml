@@ -4,6 +4,7 @@
 <IncludeAssemblies>
 EasyHook
 VisualPlus
+Newtonsoft.Json
 </IncludeAssemblies>
  </Costura>
 </Weavers>

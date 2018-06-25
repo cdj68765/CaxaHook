@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization.Formatters.Soap;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
+using EasyHook;
+using Newtonsoft.Json;
 
 namespace CaxaHook
 {
@@ -31,14 +36,35 @@ namespace CaxaHook
         public string SavePath { get; set; }
         public long TimeSelect { get; set; }
 
+        public Dictionary<string, List<FileInfo>> SaveList { get; set; }
+        public int ALLSAVECOUNT { get;  set; }
+        public int OneSaveCount { get;  set; }
+
+        public class FileInfo
+        {
+            public string FilePath;
+            public DateTime Date;
+
+            public FileInfo(string path, DateTime now)
+            {
+                FilePath = path;
+                Date = now;
+            }
+        }
+
         public void Save()
         {
             try
             {
+                File.WriteAllText($"{Path}\\RuntimeInfo.xml", JsonConvert.SerializeObject(this));
+                return;
                 using (Stream fStream = new FileStream($"{Path}\\RuntimeInfo.xml", FileMode.Create, FileAccess.ReadWrite))
                 {
-                    SoapFormatter soapFormat = new SoapFormatter();
-                    soapFormat.Serialize(fStream, this);
+                    /*  var soapFormat = new BinaryFormatter();
+                      fStream.Position = 0;
+                      soapFormat.Serialize(fStream, this);*/
+                    string strSerializeJSON = JsonConvert.SerializeObject(this);
+                    File.WriteAllText($"{Path}\\RuntimeInfo.xml", JsonConvert.SerializeObject(this));
                 }
             }
             catch (Exception)
@@ -51,10 +77,15 @@ namespace CaxaHook
             try
             {
                 if (!File.Exists($"{Path}\\RuntimeInfo.xml")) return null;
-                using (Stream fStream = new FileStream($"{Path}\\RuntimeInfo.xml", FileMode.Open, FileAccess.Read))
+           return (RuntimeInfo)JsonConvert.DeserializeObject(File.ReadAllText($"{Path}\\RuntimeInfo.xml"), typeof(RuntimeInfo));
+                var soapFormat = new BinaryFormatter();
+                return (RuntimeInfo)soapFormat.Deserialize(new MemoryStream(File.ReadAllBytes($"{Path}\\RuntimeInfo.xml")));
+                using (Stream fStream = new FileStream($"{Path}\\RuntimeInfo.xml", FileMode.Open, FileAccess.ReadWrite))
                 {
-                    SoapFormatter soapFormat = new SoapFormatter();
-                    return (RuntimeInfo)soapFormat.Deserialize(fStream);
+
+                  
+                    fStream.Position = 0;
+                    return (RuntimeInfo)soapFormat.Deserialize(new MemoryStream(File.ReadAllBytes($"{Path}\\RuntimeInfo.xml")));
                 }
             }
             catch (Exception e)
@@ -111,48 +142,71 @@ namespace CaxaHook
             }
         }
     }
-
+    
     public class HookDealWith : MarshalByRefObject
     {
-        public bool CheckHook()
+
+        public bool CheckHook(out bool uninstall)
         {
+            uninstall = Class1.Form1.UninstallAllHooks;
             return Class1.Form1.SetHook;
+        }
+
+
+        public void info(string v)
+        {
+            Console.WriteLine(v);
         }
 
         public void IsInstalled(Int32 InClientPID)
         {
-            Class1.Form1.Invoke(new Action(() => { Class1.Form1.HookAddress.Text = $@"Hook Address：{InClientPID}"; }));
+            Class1.Form1.Invoke(new Action(() =>
+            {
+                Class1.Form1.HookAddress.Text = $@"Hook Address：{InClientPID}";
+                Class1.Form1.AddLog($"Caxa挂钩成功，Hook地址：{InClientPID}");
+            }));
         }
 
-        public void OnCreateFile(Int32 InClientPID, String[] InFileNames)
-        {
-            Console.WriteLine(InClientPID);
-            foreach (var VARIABLE in InFileNames)
-            {
-                Console.WriteLine(VARIABLE);
-            }
-        }
 
         public void ReportException(Exception InInfo)
         {
-            Console.WriteLine();
+            try
+            {
+                Class1.Form1.Invoke(new Action(() =>
+                {
+                    Class1.Form1.AddLog($"Hook错误，错误信息：{InInfo}");
+                }));
+            }
+            catch (Exception e)
+            {
+            }
+      
         }
 
         public string SaveChange(string NewFile)
         {
             var TempSave = "";
-            Class1.Form1.Invoke(new Action(() =>
-            {
-                TempSave = $@"{Class1.Form1.SelectSavePath.Text}\{Path.GetFileNameWithoutExtension(NewFile).Replace(".exb", "")}{Class1.savefile}";
-                Class1.Form1.FROM.Text = NewFile;
-                Class1.Form1.TO.Text = Path.GetFileNameWithoutExtension(NewFile).Replace(".exb", "");
-                Console.WriteLine(TempSave);
-                Class1.Form1.SetHook = false;
-            }));
-            if (string.IsNullOrWhiteSpace(Class1.savefile))
+            if (!Class1.Form1.SetHook)
             {
                 return NewFile;
             }
+
+            Class1.Form1.Invoke(new Action(() =>
+            {
+                try
+                {
+                    var OnlyFileName = Path.GetFileNameWithoutExtension(NewFile).Replace(".exb", "");
+                    TempSave = $@"{Class1.Form1.SelectSavePath.Text}\{OnlyFileName}{Class1.savefile}";
+                    Class1.Form1.AddLog($"自动保存成功,保存路径：{TempSave}");
+                    Class1.Form1.SetHook = false;
+                    Class1.Form1.SaveToAutoBackList(OnlyFileName, TempSave);
+                }
+                catch (Exception e)
+                {
+                    Class1.Form1.AddLog($"自动保存失败，错误信息：{e}");
+                }
+
+            }));
             return TempSave;
         }
     }
