@@ -18,7 +18,7 @@ namespace CaxaHook
 
         public RuntimeInfo(string path)
         {
-            Path = path+ "\\CaxaAutoSave";
+            Path = path + "\\CaxaAutoSave";
             if (!File.Exists($"{Path}\\RuntimeInfo.xml"))
             {
                 Save();
@@ -28,17 +28,22 @@ namespace CaxaHook
         public bool RunMode { get; set; }
         public string Path { get; set; }
         public bool RunStatus { get; set; }
-        public string SavePath  { get; set; }
+        public string SavePath { get; set; }
         public long TimeSelect { get; set; }
 
         public void Save()
         {
-            using (Stream fStream = new FileStream($"{Path}\\RuntimeInfo.xml", FileMode.Create, FileAccess.ReadWrite))
+            try
             {
-                SoapFormatter soapFormat = new SoapFormatter();
-                soapFormat.Serialize(fStream, this);
+                using (Stream fStream = new FileStream($"{Path}\\RuntimeInfo.xml", FileMode.Create, FileAccess.ReadWrite))
+                {
+                    SoapFormatter soapFormat = new SoapFormatter();
+                    soapFormat.Serialize(fStream, this);
+                }
             }
-
+            catch (Exception)
+            {
+            }
         }
 
         public RuntimeInfo Load()
@@ -58,7 +63,6 @@ namespace CaxaHook
                 return Load();
             };
         }
-
     }
 
     public class Class1
@@ -83,7 +87,7 @@ namespace CaxaHook
                 {
                     "EasyHook32.dll", "EasyHook32Svc.exe", "EasyLoad32.dll",
                     "EasyHook64Svc.exe", "EasyHook64.dll", "EasyLoad64.dll",
-                    "VisualPlus.dll", "EasyHook.dll"
+                    "VisualPlus.dll", "EasyHook.dll","CaxaInject.dll"
                 })
                 {
                     SaveToDisk(Ass.FullName, VARIABLE);
@@ -110,10 +114,14 @@ namespace CaxaHook
 
     public class HookDealWith : MarshalByRefObject
     {
+        public bool CheckHook()
+        {
+            return Class1.Form1.SetHook;
+        }
 
         public void IsInstalled(Int32 InClientPID)
         {
-            Class1.Form1.Invoke(new Action(() => { Class1.Form1.HookAddress.Text = $@"Hook Address：{InClientPID}";}));
+            Class1.Form1.Invoke(new Action(() => { Class1.Form1.HookAddress.Text = $@"Hook Address：{InClientPID}"; }));
         }
 
         public void OnCreateFile(Int32 InClientPID, String[] InFileNames)
@@ -132,12 +140,20 @@ namespace CaxaHook
 
         public string SaveChange(string NewFile)
         {
+            var TempSave = "";
             Class1.Form1.Invoke(new Action(() =>
             {
+                TempSave = $@"{Class1.Form1.SelectSavePath.Text}\{Path.GetFileNameWithoutExtension(NewFile).Replace(".exb", "")}{Class1.savefile}";
                 Class1.Form1.FROM.Text = NewFile;
-                Class1.Form1.TO.Text = Class1.savefile;;
+                Class1.Form1.TO.Text = Path.GetFileNameWithoutExtension(NewFile).Replace(".exb", "");
+                Console.WriteLine(TempSave);
+                Class1.Form1.SetHook = false;
             }));
-            return Class1.savefile;
+            if (string.IsNullOrWhiteSpace(Class1.savefile))
+            {
+                return NewFile;
+            }
+            return TempSave;
         }
     }
 }

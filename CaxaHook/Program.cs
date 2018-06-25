@@ -15,13 +15,12 @@ using System.Windows.Forms;
 
 namespace CaxaHook
 {
-    static class Program
+    internal static class Program
     {
         [STAThread]
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-
-            var Guid = ((GuidAttribute) Attribute.GetCustomAttribute(Assembly.GetExecutingAssembly(),
+            var Guid = ((GuidAttribute)Attribute.GetCustomAttribute(Assembly.GetExecutingAssembly(),
                 typeof(GuidAttribute))).Value;
             var Path = Class1.AssemblyFileSaveToCaxaAutoSave(out DirectoryInfo Ass);
             {
@@ -31,14 +30,19 @@ namespace CaxaHook
                         FileMode.Open, FileAccess.Read,
                         FileShare.ReadWrite))
                     {
-                        using (var SaveFile = new FileStream($"{Path}\\CaxaAutoSave\\CaxaHook.exe", FileMode.Create))
+                        try
                         {
-                            ReadFile.CopyToAsync(SaveFile).Wait();
+                            using (var SaveFile = new FileStream($"{Path}\\CaxaAutoSave\\CaxaHook.exe", FileMode.Create))
+                            {
+                                ReadFile.CopyToAsync(SaveFile).Wait();
+                            }
+                        }
+                        catch (Exception)
+                        {
                         }
                     }
 
-                    File.Copy($"{AppDomain.CurrentDomain.BaseDirectory}\\CaxaInject.dll",
-                        $"{Path}\\CaxaAutoSave\\CaxaInject.dll", true);
+                    // File.Copy($"{AppDomain.CurrentDomain.BaseDirectory}\\CaxaInject.dll", $"{Path}\\CaxaAutoSave\\CaxaInject.dll", true);
                 }
             }
             if (!Class1.RuntimeInfo.RunMode)
@@ -70,7 +74,6 @@ namespace CaxaHook
                     }
                     Class1.Form1 = new Form1();
                     Class1.Form1.ShowDialog();
-
                 }
             }
             else

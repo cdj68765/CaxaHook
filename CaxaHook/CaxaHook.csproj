@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{D897D5C1-6AF2-4C58-B3E4-583B015301B2}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <RootNamespace>CaxaHook</RootNamespace>
     <AssemblyName>CaxaHook</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
@@ -140,6 +140,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="badge_outline_save_48px_6005_easyicon.net.png" />
+    <EmbeddedResource Include="CaxaInject.dll" />
     <Content Include="save_128px_1210414_easyicon.net.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

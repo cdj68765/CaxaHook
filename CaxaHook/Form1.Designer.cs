@@ -375,7 +375,7 @@
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 12;
-            this.button1.Text = "button1";
+            this.button1.Text = "打开目录";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -569,8 +569,6 @@
         }
 
         #endregion
-
-        private VisualPlus.Toolkit.Controls.Editors.VisualTextBox SelectSavePath;
         private VisualPlus.Toolkit.Controls.Layout.VisualSeparator visualSeparator1;
         private VisualPlus.Toolkit.Controls.Interactivity.VisualButton visualButton1;
         private VisualPlus.Toolkit.Controls.Interactivity.VisualNumericUpDown TimeSpanNum;
@@ -583,5 +581,6 @@
         private System.Windows.Forms.Button button1;
         public VisualPlus.Toolkit.Controls.Interactivity.VisualLabel FROM;
         public VisualPlus.Toolkit.Controls.Interactivity.VisualLabel TO;
+        public VisualPlus.Toolkit.Controls.Editors.VisualTextBox SelectSavePath;
     }
 }

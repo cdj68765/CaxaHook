@@ -12,8 +12,8 @@ namespace CaxaInject
     public class Main : EasyHook.IEntryPoint
     {
         private CaxaHook.HookDealWith Interface;
-        LocalHook CreateFileHook;
-        Stack<String> Queue = new Stack<String>();
+        private LocalHook CreateFileHook;
+        private Stack<String> Queue = new Stack<String>();
 
         public Main(
             RemoteHooking.IContext InContext,
@@ -22,7 +22,6 @@ namespace CaxaInject
             // connect to host...
             Interface = RemoteHooking.IpcConnectClient<CaxaHook.HookDealWith>(InChannelName);
             //  Interface.Ping();
-
         }
 
         public void Run(
@@ -31,13 +30,12 @@ namespace CaxaInject
         {
             try
             {
-
                 CreateFileHook = LocalHook.Create(
                     LocalHook.GetProcAddress("kernel32.dll", "MoveFileExW"),
                     new HookMoveFileEx(MoveFileEx_Hooked),
                     this);
 
-                CreateFileHook.ThreadACL.SetExclusiveACL(new Int32[] {0});
+                CreateFileHook.ThreadACL.SetInclusiveACL(new Int32[] { 0 });
                 //  CreateFileHook.ThreadACL.SetInclusiveACL(new Int32[] { 0 });
             }
             catch (Exception ExtInfo)
@@ -69,7 +67,6 @@ namespace CaxaInject
                     else
                     {
                         //  Interface.Ping(RemoteHooking.GetCurrentThreadId());
-
                     }
                 }
             }
@@ -81,7 +78,7 @@ namespace CaxaInject
         [UnmanagedFunctionPointer(CallingConvention.StdCall,
             CharSet = CharSet.Unicode,
             SetLastError = true)]
-        delegate IntPtr HookMoveFileEx(
+        private delegate IntPtr HookMoveFileEx(
             String OldFile,
             String NewFile,
             UInt32 dwFlags);
@@ -90,24 +87,22 @@ namespace CaxaInject
             CharSet = CharSet.Unicode,
             SetLastError = true,
             CallingConvention = CallingConvention.StdCall)]
-        static extern IntPtr MoveFileExW(
+        private static extern IntPtr MoveFileExW(
             String OldFile,
             String NewFile,
             UInt32 dwFlags);
 
-        static IntPtr MoveFileEx_Hooked(
+        private static IntPtr MoveFileEx_Hooked(
             String OldFile,
             String NewFile,
             UInt32 dwFlags)
         {
-
             try
             {
-                Main This = (Main) HookRuntimeInfo.Callback;
+                Main This = (Main)HookRuntimeInfo.Callback;
 
                 lock (This.Queue)
                 {
-                   
                     if (OldFile.EndsWith("$"))
                     {
                         NewFile = This.Interface.SaveChange(NewFile);

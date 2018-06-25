@@ -22,15 +22,16 @@ namespace CaxaHook
 {
     public partial class Form1 : VisualForm
     {
-        readonly System.Timers.Timer TimeSPan = new System.Timers.Timer(1000);
-        static String ChannelName = null;
+        private readonly System.Timers.Timer TimeSPan = new System.Timers.Timer(1000);
+        private static String ChannelName = null;
         public bool HookStatus = false;
+        public bool SetHook = false;
 
         public Form1()
         {
             InitializeComponent();
-            ThreadPool.QueueUserWorkItem((object state) => { InstallHookTo_Process(NativeApi.GetProcessID("CDRAFT_M.exe")); });
-        
+            //ThreadPool.QueueUserWorkItem((object state) => { InstallHookTo_Process(NativeApi.GetProcessID("CDRAFT_M.exe")); });
+
             Class1.RuntimeInfo =
                 new RuntimeInfo(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)).Load();
             if (!string.IsNullOrEmpty(Class1.RuntimeInfo.SavePath))
@@ -68,22 +69,25 @@ namespace CaxaHook
             };
             TimeSpanBar.ValueChanged += delegate
             {
-
                 if (TimeSpanBar.Value >= TimeSpanBar.Maximum)
                 {
                     TimeSpanBar.Value = 0;
                     NativeApi.WindowsLoopFindHwnd(out string WindowsName);
-                    //工程图文档2
                     var FileName = Path.GetFileName(WindowsName.Split('[')[1].Split(']')[0]);
-                    if (!FileName.StartsWith("工程图文档") && FileName.IndexOf("只读", StringComparison.Ordinal) == -1)
+                    //工程图文档2
+                    if (FileName.EndsWith("*"))
                     {
-                        Class1.savefile = $@"{SelectSavePath.Text}\{FileName.Split('.')[0]}#{DateTime.Now:MM月dd日 HH时mm分}.{FileName.Split('.')[1].Replace("*", "")}";
-                        var save = $@"{SelectSavePath.Text}\{FileName.Split('.')[0]}#{DateTime.Now:MM月dd日 HH时mm分}.{FileName.Split('.')[1].Replace("*", "")}";
-                        if (NativeApi.CheckForegroundWindow())
+                        if (!FileName.StartsWith("工程图文档") && FileName.IndexOf("只读", StringComparison.Ordinal) == -1)
                         {
-                            NativeApi.KeySaveBykeybd_event();
+                            SetHook = true;
+                            Thread.Sleep(1000);
+                            var exb = Path.GetExtension(FileName).Replace("*", "");
+                            Class1.savefile = $@"#{DateTime.Now:MM月dd日 HH时mm分}{exb}";
+                            if (NativeApi.CheckForegroundWindow())
+                            {
+                                NativeApi.KeySaveBykeybd_event();
+                            }
                         }
-
                     }
                 }
             };
@@ -98,7 +102,11 @@ namespace CaxaHook
                         PIDLabel.Text = $@"CAXA PID：{pid}";
                         PIDLabel.ForeColor = Color.LightSeaGreen;
                     }));
-                    if (!HookStatus) InstallHookTo_Process(pid);
+                    if (!HookStatus)
+                    {
+                        FROM.Text = "starthook";
+                        InstallHookTo_Process(pid);
+                    }
                     return true;
                 }
                 else
@@ -113,12 +121,19 @@ namespace CaxaHook
                 }
             }
 
-
-
-            FormClosed += delegate { SaveStatus(); };
+            FormClosed += delegate
+            {
+                try
+                {
+                    SaveStatus();
+                }
+                catch (Exception)
+                {
+                }
+            };
         }
 
-        void InstallHookTo_Process(int PID)
+        private void InstallHookTo_Process(int PID)
         {
             try
             {
@@ -136,6 +151,7 @@ namespace CaxaHook
             catch (Exception ex)
             {
                 HookStatus = false;
+                TO.Text = "failhook" + ex.ToString();
                 // return false;
             }
 
@@ -182,44 +198,46 @@ namespace CaxaHook
             SaveStatus();
         }
 
-
         private void Start()
         {
-            TimeSpanBar.Maximum = (int) (60 * TimeSpanNum.Value);
+            TimeSpanBar.Maximum = (int)(5 * TimeSpanNum.Value);
             TimeSPan.Start();
         }
 
         private void TimeSpanNum_ValueChanged(ValueChangedEventArgs e)
         {
-            TimeSpanBar.Maximum = (int) (60 * TimeSpanNum.Value);
+            TimeSpanBar.Maximum = (int)(5 * TimeSpanNum.Value);
         }
 
-        void SaveStatus()
+        private void SaveStatus()
         {
-            Class1.RuntimeInfo.SavePath = SelectSavePath.Text = Class1.RuntimeInfo.SavePath;
-            Class1.RuntimeInfo.TimeSelect = TimeSpanNum.Value;
-            Class1.RuntimeInfo.RunStatus = RunOrStop.Toggled;
-            Class1.RuntimeInfo.Save();
+            if (!string.IsNullOrEmpty(SelectSavePath.Text))
+            {
+                Class1.RuntimeInfo.SavePath = SelectSavePath.Text;
+                Class1.RuntimeInfo.TimeSelect = TimeSpanNum.Value;
+                Class1.RuntimeInfo.RunStatus = RunOrStop.Toggled;
+                Class1.RuntimeInfo.Save();
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
+            Process.Start("explorer.exe", Class1.RuntimeInfo.Path);
+            return;
             // NativeApi.OperaKeyBySend();
             Thread.Sleep(1000);
             NativeApi.WindowsLoopFindHwnd(out string WindowsName);
             //工程图文档2
             var FileName = Path.GetFileName(WindowsName.Split('[')[1].Split(']')[0]);
-            if (!FileName.StartsWith("工程图文档") && FileName.IndexOf("只读", StringComparison.Ordinal)==-1)
+            if (!FileName.StartsWith("工程图文档") && FileName.IndexOf("只读", StringComparison.Ordinal) == -1)
             {
-                Class1.savefile = $@"{SelectSavePath.Text}\{FileName.Split('.')[0]}#{DateTime.Now:MM月dd日 HH时mm分}.{FileName.Split('.')[1].Replace("*","")}";
+                Class1.savefile = $@"{SelectSavePath.Text}\{FileName.Split('.')[0]}#{DateTime.Now:MM月dd日 HH时mm分}.{FileName.Split('.')[1].Replace("*", "")}";
                 var save = $@"{SelectSavePath.Text}\{FileName.Split('.')[0]}#{DateTime.Now:MM月dd日 HH时mm分}.{FileName.Split('.')[1].Replace("*", "")}";
                 if (NativeApi.CheckForegroundWindow())
                 {
                     NativeApi.KeySaveBykeybd_event();
                 }
-            
             }
-
         }
     }
 }
