@@ -49,6 +49,7 @@ namespace CaxaHook
                       {
                           ErrorCount.Text = @"已经达到最大总量数，请尽快清空";
                       }*/
+
                     RunOrStop.Enabled = true;
                 }
 
