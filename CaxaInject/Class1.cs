@@ -42,12 +42,14 @@ namespace CaxaInject
             {
                 while (true)
                 {
+                    Interface.info("Continue");
                     Thread.Sleep(500);
+                    Interface.info(RemoteHooking.GetCurrentThreadId().ToString());
                     if (Interface.CheckHook(out bool Uninstall))
                     {
                         if (!CreateFileHook.ThreadACL.IsExclusive)
                         {
-                            CreateFileHook.ThreadACL.SetExclusiveACL(new Int32[] {0});
+                            CreateFileHook.ThreadACL.SetExclusiveACL(new Int32[] { 0 });
                             Interface.info("Hook");
                         }
                     }
@@ -55,18 +57,21 @@ namespace CaxaInject
                     {
                         if (!CreateFileHook.ThreadACL.IsInclusive)
                         {
-                            CreateFileHook.ThreadACL.SetInclusiveACL(new Int32[] {0});
+                            CreateFileHook.ThreadACL.SetInclusiveACL(new Int32[] { 0 });
                             Interface.info("UnHook");
                         }
                     }
 
                     if (Uninstall)
                     {
-                        CreateFileHook.ThreadACL.SetInclusiveACL(new Int32[] {0});
+                        Interface.info("Uninstall");
+                        CreateFileHook.ThreadACL.SetInclusiveACL(new Int32[] { 0 });
                         CreateFileHook.Dispose();
                         LocalHook.Release();
                     }
+                    Interface.info("Loop");
                 }
+                Interface.info("Breack");
             }
             catch (Exception ExtInfo)
             {
@@ -100,7 +105,7 @@ namespace CaxaInject
         {
             try
             {
-                Main This = (Main) HookRuntimeInfo.Callback;
+                Main This = (Main)HookRuntimeInfo.Callback;
 
                 if (OldFile.EndsWith("$"))
                 {

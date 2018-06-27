@@ -20,38 +20,36 @@ namespace CaxaHook
         [STAThread]
         private static void Main(string[] args)
         {
-        
             var Guid = ((GuidAttribute)Attribute.GetCustomAttribute(Assembly.GetExecutingAssembly(),
                 typeof(GuidAttribute))).Value;
             var Path = Class1.AssemblyFileSaveToCaxaAutoSave(out DirectoryInfo Ass);
             {
                 if (args.Length == 0)
                 {
-                    using (var ReadFile = new FileStream($"{AppDomain.CurrentDomain.BaseDirectory}\\CaxaHook.exe",
+                    using (var ReadFile = new FileStream(Process.GetCurrentProcess().MainModule.FileName,
                         FileMode.Open, FileAccess.Read,
                         FileShare.ReadWrite))
                     {
                         try
                         {
-                            using (var SaveFile = new FileStream($"{Path}\\CaxaAutoSave\\CaxaHook.exe", FileMode.Create))
+                            using (var SaveFile = new FileStream($"{Path}\\CaxaAutoSave\\{System.IO.Path.GetFileName(Process.GetCurrentProcess().MainModule.FileName)}", FileMode.Create))
                             {
                                 ReadFile.CopyToAsync(SaveFile).Wait();
                             }
 
-                            Stream sm = Assembly.GetExecutingAssembly().GetManifestResourceStream($"CaxaHook.CaxaInject.dll");
-                            if (sm != null)
-                            {
-                                using (var File = new FileStream($"{Path}\\CaxaAutoSave\\CaxaInject.dll", FileMode.Create))
-                                {
-                                    sm.CopyToAsync(File).Wait();
-                                }
-                                sm.Dispose();
-                            }
+                            /*  Stream sm = Assembly.GetExecutingAssembly().GetManifestResourceStream($"CaxaHook.CaxaInject.dll");
+                              if (sm != null)
+                              {
+                                  using (var File = new FileStream($"{Path}\\CaxaAutoSave\\CaxaInject.dll", FileMode.Create))
+                                  {
+                                      sm.CopyToAsync(File).Wait();
+                                  }
+                                  sm.Dispose();
+                              }*/
                         }
                         catch (Exception)
                         {
                         }
-
                     }
 
                     // File.Copy($"{AppDomain.CurrentDomain.BaseDirectory}\\CaxaInject.dll", $"{Path}\\CaxaAutoSave\\CaxaInject.dll", true);
@@ -68,6 +66,7 @@ namespace CaxaHook
                     });
                     int ret = newDomain.ExecuteAssemblyByName(Assembly.GetExecutingAssembly().FullName, Guid);
                     AppDomain.Unload(newDomain);
+                    Console.ReadLine();
                     Environment.ExitCode = ret;
                     Environment.Exit(0);
                 }
@@ -105,7 +104,7 @@ namespace CaxaHook
             {
                 new Mutex(true, "CaxaHook", out bool Close);
                 if (!Close) return;
-                Process.Start($"{Path}\\CaxaAutoSave\\CaxaHook.exe", Guid);
+                //Process.Start($"{Path}\\CaxaAutoSave\\CaxaHook.exe", Guid);
             }
         }
     }

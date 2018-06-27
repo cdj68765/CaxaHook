@@ -55,13 +55,13 @@
             this.imageList2 = new System.Windows.Forms.ImageList(this.components);
             this.visualTabPage3 = new VisualPlus.Toolkit.Child.VisualTabPage();
             this.visualPanel1 = new VisualPlus.Toolkit.Controls.Layout.VisualPanel();
+            this.OneSaveCount = new System.Windows.Forms.TextBox();
+            this.ALLSAVECOUNT = new System.Windows.Forms.TextBox();
+            this.visualLabel3 = new VisualPlus.Toolkit.Controls.Interactivity.VisualLabel();
+            this.visualLabel2 = new VisualPlus.Toolkit.Controls.Interactivity.VisualLabel();
+            this.CleanAllFile = new VisualPlus.Toolkit.Controls.Interactivity.VisualButton();
             this.OpenSaveFolder = new VisualPlus.Toolkit.Controls.Interactivity.VisualButton();
             this.OpenLast = new VisualPlus.Toolkit.Controls.Interactivity.VisualButton();
-            this.CleanAllFile = new VisualPlus.Toolkit.Controls.Interactivity.VisualButton();
-            this.visualLabel2 = new VisualPlus.Toolkit.Controls.Interactivity.VisualLabel();
-            this.visualLabel3 = new VisualPlus.Toolkit.Controls.Interactivity.VisualLabel();
-            this.ALLSAVECOUNT = new System.Windows.Forms.TextBox();
-            this.OneSaveCount = new System.Windows.Forms.TextBox();
             this.visualTabControl1.SuspendLayout();
             this.visualTabPage1.SuspendLayout();
             this.visualTabPage2.SuspendLayout();
@@ -537,7 +537,7 @@
             this.AutoSaveList.Border.Type = VisualPlus.Enumerators.ShapeType.Rectangle;
             this.AutoSaveList.Border.Visible = true;
             visualListViewColumn6.CheckBox = false;
-            visualListViewColumn6.CheckBoxes = false;
+            visualListViewColumn6.CheckBoxes = true;
             visualListViewColumn6.Checked = false;
             visualListViewColumn6.EmbeddedType = VisualPlus.Enumerators.LVActivatedEmbeddedTypes.TextBox;
             visualListViewColumn6.ImageIndex = 2;
@@ -580,10 +580,10 @@
             visualListViewColumn10.CheckBoxes = false;
             visualListViewColumn10.Checked = false;
             visualListViewColumn10.EmbeddedType = VisualPlus.Enumerators.LVActivatedEmbeddedTypes.None;
-            visualListViewColumn10.ImageIndex = -1;
+            visualListViewColumn10.ImageIndex = 4;
             visualListViewColumn10.Name = "VisualListViewColumn1";
             visualListViewColumn10.NumericSort = false;
-            visualListViewColumn10.Text = "最后一次保存";
+            visualListViewColumn10.Text = "最后一次保存路径";
             visualListViewColumn10.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;
             visualListViewColumn10.Width = 256;
             this.AutoSaveList.Columns.AddRange(new VisualPlus.Toolkit.Child.VisualListViewColumn[] {
@@ -643,6 +643,7 @@
             this.imageList1.Images.SetKeyName(1, "title_window.png");
             this.imageList1.Images.SetKeyName(2, "date.png");
             this.imageList1.Images.SetKeyName(3, "progressbar.png");
+            this.imageList1.Images.SetKeyName(4, "multiple_documents_files_27.967828418231px_1187903_easyicon.net.png");
             // 
             // imageList2
             // 
@@ -710,6 +711,116 @@
             this.visualPanel1.TextStyle.Hover = System.Drawing.Color.Empty;
             this.visualPanel1.TextStyle.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             // 
+            // OneSaveCount
+            // 
+            this.OneSaveCount.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.OneSaveCount.Location = new System.Drawing.Point(136, 80);
+            this.OneSaveCount.Name = "OneSaveCount";
+            this.OneSaveCount.Size = new System.Drawing.Size(55, 22);
+            this.OneSaveCount.TabIndex = 24;
+            this.OneSaveCount.Text = "100";
+            this.OneSaveCount.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.OneSaveCount.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.MoreThanZeroNumCheck);
+            // 
+            // ALLSAVECOUNT
+            // 
+            this.ALLSAVECOUNT.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.ALLSAVECOUNT.Location = new System.Drawing.Point(136, 44);
+            this.ALLSAVECOUNT.Name = "ALLSAVECOUNT";
+            this.ALLSAVECOUNT.Size = new System.Drawing.Size(55, 22);
+            this.ALLSAVECOUNT.TabIndex = 23;
+            this.ALLSAVECOUNT.Text = "100";
+            this.ALLSAVECOUNT.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.ALLSAVECOUNT.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.MoreThanZeroNumCheck);
+            // 
+            // visualLabel3
+            // 
+            this.visualLabel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.visualLabel3.Font = new System.Drawing.Font("Segoe UI Semibold", 8.5F, System.Drawing.FontStyle.Bold);
+            this.visualLabel3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.visualLabel3.Location = new System.Drawing.Point(23, 76);
+            this.visualLabel3.MouseState = VisualPlus.Enumerators.MouseStates.Normal;
+            this.visualLabel3.Name = "visualLabel3";
+            this.visualLabel3.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.visualLabel3.Outline = false;
+            this.visualLabel3.OutlineColor = System.Drawing.Color.Red;
+            this.visualLabel3.OutlineLocation = new System.Drawing.Point(0, 0);
+            this.visualLabel3.ReflectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.visualLabel3.ReflectionSpacing = 0;
+            this.visualLabel3.ShadowColor = System.Drawing.Color.Black;
+            this.visualLabel3.ShadowDirection = 315;
+            this.visualLabel3.ShadowLocation = new System.Drawing.Point(0, 0);
+            this.visualLabel3.ShadowOpacity = 100;
+            this.visualLabel3.Size = new System.Drawing.Size(107, 30);
+            this.visualLabel3.TabIndex = 22;
+            this.visualLabel3.Text = "单文档最大保存数:";
+            this.visualLabel3.TextAlignment = System.Drawing.StringAlignment.Near;
+            this.visualLabel3.TextLineAlignment = System.Drawing.StringAlignment.Center;
+            this.visualLabel3.TextStyle.Disabled = System.Drawing.Color.FromArgb(((int)(((byte)(131)))), ((int)(((byte)(129)))), ((int)(((byte)(129)))));
+            this.visualLabel3.TextStyle.Enabled = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.visualLabel3.TextStyle.Hover = System.Drawing.Color.Empty;
+            this.visualLabel3.TextStyle.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            // 
+            // visualLabel2
+            // 
+            this.visualLabel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.visualLabel2.Font = new System.Drawing.Font("Segoe UI Semibold", 8.5F, System.Drawing.FontStyle.Bold);
+            this.visualLabel2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.visualLabel2.Location = new System.Drawing.Point(23, 40);
+            this.visualLabel2.MouseState = VisualPlus.Enumerators.MouseStates.Normal;
+            this.visualLabel2.Name = "visualLabel2";
+            this.visualLabel2.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.visualLabel2.Outline = false;
+            this.visualLabel2.OutlineColor = System.Drawing.Color.Red;
+            this.visualLabel2.OutlineLocation = new System.Drawing.Point(0, 0);
+            this.visualLabel2.ReflectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.visualLabel2.ReflectionSpacing = 0;
+            this.visualLabel2.ShadowColor = System.Drawing.Color.Black;
+            this.visualLabel2.ShadowDirection = 315;
+            this.visualLabel2.ShadowLocation = new System.Drawing.Point(0, 0);
+            this.visualLabel2.ShadowOpacity = 100;
+            this.visualLabel2.Size = new System.Drawing.Size(107, 30);
+            this.visualLabel2.TabIndex = 16;
+            this.visualLabel2.Text = "总数最大保存数:";
+            this.visualLabel2.TextAlignment = System.Drawing.StringAlignment.Near;
+            this.visualLabel2.TextLineAlignment = System.Drawing.StringAlignment.Center;
+            this.visualLabel2.TextStyle.Disabled = System.Drawing.Color.FromArgb(((int)(((byte)(131)))), ((int)(((byte)(129)))), ((int)(((byte)(129)))));
+            this.visualLabel2.TextStyle.Enabled = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.visualLabel2.TextStyle.Hover = System.Drawing.Color.Empty;
+            this.visualLabel2.TextStyle.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            // 
+            // CleanAllFile
+            // 
+            this.CleanAllFile.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.CleanAllFile.BackColorState.Disabled = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.CleanAllFile.BackColorState.Enabled = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.CleanAllFile.BackColorState.Hover = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.CleanAllFile.BackColorState.Pressed = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.CleanAllFile.Border.Color = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
+            this.CleanAllFile.Border.HoverColor = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(183)))), ((int)(((byte)(230)))));
+            this.CleanAllFile.Border.HoverVisible = true;
+            this.CleanAllFile.Border.Rounding = 6;
+            this.CleanAllFile.Border.Thickness = 1;
+            this.CleanAllFile.Border.Type = VisualPlus.Enumerators.ShapeType.Rounded;
+            this.CleanAllFile.Border.Visible = true;
+            this.CleanAllFile.Font = new System.Drawing.Font("Segoe UI", 8.25F);
+            this.CleanAllFile.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.CleanAllFile.Image = null;
+            this.CleanAllFile.Location = new System.Drawing.Point(23, 8);
+            this.CleanAllFile.MouseState = VisualPlus.Enumerators.MouseStates.Normal;
+            this.CleanAllFile.Name = "CleanAllFile";
+            this.CleanAllFile.Size = new System.Drawing.Size(136, 24);
+            this.CleanAllFile.TabIndex = 15;
+            this.CleanAllFile.Text = "清空所有保存文件";
+            this.CleanAllFile.TextAlignment = System.Drawing.StringAlignment.Center;
+            this.CleanAllFile.TextImageRelation = System.Windows.Forms.TextImageRelation.Overlay;
+            this.CleanAllFile.TextLineAlignment = System.Drawing.StringAlignment.Center;
+            this.CleanAllFile.TextStyle.Disabled = System.Drawing.Color.FromArgb(((int)(((byte)(131)))), ((int)(((byte)(129)))), ((int)(((byte)(129)))));
+            this.CleanAllFile.TextStyle.Enabled = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.CleanAllFile.TextStyle.Hover = System.Drawing.Color.Empty;
+            this.CleanAllFile.TextStyle.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            this.CleanAllFile.Click += new System.EventHandler(this.CleanAllFile_Click);
+            // 
             // OpenSaveFolder
             // 
             this.OpenSaveFolder.BackColorState.Disabled = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
@@ -771,116 +882,6 @@
             this.OpenLast.TextStyle.Hover = System.Drawing.Color.Empty;
             this.OpenLast.TextStyle.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             this.OpenLast.Click += new System.EventHandler(this.OpenLast_Click);
-            // 
-            // CleanAllFile
-            // 
-            this.CleanAllFile.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.CleanAllFile.BackColorState.Disabled = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.CleanAllFile.BackColorState.Enabled = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.CleanAllFile.BackColorState.Hover = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.CleanAllFile.BackColorState.Pressed = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.CleanAllFile.Border.Color = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
-            this.CleanAllFile.Border.HoverColor = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(183)))), ((int)(((byte)(230)))));
-            this.CleanAllFile.Border.HoverVisible = true;
-            this.CleanAllFile.Border.Rounding = 6;
-            this.CleanAllFile.Border.Thickness = 1;
-            this.CleanAllFile.Border.Type = VisualPlus.Enumerators.ShapeType.Rounded;
-            this.CleanAllFile.Border.Visible = true;
-            this.CleanAllFile.Font = new System.Drawing.Font("Segoe UI", 8.25F);
-            this.CleanAllFile.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.CleanAllFile.Image = null;
-            this.CleanAllFile.Location = new System.Drawing.Point(23, 8);
-            this.CleanAllFile.MouseState = VisualPlus.Enumerators.MouseStates.Normal;
-            this.CleanAllFile.Name = "CleanAllFile";
-            this.CleanAllFile.Size = new System.Drawing.Size(136, 24);
-            this.CleanAllFile.TabIndex = 15;
-            this.CleanAllFile.Text = "清空所有保存文件";
-            this.CleanAllFile.TextAlignment = System.Drawing.StringAlignment.Center;
-            this.CleanAllFile.TextImageRelation = System.Windows.Forms.TextImageRelation.Overlay;
-            this.CleanAllFile.TextLineAlignment = System.Drawing.StringAlignment.Center;
-            this.CleanAllFile.TextStyle.Disabled = System.Drawing.Color.FromArgb(((int)(((byte)(131)))), ((int)(((byte)(129)))), ((int)(((byte)(129)))));
-            this.CleanAllFile.TextStyle.Enabled = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.CleanAllFile.TextStyle.Hover = System.Drawing.Color.Empty;
-            this.CleanAllFile.TextStyle.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-            this.CleanAllFile.Click += new System.EventHandler(this.CleanAllFile_Click);
-            // 
-            // visualLabel2
-            // 
-            this.visualLabel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.visualLabel2.Font = new System.Drawing.Font("Segoe UI Semibold", 8.5F, System.Drawing.FontStyle.Bold);
-            this.visualLabel2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.visualLabel2.Location = new System.Drawing.Point(23, 40);
-            this.visualLabel2.MouseState = VisualPlus.Enumerators.MouseStates.Normal;
-            this.visualLabel2.Name = "visualLabel2";
-            this.visualLabel2.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            this.visualLabel2.Outline = false;
-            this.visualLabel2.OutlineColor = System.Drawing.Color.Red;
-            this.visualLabel2.OutlineLocation = new System.Drawing.Point(0, 0);
-            this.visualLabel2.ReflectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.visualLabel2.ReflectionSpacing = 0;
-            this.visualLabel2.ShadowColor = System.Drawing.Color.Black;
-            this.visualLabel2.ShadowDirection = 315;
-            this.visualLabel2.ShadowLocation = new System.Drawing.Point(0, 0);
-            this.visualLabel2.ShadowOpacity = 100;
-            this.visualLabel2.Size = new System.Drawing.Size(107, 30);
-            this.visualLabel2.TabIndex = 16;
-            this.visualLabel2.Text = "总数最大保存数:";
-            this.visualLabel2.TextAlignment = System.Drawing.StringAlignment.Near;
-            this.visualLabel2.TextLineAlignment = System.Drawing.StringAlignment.Center;
-            this.visualLabel2.TextStyle.Disabled = System.Drawing.Color.FromArgb(((int)(((byte)(131)))), ((int)(((byte)(129)))), ((int)(((byte)(129)))));
-            this.visualLabel2.TextStyle.Enabled = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.visualLabel2.TextStyle.Hover = System.Drawing.Color.Empty;
-            this.visualLabel2.TextStyle.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-            // 
-            // visualLabel3
-            // 
-            this.visualLabel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.visualLabel3.Font = new System.Drawing.Font("Segoe UI Semibold", 8.5F, System.Drawing.FontStyle.Bold);
-            this.visualLabel3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.visualLabel3.Location = new System.Drawing.Point(23, 76);
-            this.visualLabel3.MouseState = VisualPlus.Enumerators.MouseStates.Normal;
-            this.visualLabel3.Name = "visualLabel3";
-            this.visualLabel3.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            this.visualLabel3.Outline = false;
-            this.visualLabel3.OutlineColor = System.Drawing.Color.Red;
-            this.visualLabel3.OutlineLocation = new System.Drawing.Point(0, 0);
-            this.visualLabel3.ReflectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.visualLabel3.ReflectionSpacing = 0;
-            this.visualLabel3.ShadowColor = System.Drawing.Color.Black;
-            this.visualLabel3.ShadowDirection = 315;
-            this.visualLabel3.ShadowLocation = new System.Drawing.Point(0, 0);
-            this.visualLabel3.ShadowOpacity = 100;
-            this.visualLabel3.Size = new System.Drawing.Size(107, 30);
-            this.visualLabel3.TabIndex = 22;
-            this.visualLabel3.Text = "单文档最大保存数:";
-            this.visualLabel3.TextAlignment = System.Drawing.StringAlignment.Near;
-            this.visualLabel3.TextLineAlignment = System.Drawing.StringAlignment.Center;
-            this.visualLabel3.TextStyle.Disabled = System.Drawing.Color.FromArgb(((int)(((byte)(131)))), ((int)(((byte)(129)))), ((int)(((byte)(129)))));
-            this.visualLabel3.TextStyle.Enabled = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.visualLabel3.TextStyle.Hover = System.Drawing.Color.Empty;
-            this.visualLabel3.TextStyle.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-            // 
-            // ALLSAVECOUNT
-            // 
-            this.ALLSAVECOUNT.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.ALLSAVECOUNT.Location = new System.Drawing.Point(136, 44);
-            this.ALLSAVECOUNT.Name = "ALLSAVECOUNT";
-            this.ALLSAVECOUNT.Size = new System.Drawing.Size(55, 22);
-            this.ALLSAVECOUNT.TabIndex = 23;
-            this.ALLSAVECOUNT.Text = "100";
-            this.ALLSAVECOUNT.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.ALLSAVECOUNT.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.MoreThanZeroNumCheck);
-            // 
-            // OneSaveCount
-            // 
-            this.OneSaveCount.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.OneSaveCount.Location = new System.Drawing.Point(136, 80);
-            this.OneSaveCount.Name = "OneSaveCount";
-            this.OneSaveCount.Size = new System.Drawing.Size(55, 22);
-            this.OneSaveCount.TabIndex = 24;
-            this.OneSaveCount.Text = "100";
-            this.OneSaveCount.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.OneSaveCount.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.MoreThanZeroNumCheck);
             // 
             // Form1
             // 

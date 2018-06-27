@@ -34,7 +34,6 @@ namespace CaxaHook
             InitializeComponent();
             Class1.RuntimeInfo =
                 new RuntimeInfo(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)).Load();
-
             Load += delegate
             {
                 if (!string.IsNullOrWhiteSpace(Class1.RuntimeInfo.SavePath))
@@ -68,9 +67,6 @@ namespace CaxaHook
                 }
             };
 
-
-
-
             TimeSPan.AutoReset = true;
             TimeSPan.Elapsed += delegate
             {
@@ -78,14 +74,11 @@ namespace CaxaHook
                 {
                     if (TryToHookTime())
                     {
-
                         TimeSpanBar.Invoke(new Action(() =>
                         {
                             TimeSpanBar.Value += 1;
                             TimeSpanBar.Refresh();
                         }));
-
-
                     }
                     else
                     {
@@ -98,9 +91,7 @@ namespace CaxaHook
                 }
                 catch (Exception e)
                 {
-
                 }
-
             };
             TimeSpanBar.ValueChanged += delegate
             {
@@ -117,10 +108,28 @@ namespace CaxaHook
                     var SPF = WindowsName.Split('[');
                     if (SPF.Length < 2)
                     {
-                        AddLog("错误，未找到文档");
+                        AddLog($"错误，未找到文档：{WindowsName}");
                         return;
                     }
-
+                    else if (WindowsName.StartsWith("CAXA电子图板2013"))
+                    {
+                        var _FileName = Path.GetFileName(SPF[1].Split(']')[0]);
+                        if (!_FileName.StartsWith("工程图文档") && _FileName.IndexOf("只读", StringComparison.Ordinal) == -1)
+                        {
+                            SetHook = true;
+                            Thread.Sleep(1000);
+                            var exb = Path.GetExtension(_FileName);
+                            Class1.savefile = $@"#{DateTime.Now:MM月dd日 HH时mm分}{exb}";
+                            if (NativeApi.CheckForegroundWindow())
+                            {
+                                NativeApi.KeySaveBykeybd_event();
+                            }
+                        }
+                        else
+                        {
+                            AddLog("错误，当前文档为只读或者新建文档");
+                        }
+                    }
                     var FileName = Path.GetFileName(SPF[1].Split(']')[0]);
                     if (FileName.EndsWith("*"))
                     {
@@ -161,11 +170,11 @@ namespace CaxaHook
                         catch (Exception e)
                         {
                         }
-
                     }
 
                     if (!HookStatus)
                     {
+                        Thread.Sleep(3000);
                         InstallHookTo_Process(pid);
                     }
 
@@ -181,20 +190,17 @@ namespace CaxaHook
                         {
                             Invoke(new Action(() =>
                             {
-
                                 if (!Class1.Form1.IsDisposed)
                                 {
                                     PIDLabel.Text = $@"CAXA PID：未找到Caxa程序";
                                     HookAddress.Text = @"Hook Address：";
                                     PIDLabel.ForeColor = Color.Red;
                                 }
-
                             }));
                         }
                         catch (Exception e)
                         {
                         }
-
                     }
 
                     return false;
@@ -212,7 +218,7 @@ namespace CaxaHook
             };
         }
 
-        void AutoSaveListUpdate()
+        private void AutoSaveListUpdate()
         {
             Invoke(new Action(() =>
             {
@@ -236,11 +242,9 @@ namespace CaxaHook
         {
             ThreadPool.QueueUserWorkItem((object state) =>
             {
-
                 if (Class1.RuntimeInfo.SaveList.ContainsKey(onlyFileName))
                 {
                     Class1.RuntimeInfo.SaveList[onlyFileName].Add(new RuntimeInfo.FileInfo(path, DateTime.Now));
-
                 }
                 else
                 {
@@ -248,10 +252,10 @@ namespace CaxaHook
                     {
                         Class1.RuntimeInfo.SaveList.Remove(Class1.RuntimeInfo.SaveList.ToList()
                             .OrderBy(x => x.Value[x.Value.Count - 1].Date).First().Key);
-                       // ErrorCount.Text = "已经达到最大总量数，请尽快清空";
+                        // ErrorCount.Text = "已经达到最大总量数，请尽快清空";
                     }
                     Class1.RuntimeInfo.SaveList.Add(onlyFileName,
-                        new List<RuntimeInfo.FileInfo>() {new RuntimeInfo.FileInfo(path, DateTime.Now)});
+                        new List<RuntimeInfo.FileInfo>() { new RuntimeInfo.FileInfo(path, DateTime.Now) });
                 }
 
                 AutoSaveListUpdate();
@@ -333,7 +337,6 @@ namespace CaxaHook
                     $"{Class1.RuntimeInfo.Path}\\CaxaInject.dll",
                     ChannelName
                 );
-
             }
             catch (Exception ex)
             {
@@ -385,13 +388,13 @@ namespace CaxaHook
 
         private void Start()
         {
-            TimeSpanBar.Maximum = (int) (60 * TimeSpanNum.Value);
+            TimeSpanBar.Maximum = (int)(10 * TimeSpanNum.Value);
             TimeSPan.Start();
         }
 
         private void TimeSpanNum_ValueChanged(ValueChangedEventArgs e)
         {
-            TimeSpanBar.Maximum = (int) (60 * TimeSpanNum.Value);
+            TimeSpanBar.Maximum = (int)(10 * TimeSpanNum.Value);
         }
 
         private void SaveStatus()
@@ -404,6 +407,7 @@ namespace CaxaHook
                 Class1.RuntimeInfo.Save();
             }
         }
+
         public void MoreThanZeroNumCheck(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar != '\b' && e.KeyChar == '.' && e.KeyChar != '\u0016' && e.KeyChar != '\u0003') //这是允许输入退格键
@@ -417,6 +421,7 @@ namespace CaxaHook
                 }
             }
         }
+
         private void button1_Click(object sender, EventArgs e)
         {
             Process.Start("explorer.exe", Class1.RuntimeInfo.Path);
@@ -482,9 +487,7 @@ namespace CaxaHook
                     Class1.RuntimeInfo.SaveList = new Dictionary<string, List<RuntimeInfo.FileInfo>>();
                     Class1.RuntimeInfo.Save();
                     AutoSaveListUpdate();
-                 
                 });
-
             }
         }
     }

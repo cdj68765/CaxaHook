@@ -30,8 +30,6 @@ namespace CaxaHook
         public const byte vbKeyControl = 0x11; // CTRL 键
         public const byte vbKeyS = 83;
 
-
-
         /// <summary>
         /// 导入模拟键盘的方法
         /// </summary>
@@ -82,7 +80,12 @@ namespace CaxaHook
             EnumWindows((a, b) =>
             {
                 GetWindowText(a, lpString, lpString.Capacity);
-                if (lpString.ToString().StartsWith("CAXA CAD"))
+                /*  if (lpString.ToString().IndexOf("电子图版") != -1 && lpString.ToString().StartsWith("CAXA") && lpString.ToString() != "Default IME")
+                  {
+                      winHmd = a;
+                      return false;
+                  }*/
+                if (lpString.ToString().IndexOf("电子图板") != -1)
                 {
                     winHmd = a;
                     return false;
@@ -101,13 +104,19 @@ namespace CaxaHook
         {
             var GetText = new StringBuilder(256);
             GetWindowTextW(GetForegroundWindow(IntPtr.Zero), GetText, 256);
-            if (GetText.ToString().StartsWith("CAXA CAD"))
+            if (GetText.ToString().IndexOf("电子图板") != -1)
                 return true;
             else
                 return false;
+            /*  if (GetText.ToString().IndexOf("电子图版") != -1 && GetText.ToString().StartsWith("CAXA") && GetText.ToString() != "Default IME")
+                  return true;
+              else
+                  return false;*/
         }//查找窗体
+
         [DllImport("User32.dll", EntryPoint = "FindWindow")]
         public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+
         [DllImport("user32.dll", EntryPoint = "SendMessage")]
         public static extern int SendMessage(IntPtr hwnd, int wMsg, uint wParam, uint lParam);
 

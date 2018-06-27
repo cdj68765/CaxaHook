@@ -37,8 +37,8 @@ namespace CaxaHook
         public long TimeSelect { get; set; }
 
         public Dictionary<string, List<FileInfo>> SaveList { get; set; }
-        public int ALLSAVECOUNT { get;  set; }
-        public int OneSaveCount { get;  set; }
+        public int ALLSAVECOUNT { get; set; }
+        public int OneSaveCount { get; set; }
 
         public class FileInfo
         {
@@ -77,13 +77,11 @@ namespace CaxaHook
             try
             {
                 if (!File.Exists($"{Path}\\RuntimeInfo.xml")) return null;
-           return (RuntimeInfo)JsonConvert.DeserializeObject(File.ReadAllText($"{Path}\\RuntimeInfo.xml"), typeof(RuntimeInfo));
+                return (RuntimeInfo)JsonConvert.DeserializeObject(File.ReadAllText($"{Path}\\RuntimeInfo.xml"), typeof(RuntimeInfo));
                 var soapFormat = new BinaryFormatter();
                 return (RuntimeInfo)soapFormat.Deserialize(new MemoryStream(File.ReadAllBytes($"{Path}\\RuntimeInfo.xml")));
                 using (Stream fStream = new FileStream($"{Path}\\RuntimeInfo.xml", FileMode.Open, FileAccess.ReadWrite))
                 {
-
-                  
                     fStream.Position = 0;
                     return (RuntimeInfo)soapFormat.Deserialize(new MemoryStream(File.ReadAllBytes($"{Path}\\RuntimeInfo.xml")));
                 }
@@ -107,6 +105,7 @@ namespace CaxaHook
             String Path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             Ass = new DirectoryInfo(
                 $"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\\CaxaAutoSave");
+            Directory.SetCurrentDirectory(Ass.FullName);
             if (!Ass.Exists)
             {
                 Ass.Create();
@@ -127,7 +126,6 @@ namespace CaxaHook
 
             RuntimeInfo = File.Exists($"{Path}\\RuntimeInfo.xml") ? new RuntimeInfo(Path).Load() : new RuntimeInfo(Path);
             return Path;
-
             void SaveToDisk(string fullName, string v)
             {
                 Stream sm = Assembly.GetExecutingAssembly().GetManifestResourceStream($"CaxaHook.{v}");
@@ -142,16 +140,14 @@ namespace CaxaHook
             }
         }
     }
-    
+
     public class HookDealWith : MarshalByRefObject
     {
-
         public bool CheckHook(out bool uninstall)
         {
             uninstall = Class1.Form1.UninstallAllHooks;
             return Class1.Form1.SetHook;
         }
-
 
         public void info(string v)
         {
@@ -167,7 +163,6 @@ namespace CaxaHook
             }));
         }
 
-
         public void ReportException(Exception InInfo)
         {
             try
@@ -180,12 +175,12 @@ namespace CaxaHook
             catch (Exception e)
             {
             }
-      
         }
 
         public string SaveChange(string NewFile)
         {
             var TempSave = "";
+            Console.WriteLine(NewFile);
             if (!Class1.Form1.SetHook)
             {
                 return NewFile;
@@ -205,7 +200,6 @@ namespace CaxaHook
                 {
                     Class1.Form1.AddLog($"自动保存失败，错误信息：{e}");
                 }
-
             }));
             return TempSave;
         }
