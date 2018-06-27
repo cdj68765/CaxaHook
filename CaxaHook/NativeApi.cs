@@ -12,19 +12,23 @@ namespace CaxaHook
 {
     internal class NativeApi
     {
-        internal static int GetProcessID(string name)
+        internal static int[] GetProcessID(string name)
         {
-            int PID = -1;
-            foreach (var disk in new ManagementObjectSearcher(new SelectQuery("Select * from Win32_Process")).Get())
-            {
-                if (disk["Name"].ToString() == name)
-                {
-                    PID = int.Parse(disk["ProcessId"].ToString());
-                    break;
-                }
-            }
+            var PIDList = new List<int>();
 
-            return PID;
+            foreach (var disk in new ManagementObjectSearcher(
+                new SelectQuery("Select Name,ProcessId from Win32_Process Where (Name = 'CDRAFT_M.exe')")).Get())
+            {
+                PIDList.Add(int.Parse(disk["ProcessId"].ToString()));
+                //Class1.Form1.AddLog(disk["ProcessId"].ToString());
+                // PID = int.Parse(disk["ProcessId"].ToString());
+                /* if (disk["Name"].ToString() == name)
+                  {
+                      PID = int.Parse(disk["ProcessId"].ToString());
+                      //break;
+                  }*/
+            }
+            return PIDList.ToArray();
         }
 
         public const byte vbKeyControl = 0x11; // CTRL 键
@@ -80,23 +84,20 @@ namespace CaxaHook
             EnumWindows((a, b) =>
             {
                 GetWindowText(a, lpString, lpString.Capacity);
-                /*  if (lpString.ToString().IndexOf("电子图版") != -1 && lpString.ToString().StartsWith("CAXA") && lpString.ToString() != "Default IME")
-                  {
-                      winHmd = a;
-                      return false;
-                  }*/
-                if (lpString.ToString().IndexOf("电子图板") != -1)
+                if (lpString.ToString().IndexOf("电子图板", StringComparison.Ordinal) != -1 && lpString.ToString().StartsWith("CAXA"))
                 {
+                  /*  NativeApi.GetWindowThreadProcessId(a, out uint pid);
+                    Console.WriteLine($"pid:{pid}");*/
                     winHmd = a;
                     return false;
                 }
-
                 return true;
             }, 0);
             WinHmd = lpString.ToString();
             return winHmd;
         }
-
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
         [DllImport("user32.dll")]
         public static extern IntPtr GetForegroundWindow(IntPtr hWnd);
 
@@ -104,7 +105,7 @@ namespace CaxaHook
         {
             var GetText = new StringBuilder(256);
             GetWindowTextW(GetForegroundWindow(IntPtr.Zero), GetText, 256);
-            if (GetText.ToString().IndexOf("电子图板") != -1)
+            if (GetText.ToString().IndexOf("电子图板", StringComparison.Ordinal) != -1)
                 return true;
             else
                 return false;

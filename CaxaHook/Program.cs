@@ -66,7 +66,6 @@ namespace CaxaHook
                     });
                     int ret = newDomain.ExecuteAssemblyByName(Assembly.GetExecutingAssembly().FullName, Guid);
                     AppDomain.Unload(newDomain);
-                    Console.ReadLine();
                     Environment.ExitCode = ret;
                     Environment.Exit(0);
                 }

@@ -105,7 +105,7 @@ namespace CaxaHook
             String Path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             Ass = new DirectoryInfo(
                 $"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\\CaxaAutoSave");
-            Directory.SetCurrentDirectory(Ass.FullName);
+      
             if (!Ass.Exists)
             {
                 Ass.Create();
@@ -125,6 +125,7 @@ namespace CaxaHook
             }
 
             RuntimeInfo = File.Exists($"{Path}\\RuntimeInfo.xml") ? new RuntimeInfo(Path).Load() : new RuntimeInfo(Path);
+            Directory.SetCurrentDirectory(Ass.FullName);
             return Path;
             void SaveToDisk(string fullName, string v)
             {
@@ -159,7 +160,7 @@ namespace CaxaHook
             Class1.Form1.Invoke(new Action(() =>
             {
                 Class1.Form1.HookAddress.Text = $@"Hook Address：{InClientPID}";
-                Class1.Form1.AddLog($"Caxa挂钩成功，Hook地址：{InClientPID}");
+               // Class1.Form1.AddLog($"Caxa挂钩成功，Hook地址：{InClientPID}");
             }));
         }
 
@@ -179,29 +180,26 @@ namespace CaxaHook
 
         public string SaveChange(string NewFile)
         {
-            var TempSave = "";
-            Console.WriteLine(NewFile);
-            if (!Class1.Form1.SetHook)
-            {
-                return NewFile;
-            }
-
+      
             Class1.Form1.Invoke(new Action(() =>
             {
-                try
+                if (Class1.Form1.SetHook)
                 {
-                    var OnlyFileName = Path.GetFileNameWithoutExtension(NewFile).Replace(".exb", "");
-                    TempSave = $@"{Class1.Form1.SelectSavePath.Text}\{OnlyFileName}{Class1.savefile}";
-                    Class1.Form1.AddLog($"自动保存成功,保存路径：{TempSave}");
-                    Class1.Form1.SetHook = false;
-                    Class1.Form1.SaveToAutoBackList(OnlyFileName, TempSave);
-                }
-                catch (Exception e)
-                {
-                    Class1.Form1.AddLog($"自动保存失败，错误信息：{e}");
+                    try
+                    {
+                        var OnlyFileName = Path.GetFileNameWithoutExtension(NewFile).Replace(".exb", "");
+                        NewFile = $@"{Class1.Form1.SelectSavePath.Text}\{OnlyFileName}{Class1.savefile}";
+                        Class1.Form1.AddLog($"自动保存成功,保存路径：{NewFile}");
+                        Class1.Form1.SetHook = false;
+                        Class1.Form1.SaveToAutoBackList(OnlyFileName, NewFile);
+                    }
+                    catch (Exception e)
+                    {
+                        Class1.Form1.AddLog($"自动保存失败，错误信息：{e}");
+                    }
                 }
             }));
-            return TempSave;
+            return NewFile;
         }
     }
 }

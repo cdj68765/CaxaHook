@@ -23,12 +23,13 @@ using VisualPlus.Toolkit.Dialogs;
 
 namespace CaxaHook
 {
+   
     public partial class Form1 : VisualForm
     {
-        private readonly System.Timers.Timer TimeSPan = new System.Timers.Timer(1000);
+        private readonly System.Timers.Timer TimeSPan = new System.Timers.Timer(5000);
         public bool HookStatus = false;
         public bool SetHook = false;
-
+        public Dictionary<int, string> HookList = new Dictionary<int, string>();
         public Form1()
         {
             InitializeComponent();
@@ -72,11 +73,13 @@ namespace CaxaHook
             {
                 try
                 {
+                    // Console.WriteLine(NativeApi.GetWindowThreadProcessId(NativeApi.GetForegroundWindow(IntPtr.Zero), out uint pid));
+                    //Console.WriteLine(pid);
                     if (TryToHookTime())
                     {
                         TimeSpanBar.Invoke(new Action(() =>
                         {
-                            TimeSpanBar.Value += 1;
+                            TimeSpanBar.Value += 5;
                             TimeSpanBar.Refresh();
                         }));
                     }
@@ -154,7 +157,34 @@ namespace CaxaHook
 
             bool TryToHookTime()
             {
-                var pid = NativeApi.GetProcessID("CDRAFT_M.exe");
+                if (!SetHook)
+                {
+                    var PID = NativeApi.GetProcessID("CDRAFT_M.exe");
+
+                   foreach (var ptemp in from Ptemp in PID where !HookList.ContainsKey(Ptemp) select Ptemp)
+                    {
+                        InstallHookTo_Process(ptemp, out string Ptemp);
+                        if (!string.IsNullOrEmpty(Ptemp))
+                        {
+                            HookList.Add(ptemp, Ptemp);
+                            Class1.Form1.AddLog($"添加Hook：{ptemp}->{Ptemp}");
+                        }
+                       // HookList.Add(Ptemp, InstallHookTo_Process(Ptemp, out string Ptemp));
+                    }
+
+                    foreach (var Exc in HookList.Keys.ToList().Except(PID))
+                    {
+                        if (HookList.ContainsKey(Exc))
+                        {
+                            Class1.Form1.AddLog($"移除Hook：{Exc}:{HookList[Exc]}");
+                            HookList.Remove(Exc);
+                        }
+                    }
+;
+                }
+
+                return false;
+                var pid = NativeApi.GetProcessID("CDRAFT_M.exe")[0];
                 if (pid != -1)
                 {
                     if (!Class1.Form1.IsDisposed)
@@ -175,7 +205,7 @@ namespace CaxaHook
                     if (!HookStatus)
                     {
                         Thread.Sleep(3000);
-                        InstallHookTo_Process(pid);
+                      //  InstallHookTo_Process(pid);
                     }
 
                     return true;
@@ -248,6 +278,7 @@ namespace CaxaHook
                 }
                 else
                 {
+                    if (Class1.RuntimeInfo.SaveList.Count == 0) Class1.RuntimeInfo.SaveList = new Dictionary<string, List<RuntimeInfo.FileInfo>>();
                     if (Class1.RuntimeInfo.SaveList.Count >= int.Parse(ALLSAVECOUNT.Text))
                     {
                         Class1.RuntimeInfo.SaveList.Remove(Class1.RuntimeInfo.SaveList.ToList()
@@ -322,11 +353,12 @@ namespace CaxaHook
 
         public bool UninstallAllHooks = false;
 
-        private void InstallHookTo_Process(int PID)
+        private void InstallHookTo_Process(int PID,out string ChannelName)
         {
+            ChannelName = null;
             try
             {
-                String ChannelName = null;
+             
                 Config.DependencyPath = Class1.RuntimeInfo.Path;
                 Config.HelperLibraryLocation = Class1.RuntimeInfo.Path;
                 RemoteHooking.IpcCreateServer<HookDealWith>(ref ChannelName, WellKnownObjectMode.SingleCall);
