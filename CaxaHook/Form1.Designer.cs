@@ -29,15 +29,14 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            VisualPlus.Toolkit.Child.VisualListViewColumn visualListViewColumn6 = new VisualPlus.Toolkit.Child.VisualListViewColumn();
-            VisualPlus.Toolkit.Child.VisualListViewColumn visualListViewColumn7 = new VisualPlus.Toolkit.Child.VisualListViewColumn();
-            VisualPlus.Toolkit.Child.VisualListViewColumn visualListViewColumn8 = new VisualPlus.Toolkit.Child.VisualListViewColumn();
-            VisualPlus.Toolkit.Child.VisualListViewColumn visualListViewColumn9 = new VisualPlus.Toolkit.Child.VisualListViewColumn();
-            VisualPlus.Toolkit.Child.VisualListViewColumn visualListViewColumn10 = new VisualPlus.Toolkit.Child.VisualListViewColumn();
+            VisualPlus.Toolkit.Child.VisualListViewColumn visualListViewColumn1 = new VisualPlus.Toolkit.Child.VisualListViewColumn();
+            VisualPlus.Toolkit.Child.VisualListViewColumn visualListViewColumn2 = new VisualPlus.Toolkit.Child.VisualListViewColumn();
+            VisualPlus.Toolkit.Child.VisualListViewColumn visualListViewColumn3 = new VisualPlus.Toolkit.Child.VisualListViewColumn();
+            VisualPlus.Toolkit.Child.VisualListViewColumn visualListViewColumn4 = new VisualPlus.Toolkit.Child.VisualListViewColumn();
+            VisualPlus.Toolkit.Child.VisualListViewColumn visualListViewColumn5 = new VisualPlus.Toolkit.Child.VisualListViewColumn();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.SelectSavePath = new VisualPlus.Toolkit.Controls.Editors.VisualTextBox();
             this.visualSeparator1 = new VisualPlus.Toolkit.Controls.Layout.VisualSeparator();
-            this.visualButton1 = new VisualPlus.Toolkit.Controls.Interactivity.VisualButton();
             this.TimeSpanNum = new VisualPlus.Toolkit.Controls.Interactivity.VisualNumericUpDown();
             this.Time_Span_Label = new VisualPlus.Toolkit.Controls.Interactivity.VisualLabel();
             this.TimeSpanBar = new VisualPlus.Toolkit.Controls.DataVisualization.VisualProgressBar();
@@ -62,6 +61,7 @@
             this.CleanAllFile = new VisualPlus.Toolkit.Controls.Interactivity.VisualButton();
             this.OpenSaveFolder = new VisualPlus.Toolkit.Controls.Interactivity.VisualButton();
             this.OpenLast = new VisualPlus.Toolkit.Controls.Interactivity.VisualButton();
+            this.visualLabel4 = new VisualPlus.Toolkit.Controls.Interactivity.VisualLabel();
             this.visualTabControl1.SuspendLayout();
             this.visualTabPage1.SuspendLayout();
             this.visualTabPage2.SuspendLayout();
@@ -139,37 +139,6 @@
             this.visualSeparator1.TextStyle.Enabled = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.visualSeparator1.TextStyle.Hover = System.Drawing.Color.Empty;
             this.visualSeparator1.TextStyle.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-            // 
-            // visualButton1
-            // 
-            this.visualButton1.BackColorState.Disabled = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.visualButton1.BackColorState.Enabled = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.visualButton1.BackColorState.Hover = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.visualButton1.BackColorState.Pressed = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.visualButton1.Border.Color = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
-            this.visualButton1.Border.HoverColor = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(183)))), ((int)(((byte)(230)))));
-            this.visualButton1.Border.HoverVisible = true;
-            this.visualButton1.Border.Rounding = 6;
-            this.visualButton1.Border.Thickness = 1;
-            this.visualButton1.Border.Type = VisualPlus.Enumerators.ShapeType.Rounded;
-            this.visualButton1.Border.Visible = true;
-            this.visualButton1.Font = new System.Drawing.Font("Segoe UI", 8.25F);
-            this.visualButton1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.visualButton1.Image = null;
-            this.visualButton1.Location = new System.Drawing.Point(22, 39);
-            this.visualButton1.MouseState = VisualPlus.Enumerators.MouseStates.Normal;
-            this.visualButton1.Name = "visualButton1";
-            this.visualButton1.Size = new System.Drawing.Size(85, 30);
-            this.visualButton1.TabIndex = 3;
-            this.visualButton1.Text = "选择保存目录";
-            this.visualButton1.TextAlignment = System.Drawing.StringAlignment.Center;
-            this.visualButton1.TextImageRelation = System.Windows.Forms.TextImageRelation.Overlay;
-            this.visualButton1.TextLineAlignment = System.Drawing.StringAlignment.Center;
-            this.visualButton1.TextStyle.Disabled = System.Drawing.Color.FromArgb(((int)(((byte)(131)))), ((int)(((byte)(129)))), ((int)(((byte)(129)))));
-            this.visualButton1.TextStyle.Enabled = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.visualButton1.TextStyle.Hover = System.Drawing.Color.Empty;
-            this.visualButton1.TextStyle.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
-            this.visualButton1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.SeletSaveButton);
             // 
             // TimeSpanNum
             // 
@@ -310,7 +279,7 @@
             this.RunOrStop.TextStyle.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             this.RunOrStop.TrueTextToggle = "";
             this.RunOrStop.Type = VisualPlus.Toolkit.Controls.Interactivity.VisualToggle.ToggleTypes.OnOff;
-            this.RunOrStop.ToggleChanged += new VisualPlus.Delegates.ToggleChangedEventHandler(this.RunOrStop_ToggleChanged);
+            this.RunOrStop.Click += new System.EventHandler(this.RunOrStop_Click);
             // 
             // visualLabel1
             // 
@@ -536,62 +505,62 @@
             this.AutoSaveList.Border.Thickness = 1;
             this.AutoSaveList.Border.Type = VisualPlus.Enumerators.ShapeType.Rectangle;
             this.AutoSaveList.Border.Visible = true;
-            visualListViewColumn6.CheckBox = false;
-            visualListViewColumn6.CheckBoxes = true;
-            visualListViewColumn6.Checked = false;
-            visualListViewColumn6.EmbeddedType = VisualPlus.Enumerators.LVActivatedEmbeddedTypes.TextBox;
-            visualListViewColumn6.ImageIndex = 2;
-            visualListViewColumn6.Name = "VisualListViewColumn1";
-            visualListViewColumn6.NumericSort = false;
-            visualListViewColumn6.Text = "保存时间";
-            visualListViewColumn6.TextAlignment = System.Drawing.ContentAlignment.MiddleCenter;
-            visualListViewColumn6.Width = 150;
-            visualListViewColumn7.CheckBox = false;
-            visualListViewColumn7.CheckBoxes = false;
-            visualListViewColumn7.Checked = false;
-            visualListViewColumn7.EmbeddedType = VisualPlus.Enumerators.LVActivatedEmbeddedTypes.None;
-            visualListViewColumn7.ImageIndex = 1;
-            visualListViewColumn7.Name = "VisualListViewColumn2";
-            visualListViewColumn7.NumericSort = false;
-            visualListViewColumn7.Text = "记录数量";
-            visualListViewColumn7.TextAlignment = System.Drawing.ContentAlignment.MiddleCenter;
-            visualListViewColumn7.Width = 80;
-            visualListViewColumn8.CheckBox = false;
-            visualListViewColumn8.CheckBoxes = false;
-            visualListViewColumn8.Checked = false;
-            visualListViewColumn8.EmbeddedType = VisualPlus.Enumerators.LVActivatedEmbeddedTypes.TextBox;
-            visualListViewColumn8.ImageIndex = 0;
-            visualListViewColumn8.Name = "VisualListViewColumn3";
-            visualListViewColumn8.NumericSort = true;
-            visualListViewColumn8.Text = "文档名";
-            visualListViewColumn8.TextAlignment = System.Drawing.ContentAlignment.MiddleCenter;
-            visualListViewColumn8.Width = 150;
-            visualListViewColumn9.CheckBox = false;
-            visualListViewColumn9.CheckBoxes = false;
-            visualListViewColumn9.Checked = false;
-            visualListViewColumn9.EmbeddedType = VisualPlus.Enumerators.LVActivatedEmbeddedTypes.None;
-            visualListViewColumn9.ImageIndex = 3;
-            visualListViewColumn9.Name = "VisualListViewColumn4";
-            visualListViewColumn9.NumericSort = false;
-            visualListViewColumn9.Text = "剩余";
-            visualListViewColumn9.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;
-            visualListViewColumn9.Width = 100;
-            visualListViewColumn10.CheckBox = false;
-            visualListViewColumn10.CheckBoxes = false;
-            visualListViewColumn10.Checked = false;
-            visualListViewColumn10.EmbeddedType = VisualPlus.Enumerators.LVActivatedEmbeddedTypes.None;
-            visualListViewColumn10.ImageIndex = 4;
-            visualListViewColumn10.Name = "VisualListViewColumn1";
-            visualListViewColumn10.NumericSort = false;
-            visualListViewColumn10.Text = "最后一次保存路径";
-            visualListViewColumn10.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;
-            visualListViewColumn10.Width = 256;
+            visualListViewColumn1.CheckBox = false;
+            visualListViewColumn1.CheckBoxes = true;
+            visualListViewColumn1.Checked = false;
+            visualListViewColumn1.EmbeddedType = VisualPlus.Enumerators.LVActivatedEmbeddedTypes.TextBox;
+            visualListViewColumn1.ImageIndex = 2;
+            visualListViewColumn1.Name = "VisualListViewColumn1";
+            visualListViewColumn1.NumericSort = false;
+            visualListViewColumn1.Text = "保存时间";
+            visualListViewColumn1.TextAlignment = System.Drawing.ContentAlignment.MiddleCenter;
+            visualListViewColumn1.Width = 150;
+            visualListViewColumn2.CheckBox = false;
+            visualListViewColumn2.CheckBoxes = false;
+            visualListViewColumn2.Checked = false;
+            visualListViewColumn2.EmbeddedType = VisualPlus.Enumerators.LVActivatedEmbeddedTypes.None;
+            visualListViewColumn2.ImageIndex = 1;
+            visualListViewColumn2.Name = "VisualListViewColumn2";
+            visualListViewColumn2.NumericSort = false;
+            visualListViewColumn2.Text = "记录数量";
+            visualListViewColumn2.TextAlignment = System.Drawing.ContentAlignment.MiddleCenter;
+            visualListViewColumn2.Width = 80;
+            visualListViewColumn3.CheckBox = false;
+            visualListViewColumn3.CheckBoxes = false;
+            visualListViewColumn3.Checked = false;
+            visualListViewColumn3.EmbeddedType = VisualPlus.Enumerators.LVActivatedEmbeddedTypes.TextBox;
+            visualListViewColumn3.ImageIndex = 0;
+            visualListViewColumn3.Name = "VisualListViewColumn3";
+            visualListViewColumn3.NumericSort = true;
+            visualListViewColumn3.Text = "文档名";
+            visualListViewColumn3.TextAlignment = System.Drawing.ContentAlignment.MiddleCenter;
+            visualListViewColumn3.Width = 150;
+            visualListViewColumn4.CheckBox = false;
+            visualListViewColumn4.CheckBoxes = false;
+            visualListViewColumn4.Checked = false;
+            visualListViewColumn4.EmbeddedType = VisualPlus.Enumerators.LVActivatedEmbeddedTypes.None;
+            visualListViewColumn4.ImageIndex = 3;
+            visualListViewColumn4.Name = "VisualListViewColumn4";
+            visualListViewColumn4.NumericSort = false;
+            visualListViewColumn4.Text = "剩余";
+            visualListViewColumn4.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;
+            visualListViewColumn4.Width = 100;
+            visualListViewColumn5.CheckBox = false;
+            visualListViewColumn5.CheckBoxes = false;
+            visualListViewColumn5.Checked = false;
+            visualListViewColumn5.EmbeddedType = VisualPlus.Enumerators.LVActivatedEmbeddedTypes.None;
+            visualListViewColumn5.ImageIndex = 4;
+            visualListViewColumn5.Name = "VisualListViewColumn1";
+            visualListViewColumn5.NumericSort = false;
+            visualListViewColumn5.Text = "最后一次保存路径";
+            visualListViewColumn5.TextAlignment = System.Drawing.ContentAlignment.MiddleLeft;
+            visualListViewColumn5.Width = 256;
             this.AutoSaveList.Columns.AddRange(new VisualPlus.Toolkit.Child.VisualListViewColumn[] {
-            visualListViewColumn6,
-            visualListViewColumn7,
-            visualListViewColumn8,
-            visualListViewColumn9,
-            visualListViewColumn10});
+            visualListViewColumn1,
+            visualListViewColumn2,
+            visualListViewColumn3,
+            visualListViewColumn4,
+            visualListViewColumn5});
             this.AutoSaveList.ControlStyle = VisualPlus.Enumerators.LVControlStyles.SuperFlat;
             this.AutoSaveList.CornerBoxColor = System.Drawing.Color.FromArgb(((int)(((byte)(241)))), ((int)(((byte)(244)))), ((int)(((byte)(249)))));
             this.AutoSaveList.DisplayText = "";
@@ -883,6 +852,33 @@
             this.OpenLast.TextStyle.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             this.OpenLast.Click += new System.EventHandler(this.OpenLast_Click);
             // 
+            // visualLabel4
+            // 
+            this.visualLabel4.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
+            this.visualLabel4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.visualLabel4.Location = new System.Drawing.Point(22, 44);
+            this.visualLabel4.MouseState = VisualPlus.Enumerators.MouseStates.Normal;
+            this.visualLabel4.Name = "visualLabel4";
+            this.visualLabel4.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.visualLabel4.Outline = false;
+            this.visualLabel4.OutlineColor = System.Drawing.Color.Red;
+            this.visualLabel4.OutlineLocation = new System.Drawing.Point(0, 0);
+            this.visualLabel4.ReflectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.visualLabel4.ReflectionSpacing = 0;
+            this.visualLabel4.ShadowColor = System.Drawing.Color.Black;
+            this.visualLabel4.ShadowDirection = 315;
+            this.visualLabel4.ShadowLocation = new System.Drawing.Point(0, 0);
+            this.visualLabel4.ShadowOpacity = 100;
+            this.visualLabel4.Size = new System.Drawing.Size(118, 30);
+            this.visualLabel4.TabIndex = 16;
+            this.visualLabel4.Text = "选择自动保存目录:";
+            this.visualLabel4.TextAlignment = System.Drawing.StringAlignment.Near;
+            this.visualLabel4.TextLineAlignment = System.Drawing.StringAlignment.Center;
+            this.visualLabel4.TextStyle.Disabled = System.Drawing.Color.FromArgb(((int)(((byte)(131)))), ((int)(((byte)(129)))), ((int)(((byte)(129)))));
+            this.visualLabel4.TextStyle.Enabled = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.visualLabel4.TextStyle.Hover = System.Drawing.Color.Empty;
+            this.visualLabel4.TextStyle.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -983,6 +979,7 @@
             this.ControlBox.TextStyle.Enabled = System.Drawing.Color.Empty;
             this.ControlBox.TextStyle.Hover = System.Drawing.Color.Empty;
             this.ControlBox.TextStyle.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            this.Controls.Add(this.visualLabel4);
             this.Controls.Add(this.OpenLast);
             this.Controls.Add(this.OpenSaveFolder);
             this.Controls.Add(this.visualTabControl1);
@@ -994,7 +991,6 @@
             this.Controls.Add(this.TimeSpanBar);
             this.Controls.Add(this.Time_Span_Label);
             this.Controls.Add(this.TimeSpanNum);
-            this.Controls.Add(this.visualButton1);
             this.Controls.Add(this.visualSeparator1);
             this.Controls.Add(this.SelectSavePath);
             this.Cursor = System.Windows.Forms.Cursors.Default;
@@ -1030,7 +1026,6 @@
 
         #endregion
         private VisualPlus.Toolkit.Controls.Layout.VisualSeparator visualSeparator1;
-        private VisualPlus.Toolkit.Controls.Interactivity.VisualButton visualButton1;
         private VisualPlus.Toolkit.Controls.Interactivity.VisualNumericUpDown TimeSpanNum;
         private VisualPlus.Toolkit.Controls.Interactivity.VisualLabel Time_Span_Label;
         private VisualPlus.Toolkit.Controls.DataVisualization.VisualProgressBar TimeSpanBar;
@@ -1056,5 +1051,6 @@
         private VisualPlus.Toolkit.Controls.Interactivity.VisualLabel visualLabel2;
         private System.Windows.Forms.TextBox OneSaveCount;
         private System.Windows.Forms.TextBox ALLSAVECOUNT;
+        private VisualPlus.Toolkit.Controls.Interactivity.VisualLabel visualLabel4;
     }
 }

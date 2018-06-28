@@ -105,7 +105,7 @@ namespace CaxaHook
             String Path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             Ass = new DirectoryInfo(
                 $"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\\CaxaAutoSave");
-      
+
             if (!Ass.Exists)
             {
                 Ass.Create();
@@ -117,7 +117,7 @@ namespace CaxaHook
                 {
                     "EasyHook32.dll", "EasyHook32Svc.exe", "EasyLoad32.dll",
                     "EasyHook64Svc.exe", "EasyHook64.dll", "EasyLoad64.dll",
-                    "VisualPlus.dll", "EasyHook.dll","CaxaInject.dll"
+                    "VisualPlus.dll", "EasyHook.dll","CaxaInject.dll","Newtonsoft.Json.dll"
                 })
                 {
                     SaveToDisk(Ass.FullName, VARIABLE);
@@ -160,7 +160,7 @@ namespace CaxaHook
             Class1.Form1.Invoke(new Action(() =>
             {
                 Class1.Form1.HookAddress.Text = $@"Hook Address：{InClientPID}";
-               // Class1.Form1.AddLog($"Caxa挂钩成功，Hook地址：{InClientPID}");
+                // Class1.Form1.AddLog($"Caxa挂钩成功，Hook地址：{InClientPID}");
             }));
         }
 
@@ -180,7 +180,6 @@ namespace CaxaHook
 
         public string SaveChange(string NewFile)
         {
-      
             Class1.Form1.Invoke(new Action(() =>
             {
                 if (Class1.Form1.SetHook)

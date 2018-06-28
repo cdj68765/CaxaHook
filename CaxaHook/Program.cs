@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using EasyHook;
+using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Management;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Runtime.Remoting;
 using System.Threading;
-using EasyHook;
-using System.Windows.Forms;
 
 namespace CaxaHook
 {

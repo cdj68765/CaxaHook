@@ -23,13 +23,13 @@ using VisualPlus.Toolkit.Dialogs;
 
 namespace CaxaHook
 {
-   
     public partial class Form1 : VisualForm
     {
         private readonly System.Timers.Timer TimeSPan = new System.Timers.Timer(5000);
         public bool HookStatus = false;
         public bool SetHook = false;
         public Dictionary<int, string> HookList = new Dictionary<int, string>();
+
         public Form1()
         {
             InitializeComponent();
@@ -41,16 +41,30 @@ namespace CaxaHook
                 {
                     SelectSavePath.Text = Class1.RuntimeInfo.SavePath;
                     TimeSpanNum.Value = Class1.RuntimeInfo.TimeSelect;
-                    RunOrStop.Toggled = Class1.RuntimeInfo.RunStatus;
+                    //RunOrStop.Toggled = Class1.RuntimeInfo.RunStatus;
                     ALLSAVECOUNT.Text = Class1.RuntimeInfo.ALLSAVECOUNT.ToString();
                     OneSaveCount.Text = Class1.RuntimeInfo.OneSaveCount.ToString();
                     /*  int.TryParse(ALLSAVECOUNT.Text, out int rc);
                       if (Class1.RuntimeInfo.SaveList.Count >= rc)
                       {
                           ErrorCount.Text = @"已经达到最大总量数，请尽快清空";
-                      }*/
-
+                     }*/
                     RunOrStop.Enabled = true;
+                    if (Class1.RuntimeInfo.RunStatus)
+                    {
+                        RunOrStop.ButtonColorState.Enabled = Color.LightGreen;
+                        RunOrStop.Toggled = true;
+                        Start();
+                        Refresh();
+                    }
+
+                    /*RunOrStop.Toggled = true;
+                    RunOrStop.ButtonColorState.Enabled = Color.LightGreen;
+                    RunOrStop.Refresh();
+                   if (RunOrStop.Toggled)
+                   {
+                       Start();
+                   }*/
                 }
 
                 if (Class1.RuntimeInfo.SaveList == null)
@@ -61,11 +75,6 @@ namespace CaxaHook
                 {
                     AutoSaveListUpdate();
                 }
-
-                if (RunOrStop.Toggled)
-                {
-                    Start();
-                }
             };
 
             TimeSPan.AutoReset = true;
@@ -73,15 +82,23 @@ namespace CaxaHook
             {
                 try
                 {
+                    // AddLog("间隔激活");
                     // Console.WriteLine(NativeApi.GetWindowThreadProcessId(NativeApi.GetForegroundWindow(IntPtr.Zero), out uint pid));
                     //Console.WriteLine(pid);
                     if (TryToHookTime())
                     {
-                        TimeSpanBar.Invoke(new Action(() =>
+                        if (RunOrStop.Toggled)
                         {
-                            TimeSpanBar.Value += 5;
-                            TimeSpanBar.Refresh();
-                        }));
+                            for (int i = 0; i < 5; i++)
+                            {
+                                BeginInvoke(new Action(() =>
+                                {
+                                    TimeSpanBar.Value += 1;
+                                    TimeSpanBar.Refresh();
+                                }));
+                                Thread.Sleep(1000);
+                            }
+                        }
                     }
                     else
                     {
@@ -157,30 +174,67 @@ namespace CaxaHook
 
             bool TryToHookTime()
             {
-                if (!SetHook)
+                //AddLog("查找窗体");
+                var PID = NativeApi.GetProcessID("CDRAFT_M.exe");
+                foreach (var ptemp in from Ptemp in PID where !HookList.ContainsKey(Ptemp) select Ptemp)
                 {
-                    var PID = NativeApi.GetProcessID("CDRAFT_M.exe");
-
-                   foreach (var ptemp in from Ptemp in PID where !HookList.ContainsKey(Ptemp) select Ptemp)
+                    if (InstallHookTo_Process(ptemp, out string Ptemp))
                     {
-                        InstallHookTo_Process(ptemp, out string Ptemp);
+                        // AddLog("找到窗体");
                         if (!string.IsNullOrEmpty(Ptemp))
                         {
                             HookList.Add(ptemp, Ptemp);
                             Class1.Form1.AddLog($"添加Hook：{ptemp}->{Ptemp}");
                         }
-                       // HookList.Add(Ptemp, InstallHookTo_Process(Ptemp, out string Ptemp));
                     }
+                }
 
-                    foreach (var Exc in HookList.Keys.ToList().Except(PID))
+                foreach (var Exc in HookList.Keys.ToList().Except(PID))
+                {
+                    if (HookList.ContainsKey(Exc))
                     {
-                        if (HookList.ContainsKey(Exc))
+                        Class1.Form1.AddLog($"移除Hook：{Exc}:{HookList[Exc]}");
+                        HookList.Remove(Exc);
+                    }
+                }
+                try
+                {
+                    if (!Class1.Form1.IsDisposed)
+                    {
+                        if (HookList.Count != 0)
                         {
-                            Class1.Form1.AddLog($"移除Hook：{Exc}:{HookList[Exc]}");
-                            HookList.Remove(Exc);
+                            Invoke(new Action(() =>
+                            {
+                                if (HookList.Count == 1)
+                                {
+                                    PIDLabel.Text = $@"CAXA PID：{HookList.First().Key}";
+                                    PIDLabel.ForeColor = Color.LightSeaGreen;
+                                }
+                                else
+                                {
+                                    PIDLabel.Text = $@"CAXA 数量：{HookList.Count}";
+                                    PIDLabel.ForeColor = Color.LightSeaGreen;
+                                }
+                            }));
+                            return true;
+                        }
+                        else
+                        {
+                            AddLog($"未找到Caxa程序");
+                            Invoke(new Action(() =>
+                            {
+                                if (!Class1.Form1.IsDisposed)
+                                {
+                                    PIDLabel.Text = $@"CAXA PID：未找到Caxa程序";
+                                    HookAddress.Text = @"Hook Address：";
+                                    PIDLabel.ForeColor = Color.Red;
+                                }
+                            }));
                         }
                     }
-;
+                }
+                catch (Exception)
+                {
                 }
 
                 return false;
@@ -205,7 +259,7 @@ namespace CaxaHook
                     if (!HookStatus)
                     {
                         Thread.Sleep(3000);
-                      //  InstallHookTo_Process(pid);
+                        //  InstallHookTo_Process(pid);
                     }
 
                     return true;
@@ -250,22 +304,22 @@ namespace CaxaHook
 
         private void AutoSaveListUpdate()
         {
-            Invoke(new Action(() =>
-            {
-                AutoSaveList.BeginUpdate();
-                AutoSaveList.Items.Clear();
-                foreach (var VARIABLE in Class1.RuntimeInfo.SaveList.ToList()
-                    .OrderByDescending(x => x.Value[x.Value.Count - 1].Date))
-                {
-                    var Find = AutoSaveList.Items.Find(VARIABLE.Key, false);
-                    if (Find.Length == 0)
-                    {
-                        AutoSaveList.Items.Add(AddItem(VARIABLE.Key, VARIABLE.Value));
-                    }
-                }
+            AutoSaveList.Invoke(new Action(() =>
+           {
+               AutoSaveList.BeginUpdate();
+               AutoSaveList.Items.Clear();
+               foreach (var VARIABLE in Class1.RuntimeInfo.SaveList.ToList()
+                   .OrderByDescending(x => x.Value[x.Value.Count - 1].Date))
+               {
+                   var Find = AutoSaveList.Items.Find(VARIABLE.Key, false);
+                   if (Find.Length == 0)
+                   {
+                       AutoSaveList.Items.Add(AddItem(VARIABLE.Key, VARIABLE.Value));
+                   }
+               }
 
-                AutoSaveList.EndUpdate();
-            }));
+               AutoSaveList.EndUpdate();
+           }));
         }
 
         internal void SaveToAutoBackList(string onlyFileName, string path)
@@ -295,7 +349,7 @@ namespace CaxaHook
 
         private VisualListViewItem AddItem(string onlyFileName, List<RuntimeInfo.FileInfo> saveList)
         {
-            VisualListViewItem _item = new VisualListViewItem(Text = saveList[saveList.Count - 1].Date.ToString("F"));
+            VisualListViewItem _item = new VisualListViewItem(saveList[saveList.Count - 1].Date.ToString("F"));
             VisualListViewSubItem _content = new VisualListViewSubItem(saveList.Count.ToString());
 
             VisualListViewSubItem _date = new VisualListViewSubItem()
@@ -353,12 +407,11 @@ namespace CaxaHook
 
         public bool UninstallAllHooks = false;
 
-        private void InstallHookTo_Process(int PID,out string ChannelName)
+        private bool InstallHookTo_Process(int PID, out string ChannelName)
         {
             ChannelName = null;
             try
             {
-             
                 Config.DependencyPath = Class1.RuntimeInfo.Path;
                 Config.HelperLibraryLocation = Class1.RuntimeInfo.Path;
                 RemoteHooking.IpcCreateServer<HookDealWith>(ref ChannelName, WellKnownObjectMode.SingleCall);
@@ -372,13 +425,13 @@ namespace CaxaHook
             }
             catch (Exception ex)
             {
-                HookStatus = false;
+                // HookStatus = false;
                 AddLog($"Hook失败，失败原因{ex}");
-                // return false;
+                return false;
             }
 
-            HookStatus = true;
-            // return true;
+            //HookStatus = true;
+            return true;
         }
 
         private void SeletSaveButton()
@@ -402,31 +455,17 @@ namespace CaxaHook
             SeletSaveButton();
         }
 
-        private void RunOrStop_ToggleChanged(ToggleEventArgs e)
-        {
-            if (e.State)
-            {
-                RunOrStop.ButtonColorState.Enabled = Color.LightGreen;
-                Start();
-            }
-            else
-            {
-                RunOrStop.ButtonColorState.Enabled = Color.Red;
-                TimeSPan.Stop();
-                TimeSpanBar.Value = 0;
-                Refresh();
-            }
-        }
-
         private void Start()
         {
-            TimeSpanBar.Maximum = (int)(10 * TimeSpanNum.Value);
+            AddLog("开始运行");
+            TimeSpanBar.Maximum = (int)(60 * TimeSpanNum.Value);
+            TimeSpanBar.Value = 0;
             TimeSPan.Start();
         }
 
         private void TimeSpanNum_ValueChanged(ValueChangedEventArgs e)
         {
-            TimeSpanBar.Maximum = (int)(10 * TimeSpanNum.Value);
+            TimeSpanBar.Maximum = (int)(60 * TimeSpanNum.Value);
         }
 
         private void SaveStatus()
@@ -521,6 +560,34 @@ namespace CaxaHook
                     AutoSaveListUpdate();
                 });
             }
+        }
+
+        private void RunOrStop_Click(object sender, EventArgs e)
+        {
+            // RunOrStop.Toggled = !RunOrStop.Toggled ? true : false;
+            if (!RunOrStop.Toggled)
+            {
+                RunOrStop.ButtonColorState.Enabled = Color.LightGreen;
+                //RunOrStop.Toggled = false;
+                Start();
+            }
+            else
+            {
+                RunOrStop.ButtonColorState.Enabled = Color.Red;
+                // RunOrStop.Toggled = true;
+                AddLog("结束运行");
+                TimeSPan.Stop();
+                ThreadPool.QueueUserWorkItem((object state) =>
+                {
+                    TimeSpanBar.BeginInvoke(new Action(() =>
+                        {
+                            Thread.Sleep(500);
+                            TimeSpanBar.Value = 0;
+                            Refresh();
+                        }));
+                });
+            }
+            Refresh();
         }
     }
 }
