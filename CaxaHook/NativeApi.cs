@@ -12,14 +12,13 @@ namespace CaxaHook
 {
     internal class NativeApi
     {
-        internal static int[] GetProcessID(string name)
+        internal static IEnumerable<int> GetProcessID(string name)
         {
-            var PIDList = new List<int>();
 
             foreach (var disk in new ManagementObjectSearcher(
-                new SelectQuery("Select Name,ProcessId from Win32_Process Where (Name = 'CDRAFT_M.exe')")).Get())
+                new SelectQuery($"Select Name,ProcessId from Win32_Process Where (Name = '{name}')")).Get())
             {
-                PIDList.Add(int.Parse(disk["ProcessId"].ToString()));
+                yield return int.Parse(disk["ProcessId"].ToString());
                 //Class1.Form1.AddLog(disk["ProcessId"].ToString());
                 // PID = int.Parse(disk["ProcessId"].ToString());
                 /* if (disk["Name"].ToString() == name)
@@ -28,7 +27,6 @@ namespace CaxaHook
                       //break;
                   }*/
             }
-            return PIDList.ToArray();
         }
 
         public const byte vbKeyControl = 0x11; // CTRL 键

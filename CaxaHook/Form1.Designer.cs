@@ -62,11 +62,19 @@
             this.OpenSaveFolder = new VisualPlus.Toolkit.Controls.Interactivity.VisualButton();
             this.OpenLast = new VisualPlus.Toolkit.Controls.Interactivity.VisualButton();
             this.visualLabel4 = new VisualPlus.Toolkit.Controls.Interactivity.VisualLabel();
+            this.visualTabPage4 = new VisualPlus.Toolkit.Child.VisualTabPage();
+            this.visualPanel2 = new VisualPlus.Toolkit.Controls.Layout.VisualPanel();
+            this.进程名 = new VisualPlus.Toolkit.Controls.Interactivity.VisualLabel();
+            this.StartPLMHook = new VisualPlus.Toolkit.Controls.Interactivity.VisualButton();
+            this.PLMAddress = new VisualPlus.Toolkit.Controls.Interactivity.VisualLabel();
+            this.Tname = new System.Windows.Forms.TextBox();
             this.visualTabControl1.SuspendLayout();
             this.visualTabPage1.SuspendLayout();
             this.visualTabPage2.SuspendLayout();
             this.visualTabPage3.SuspendLayout();
             this.visualPanel1.SuspendLayout();
+            this.visualTabPage4.SuspendLayout();
+            this.visualPanel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // SelectSavePath
@@ -381,13 +389,14 @@
             this.visualTabControl1.Controls.Add(this.visualTabPage1);
             this.visualTabControl1.Controls.Add(this.visualTabPage2);
             this.visualTabControl1.Controls.Add(this.visualTabPage3);
+            this.visualTabControl1.Controls.Add(this.visualTabPage4);
             this.visualTabControl1.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;
             this.visualTabControl1.Font = new System.Drawing.Font("Segoe UI", 8.25F);
             this.visualTabControl1.ItemSize = new System.Drawing.Size(100, 25);
             this.visualTabControl1.Location = new System.Drawing.Point(210, 39);
             this.visualTabControl1.MinimumSize = new System.Drawing.Size(144, 85);
             this.visualTabControl1.Name = "visualTabControl1";
-            this.visualTabControl1.SelectedIndex = 0;
+            this.visualTabControl1.SelectedIndex = 3;
             this.visualTabControl1.SelectorAlignment = System.Windows.Forms.TabAlignment.Bottom;
             this.visualTabControl1.SelectorSpacing = 10;
             this.visualTabControl1.SelectorThickness = 5;
@@ -590,7 +599,7 @@
             this.AutoSaveList.ItemSelectedTextColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.AutoSaveList.ItemWordWrap = true;
             this.AutoSaveList.Location = new System.Drawing.Point(0, 0);
-            this.AutoSaveList.MouseState = VisualPlus.Enumerators.MouseStates.Hover;
+            this.AutoSaveList.MouseState = VisualPlus.Enumerators.MouseStates.Normal;
             this.AutoSaveList.MultiSelect = false;
             this.AutoSaveList.Name = "AutoSaveList";
             this.AutoSaveList.Selectable = true;
@@ -879,6 +888,160 @@
             this.visualLabel4.TextStyle.Hover = System.Drawing.Color.Empty;
             this.visualLabel4.TextStyle.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             // 
+            // visualTabPage4
+            // 
+            this.visualTabPage4.BackColor = System.Drawing.Color.Transparent;
+            this.visualTabPage4.Border.Color = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
+            this.visualTabPage4.Border.Rounding = 6;
+            this.visualTabPage4.Border.Thickness = 1;
+            this.visualTabPage4.Border.Type = VisualPlus.Enumerators.ShapeType.Rectangle;
+            this.visualTabPage4.Border.Visible = false;
+            this.visualTabPage4.Controls.Add(this.visualPanel2);
+            this.visualTabPage4.Font = new System.Drawing.Font("Segoe UI", 8.25F);
+            this.visualTabPage4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(174)))), ((int)(((byte)(181)))), ((int)(((byte)(187)))));
+            this.visualTabPage4.HeaderImage = null;
+            this.visualTabPage4.Image = null;
+            this.visualTabPage4.ImageSize = new System.Drawing.Size(16, 16);
+            this.visualTabPage4.Location = new System.Drawing.Point(4, 29);
+            this.visualTabPage4.Name = "visualTabPage4";
+            this.visualTabPage4.Size = new System.Drawing.Size(419, 235);
+            this.visualTabPage4.TabHover = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(36)))), ((int)(((byte)(38)))));
+            this.visualTabPage4.TabIndex = 3;
+            this.visualTabPage4.TabNormal = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(61)))), ((int)(((byte)(73)))));
+            this.visualTabPage4.TabSelected = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(76)))), ((int)(((byte)(88)))));
+            this.visualTabPage4.Text = "PLM相关";
+            this.visualTabPage4.TextAlignment = System.Drawing.StringAlignment.Center;
+            this.visualTabPage4.TextImageRelation = VisualPlus.Toolkit.Child.VisualTabPage.TextImageRelations.Text;
+            this.visualTabPage4.TextLineAlignment = System.Drawing.StringAlignment.Center;
+            this.visualTabPage4.TextSelected = System.Drawing.Color.FromArgb(((int)(((byte)(217)))), ((int)(((byte)(220)))), ((int)(((byte)(227)))));
+            // 
+            // visualPanel2
+            // 
+            this.visualPanel2.BackColorState.Disabled = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.visualPanel2.BackColorState.Enabled = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.visualPanel2.Border.Color = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
+            this.visualPanel2.Border.HoverColor = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(183)))), ((int)(((byte)(230)))));
+            this.visualPanel2.Border.HoverVisible = true;
+            this.visualPanel2.Border.Rounding = 6;
+            this.visualPanel2.Border.Thickness = 1;
+            this.visualPanel2.Border.Type = VisualPlus.Enumerators.ShapeType.Rounded;
+            this.visualPanel2.Border.Visible = true;
+            this.visualPanel2.Controls.Add(this.Tname);
+            this.visualPanel2.Controls.Add(this.PLMAddress);
+            this.visualPanel2.Controls.Add(this.StartPLMHook);
+            this.visualPanel2.Controls.Add(this.进程名);
+            this.visualPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.visualPanel2.Font = new System.Drawing.Font("Segoe UI", 8.25F);
+            this.visualPanel2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.visualPanel2.Location = new System.Drawing.Point(0, 0);
+            this.visualPanel2.MouseState = VisualPlus.Enumerators.MouseStates.Normal;
+            this.visualPanel2.Name = "visualPanel2";
+            this.visualPanel2.Padding = new System.Windows.Forms.Padding(5);
+            this.visualPanel2.Size = new System.Drawing.Size(419, 235);
+            this.visualPanel2.TabIndex = 0;
+            this.visualPanel2.Text = "visualPanel2";
+            this.visualPanel2.TextStyle.Disabled = System.Drawing.Color.FromArgb(((int)(((byte)(131)))), ((int)(((byte)(129)))), ((int)(((byte)(129)))));
+            this.visualPanel2.TextStyle.Enabled = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.visualPanel2.TextStyle.Hover = System.Drawing.Color.Empty;
+            this.visualPanel2.TextStyle.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            // 
+            // 进程名
+            // 
+            this.进程名.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.进程名.Font = new System.Drawing.Font("Segoe UI", 8.25F);
+            this.进程名.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.进程名.Location = new System.Drawing.Point(14, 7);
+            this.进程名.MouseState = VisualPlus.Enumerators.MouseStates.Normal;
+            this.进程名.Name = "进程名";
+            this.进程名.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.进程名.Outline = false;
+            this.进程名.OutlineColor = System.Drawing.Color.Red;
+            this.进程名.OutlineLocation = new System.Drawing.Point(0, 0);
+            this.进程名.ReflectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.进程名.ReflectionSpacing = 0;
+            this.进程名.ShadowColor = System.Drawing.Color.Black;
+            this.进程名.ShadowDirection = 315;
+            this.进程名.ShadowLocation = new System.Drawing.Point(0, 0);
+            this.进程名.ShadowOpacity = 100;
+            this.进程名.Size = new System.Drawing.Size(75, 23);
+            this.进程名.TabIndex = 1;
+            this.进程名.Text = "进程名";
+            this.进程名.TextAlignment = System.Drawing.StringAlignment.Near;
+            this.进程名.TextLineAlignment = System.Drawing.StringAlignment.Center;
+            this.进程名.TextStyle.Disabled = System.Drawing.Color.FromArgb(((int)(((byte)(131)))), ((int)(((byte)(129)))), ((int)(((byte)(129)))));
+            this.进程名.TextStyle.Enabled = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.进程名.TextStyle.Hover = System.Drawing.Color.Empty;
+            this.进程名.TextStyle.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            // 
+            // StartPLMHook
+            // 
+            this.StartPLMHook.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.StartPLMHook.BackColorState.Disabled = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.StartPLMHook.BackColorState.Enabled = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.StartPLMHook.BackColorState.Hover = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.StartPLMHook.BackColorState.Pressed = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.StartPLMHook.Border.Color = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
+            this.StartPLMHook.Border.HoverColor = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(183)))), ((int)(((byte)(230)))));
+            this.StartPLMHook.Border.HoverVisible = true;
+            this.StartPLMHook.Border.Rounding = 6;
+            this.StartPLMHook.Border.Thickness = 1;
+            this.StartPLMHook.Border.Type = VisualPlus.Enumerators.ShapeType.Rounded;
+            this.StartPLMHook.Border.Visible = true;
+            this.StartPLMHook.Font = new System.Drawing.Font("Segoe UI", 8.25F);
+            this.StartPLMHook.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.StartPLMHook.Image = null;
+            this.StartPLMHook.Location = new System.Drawing.Point(14, 59);
+            this.StartPLMHook.MouseState = VisualPlus.Enumerators.MouseStates.Normal;
+            this.StartPLMHook.Name = "StartPLMHook";
+            this.StartPLMHook.Size = new System.Drawing.Size(136, 24);
+            this.StartPLMHook.TabIndex = 15;
+            this.StartPLMHook.Text = "启动Hook";
+            this.StartPLMHook.TextAlignment = System.Drawing.StringAlignment.Center;
+            this.StartPLMHook.TextImageRelation = System.Windows.Forms.TextImageRelation.Overlay;
+            this.StartPLMHook.TextLineAlignment = System.Drawing.StringAlignment.Center;
+            this.StartPLMHook.TextStyle.Disabled = System.Drawing.Color.FromArgb(((int)(((byte)(131)))), ((int)(((byte)(129)))), ((int)(((byte)(129)))));
+            this.StartPLMHook.TextStyle.Enabled = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.StartPLMHook.TextStyle.Hover = System.Drawing.Color.Empty;
+            this.StartPLMHook.TextStyle.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            this.StartPLMHook.Click += new System.EventHandler(this.StartPLMHook_Click);
+            // 
+            // PLMAddress
+            // 
+            this.PLMAddress.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.PLMAddress.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.PLMAddress.ForeColor = System.Drawing.Color.Red;
+            this.PLMAddress.Location = new System.Drawing.Point(156, 60);
+            this.PLMAddress.MouseState = VisualPlus.Enumerators.MouseStates.Normal;
+            this.PLMAddress.Name = "PLMAddress";
+            this.PLMAddress.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.PLMAddress.Outline = false;
+            this.PLMAddress.OutlineColor = System.Drawing.Color.Red;
+            this.PLMAddress.OutlineLocation = new System.Drawing.Point(0, 0);
+            this.PLMAddress.ReflectionColor = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.PLMAddress.ReflectionSpacing = 0;
+            this.PLMAddress.ShadowColor = System.Drawing.Color.Black;
+            this.PLMAddress.ShadowDirection = 315;
+            this.PLMAddress.ShadowLocation = new System.Drawing.Point(0, 0);
+            this.PLMAddress.ShadowOpacity = 100;
+            this.PLMAddress.Size = new System.Drawing.Size(165, 23);
+            this.PLMAddress.TabIndex = 16;
+            this.PLMAddress.Text = "Hook Address：";
+            this.PLMAddress.TextAlignment = System.Drawing.StringAlignment.Near;
+            this.PLMAddress.TextLineAlignment = System.Drawing.StringAlignment.Center;
+            this.PLMAddress.TextStyle.Disabled = System.Drawing.Color.FromArgb(((int)(((byte)(131)))), ((int)(((byte)(129)))), ((int)(((byte)(129)))));
+            this.PLMAddress.TextStyle.Enabled = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.PLMAddress.TextStyle.Hover = System.Drawing.Color.Empty;
+            this.PLMAddress.TextStyle.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+            // 
+            // Tname
+            // 
+            this.Tname.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.Tname.Location = new System.Drawing.Point(14, 31);
+            this.Tname.Name = "Tname";
+            this.Tname.Size = new System.Drawing.Size(136, 22);
+            this.Tname.TabIndex = 17;
+            this.Tname.Text = "ConsoleApp1.exe";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1019,6 +1182,9 @@
             this.visualTabPage3.ResumeLayout(false);
             this.visualPanel1.ResumeLayout(false);
             this.visualPanel1.PerformLayout();
+            this.visualTabPage4.ResumeLayout(false);
+            this.visualPanel2.ResumeLayout(false);
+            this.visualPanel2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1052,5 +1218,11 @@
         private System.Windows.Forms.TextBox OneSaveCount;
         private System.Windows.Forms.TextBox ALLSAVECOUNT;
         private VisualPlus.Toolkit.Controls.Interactivity.VisualLabel visualLabel4;
+        private VisualPlus.Toolkit.Child.VisualTabPage visualTabPage4;
+        private VisualPlus.Toolkit.Controls.Layout.VisualPanel visualPanel2;
+        public VisualPlus.Toolkit.Controls.Interactivity.VisualLabel PLMAddress;
+        private VisualPlus.Toolkit.Controls.Interactivity.VisualButton StartPLMHook;
+        private VisualPlus.Toolkit.Controls.Interactivity.VisualLabel 进程名;
+        private System.Windows.Forms.TextBox Tname;
     }
 }

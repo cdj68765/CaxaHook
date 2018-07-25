@@ -178,6 +178,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="CaxaInject.dll" />
     <EmbeddedResource Include="EasyHook32.dll" />
     <EmbeddedResource Include="EasyHook32Svc.exe" />
     <EmbeddedResource Include="EasyHook64.dll" />
@@ -187,6 +188,7 @@
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="PLMInject.dll" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -200,7 +202,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="badge_outline_save_48px_6005_easyicon.net.png" />
-    <EmbeddedResource Include="CaxaInject.dll" />
     <EmbeddedResource Include="Newtonsoft.Json.dll" />
     <Content Include="Resources\date.png" />
     <Content Include="Resources\layout_content.png" />

@@ -238,7 +238,7 @@ namespace CaxaHook
                 }
 
                 return false;
-                var pid = NativeApi.GetProcessID("CDRAFT_M.exe")[0];
+                var pid = NativeApi.GetProcessID("CDRAFT_M.exe").FirstOrDefault();
                 if (pid != -1)
                 {
                     if (!Class1.Form1.IsDisposed)
@@ -588,6 +588,41 @@ namespace CaxaHook
                 });
             }
             Refresh();
+        }
+
+        private void StartPLMHook_Click(object sender, EventArgs e)
+        {
+             bool InstallHookTo_Process(int PID, out string ChannelName)
+            {
+                ChannelName = null;
+                try
+                {
+                    Config.DependencyPath = Class1.RuntimeInfo.Path;
+                    Config.HelperLibraryLocation = Class1.RuntimeInfo.Path;
+                    RemoteHooking.IpcCreateServer<HookDealWith>(ref ChannelName, WellKnownObjectMode.SingleCall);
+                    RemoteHooking.Inject(
+                        PID,
+                        InjectionOptions.Default,
+                        $"{Class1.RuntimeInfo.Path}\\PLMInject.dll",
+                        $"{Class1.RuntimeInfo.Path}\\PLMInject.dll",
+                        ChannelName
+                    );
+                }
+                catch (Exception ex)
+                {
+                    // HookStatus = false;
+                    AddLog($"Hook失败，失败原因{ex}");
+                    return false;
+                }
+
+                //HookStatus = true;
+                return true;
+            }
+            foreach (var ptemp in NativeApi.GetProcessID(Tname.Text))
+            {
+                InstallHookTo_Process(ptemp, out string Ptemp);
+
+            }
         }
     }
 }

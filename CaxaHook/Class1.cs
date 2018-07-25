@@ -111,16 +111,23 @@ namespace CaxaHook
                 Ass.Create();
             }
 
-            if (!File.Exists($"{Ass}\\EasyLoad64.dll"))
+            if (!File.Exists($"{Ass}\\EasyLoad64.dll")||true)
             {
                 foreach (var VARIABLE in new[]
                 {
                     "EasyHook32.dll", "EasyHook32Svc.exe", "EasyLoad32.dll",
                     "EasyHook64Svc.exe", "EasyHook64.dll", "EasyLoad64.dll",
-                    "VisualPlus.dll", "EasyHook.dll","CaxaInject.dll","Newtonsoft.Json.dll"
+                    "VisualPlus.dll", "EasyHook.dll","CaxaInject.dll","Newtonsoft.Json.dll","PLMInject.dll"
                 })
                 {
-                    SaveToDisk(Ass.FullName, VARIABLE);
+                    try
+                    {
+                        SaveToDisk(Ass.FullName, VARIABLE);
+                    }
+                    catch (Exception e)
+                    {
+                    }
+               
                 }
             }
 
@@ -201,4 +208,31 @@ namespace CaxaHook
             return NewFile;
         }
     }
+
+    public class HookPlmDealWith : MarshalByRefObject
+    {
+        public void IsInstalled(int v)
+        {
+            Class1.Form1.Invoke(new Action(() =>
+            {
+                Class1.Form1.PLMAddress.Text = $@"Hook Address：{v}";
+
+            }));
+
+        }
+        public void ReportException(Exception InInfo)
+        {
+            try
+            {
+                Class1.Form1.Invoke(new Action(() =>
+                {
+                    Class1.Form1.AddLog($"Hook错误，错误信息：{InInfo}");
+                }));
+            }
+            catch (Exception e)
+            {
+            }
+        }
+    }
+
 }
