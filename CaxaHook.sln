@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2026
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CaxaHook", "CaxaHook\CaxaHook.csproj", "{D897D5C1-6AF2-4C58-B3E4-583B015301B2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ETCTool", "ETCTool\ETCTool.csproj", "{D897D5C1-6AF2-4C58-B3E4-583B015301B2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CaxaInject", "CaxaInject\CaxaInject.csproj", "{9B63EAB0-3A46-45BA-8257-AF77D23B8582}"
 EndProject
