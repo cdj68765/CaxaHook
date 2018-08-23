@@ -9,9 +9,9 @@ using System.Management;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.Remoting;
+using System.ServiceProcess;
 using System.Threading;
 using System.Windows.Forms;
-using EasyHook;
 
 namespace ETCTool
 {
@@ -19,32 +19,56 @@ namespace ETCTool
     {
         static void Main(string[] args)
         {
-            var Path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+
+            if (Environment.CurrentDirectory != Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory) &&
+                args.Length == 0)
+            {
+                ServiceBase.Run(new ETCToolService(Application.ExecutablePath));
+                return;
+            }
+            var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             var Guid = ((GuidAttribute) Attribute.GetCustomAttribute(Assembly.GetExecutingAssembly(),
                 typeof(GuidAttribute))).Value;
-            if (args.Length == 0)
+            if (args.Length == 0|| args[0]== "Service")
             {
-                AssemblyHandler.AssemblyFileSaveToCaxaAutoSave(Path);
+                AssemblyHandler.AssemblyFileSaveToCaxaAutoSave(path);
             }
-            if (!Properties.Settings.Default.RunMode)
+          /*  string filePath = @"D:\MyServiceLog.txt";
+            using (FileStream stream = new FileStream(filePath, FileMode.Append))
+            using (StreamWriter writer = new StreamWriter(stream))
             {
-                if (AppDomain.CurrentDomain.IsDefaultAppDomain() && args.Length == 0)
+                writer.WriteLine($"{DateTime.Now},{args[0]}！");
+            }*/
+
+            if (AppDomain.CurrentDomain.IsDefaultAppDomain() && args.Length == 0 || args[0] == "Service")
+            {
+                AppDomain newDomain = AppDomain.CreateDomain("StartNewProcess", null, new AppDomainSetup()
                 {
-                    AppDomain newDomain = AppDomain.CreateDomain("StartNewProcess", null, new AppDomainSetup()
-                    {
-                        PrivateBinPath = $"{Path}\\EtcTool",
-                        ApplicationBase = $"{Path}\\EtcTool"
-                    });
-                    int ret = newDomain.ExecuteAssemblyByName(Assembly.GetExecutingAssembly().FullName, Guid);
-                    AppDomain.Unload(newDomain);
-                    Environment.ExitCode = ret;
-                    Environment.Exit(0);
-                }
-                else
-                {
-                    ShowForm();
-                }
+                    PrivateBinPath = $"{path}\\EtcTool",
+                    ApplicationBase = $"{path}\\EtcTool"
+                });
+                int ret = newDomain.ExecuteAssemblyByName(Assembly.GetExecutingAssembly().FullName, Guid,
+                    Application.ExecutablePath);
+                AppDomain.Unload(newDomain);
+                Environment.ExitCode = ret;
+                Environment.Exit(0);
             }
+            else
+            {
+                if (args[1] != Properties.Settings.Default.OriPath)
+                {
+                    Properties.Settings.Default.OriPath = args[1];
+                    Properties.Settings.Default.Save();
+                }
+
+                if (!Properties.Settings.Default.RunMode)
+                {
+
+                }
+
+                ShowForm();
+            }
+
             void ShowForm()
             {
                 Application.EnableVisualStyles();
@@ -55,7 +79,8 @@ namespace ETCTool
                 Application.ThreadException += delegate { };
                 //处理非UI线程异常
                 AppDomain.CurrentDomain.UnhandledException += delegate { };
-                Application.Run(new MainForm());
+                Variables.MainForm = new MainForm();
+                Application.Run(Variables.MainForm);
             }
         }
     }

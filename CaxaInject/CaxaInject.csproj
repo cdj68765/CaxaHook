@@ -55,7 +55,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CaxaHook\ETCTool.csproj">
+    <ProjectReference Include="..\ETCTool\ETCTool.csproj">
       <Project>{d897d5c1-6af2-4c58-b3e4-583b015301b2}</Project>
       <Name>ETCTool</Name>
     </ProjectReference>

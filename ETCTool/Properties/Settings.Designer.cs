@@ -34,5 +34,53 @@ namespace ETCTool.Properties {
                 this["RunMode"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool CheckClipbrdFuntion {
+            get {
+                return ((bool)(this["CheckClipbrdFuntion"]));
+            }
+            set {
+                this["CheckClipbrdFuntion"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool CheckPlmFuntion {
+            get {
+                return ((bool)(this["CheckPlmFuntion"]));
+            }
+            set {
+                this["CheckPlmFuntion"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool CheckCaxaFuntion {
+            get {
+                return ((bool)(this["CheckCaxaFuntion"]));
+            }
+            set {
+                this["CheckCaxaFuntion"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string OriPath {
+            get {
+                return ((string)(this["OriPath"]));
+            }
+            set {
+                this["OriPath"] = value;
+            }
+        }
     }
 }
