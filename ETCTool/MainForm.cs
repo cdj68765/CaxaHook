@@ -1,4 +1,7 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Reflection;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 using MaterialSkin;
 using MaterialSkin.Controls;
 using Microsoft.Win32;
@@ -13,12 +16,10 @@ namespace ETCTool
         public MainForm()
         {
             InitializeComponent();
-
             CheckClipbrdFuntion.Checked = Properties.Settings.Default.CheckClipbrdFuntion;
             CheckPlmFuntion.Checked = Properties.Settings.Default.CheckPlmFuntion;
             CheckCaxaFuntion.Checked = Properties.Settings.Default.CheckCaxaFuntion;
-            RunMode.Checked = Properties.Settings.Default.RunMode;
-
+            AutoRunMode.Checked = CheckAutoRun();
             materialSkinManager = MaterialSkinManager.Instance;
             materialSkinManager.AddFormToManage(this);
             materialSkinManager.Theme = MaterialSkinManager.Themes.LIGHT;
@@ -26,6 +27,14 @@ namespace ETCTool
                 Primary.BlueGrey500, Accent.LightBlue200, TextShade.WHITE);
         }
 
+        bool  CheckAutoRun()
+        {
+            if (AutoRunServer.IsServiceExisted())
+            {
+               return AutoRunServer.CheckStartMode();
+            }
+          return  false;
+        }
         #region 主界面代码段
 
         private void StartAllFuntion_Click(object sender, System.EventArgs e)
@@ -45,52 +54,54 @@ namespace ETCTool
                 CheckPlmFuntion.Enabled = true;
             }
         }
-        private void RunMode_CheckedChanged(object sender, System.EventArgs e)
+        private void RunMode_Click(object sender, System.EventArgs e)
         {
-            Properties.Settings.Default.RunMode = RunMode.Checked;
-            Properties.Settings.Default.Save();
-        //   AutoRunServer.UninstallService(Properties.Settings.Default.OriPath);
-            if (RunMode.Checked)
+            var Status = AutoRunMode.Checked;
+            AutoRunMode.Enabled = false;
+            var StartChange = new Task(() =>
             {
-                if (AutoRunServer.IsServiceExisted("ETCToolService"))
+                if (Status)
                 {
-                    //AutoRunServer.InstallService(Properties.Settings.Default.OriPath);
-                    AutoRunServer.ServiceStart("ETCToolService");
+                    if (!AutoRunServer.IsServiceExisted())
+                    {
+                        AutoRunServer.InstallService( Application.ExecutablePath);
+                        //AutoRunServer.InstallService(Properties.Settings.Default.OriPath);
+                    }
+                    else
+                    {
+                        Status = AutoRunServer.ChangeServiceStartType(2, "Start");
+                    }
                 }
                 else
                 {
-                    AutoRunServer.InstallService(Properties.Settings.Default.OriPath);
-                }
-            }
-            else
-            {
-                if (AutoRunServer.IsServiceExisted("ETCToolService"))
-                {
-                    AutoRunServer.UninstallService("ETCToolService");
-                }
-            }
-            return;
-            if (RunMode.Checked)
-            {
-                using (RegistryKey LocalMachine = Registry.LocalMachine)
-                {
-                    using (RegistryKey SubKey = LocalMachine.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run"))
+                    if (AutoRunServer.IsServiceExisted())
                     {
-                        SubKey.SetValue("ETCTool", Properties.Settings.Default.OriPath);
+                        //AutoRunServer.UninstallService(Properties.Settings.Default.OriPath);
+                        Status = !AutoRunServer.ChangeServiceStartType(3,"Start");
                     }
                 }
-            }
-            else
+            });
+            StartChange.ContinueWith(obj =>
             {
-                using (RegistryKey LocalMachine = Registry.LocalMachine)
+                Invoke(new Action(() =>
                 {
-                    using (RegistryKey SubKey = LocalMachine.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run"))
-                    {
-                        SubKey.DeleteValue("ETCTool", false);
-                    }
-                }
-            }
+                    AutoRunMode.Checked = Status;
+                    AutoRunMode.Enabled = true;
+                }));
+            });
+            StartChange.Start();
         }
+
+        private void DeleteAutoRunService_Click(object sender, EventArgs e)
+        {
+            if (AutoRunServer.IsServiceExisted())
+            {
+                AutoRunServer.UnInstallService();
+            }
+            AutoRunMode.Checked = false;
+            AutoRunMode.Enabled = false;
+        }
+
         #region 功能勾选段
 
         private void CheckClipbrdFuntion_MouseClick(object sender, MouseEventArgs e)
@@ -145,5 +156,6 @@ namespace ETCTool
         #endregion
 
         #endregion
+
     }
 }

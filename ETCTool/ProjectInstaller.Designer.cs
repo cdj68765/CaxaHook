@@ -41,7 +41,7 @@
             // 
             this.serviceInstaller1.Description = "这是Emil创建的，用于开机启动Caxa和Plm相关辅助功能程序的服务";
             this.serviceInstaller1.ServiceName = "ETCToolService";
-            this.serviceInstaller1.StartType = System.ServiceProcess.ServiceStartMode.Disabled;
+            this.serviceInstaller1.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
             // 
             // ProjectInstaller
             // 

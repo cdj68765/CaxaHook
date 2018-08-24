@@ -19,26 +19,26 @@ namespace ETCTool
     {
         static void Main(string[] args)
         {
-
-            if (Environment.CurrentDirectory != Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory) &&
-                args.Length == 0)
+            if (!Environment.UserInteractive)
             {
                 ServiceBase.Run(new ETCToolService(Application.ExecutablePath));
                 return;
             }
+
+            if (args.Length != 0 && args[0] == "Service")
+            {
+                ShowForm();
+                AutoRunServer.ServiceStop();
+                return;
+            }
+
             var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             var Guid = ((GuidAttribute) Attribute.GetCustomAttribute(Assembly.GetExecutingAssembly(),
                 typeof(GuidAttribute))).Value;
-            if (args.Length == 0|| args[0]== "Service")
+            if (args.Length == 0 || args[0] == "Service")
             {
                 AssemblyHandler.AssemblyFileSaveToCaxaAutoSave(path);
             }
-          /*  string filePath = @"D:\MyServiceLog.txt";
-            using (FileStream stream = new FileStream(filePath, FileMode.Append))
-            using (StreamWriter writer = new StreamWriter(stream))
-            {
-                writer.WriteLine($"{DateTime.Now},{args[0]}！");
-            }*/
 
             if (AppDomain.CurrentDomain.IsDefaultAppDomain() && args.Length == 0 || args[0] == "Service")
             {
@@ -48,7 +48,7 @@ namespace ETCTool
                     ApplicationBase = $"{path}\\EtcTool"
                 });
                 int ret = newDomain.ExecuteAssemblyByName(Assembly.GetExecutingAssembly().FullName, Guid,
-                    Application.ExecutablePath);
+                    Application.ExecutablePath, "RunByService");
                 AppDomain.Unload(newDomain);
                 Environment.ExitCode = ret;
                 Environment.Exit(0);
@@ -61,26 +61,24 @@ namespace ETCTool
                     Properties.Settings.Default.Save();
                 }
 
-                if (!Properties.Settings.Default.RunMode)
-                {
-
-                }
-
                 ShowForm();
             }
 
             void ShowForm()
             {
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false);
-                //处理未捕获的异常
-                Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
-                //处理UI线程异常
-                Application.ThreadException += delegate { };
-                //处理非UI线程异常
-                AppDomain.CurrentDomain.UnhandledException += delegate { };
-                Variables.MainForm = new MainForm();
-                Application.Run(Variables.MainForm);
+                if (!Properties.Settings.Default.RunMode)
+                {
+                    Application.EnableVisualStyles();
+                    Application.SetCompatibleTextRenderingDefault(false);
+                    //处理未捕获的异常
+                    Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+                    //处理UI线程异常
+                    Application.ThreadException += delegate { };
+                    //处理非UI线程异常
+                    AppDomain.CurrentDomain.UnhandledException += delegate { };
+                    Variables.MainForm = new MainForm();
+                    Application.Run(Variables.MainForm);
+                }
             }
         }
     }
