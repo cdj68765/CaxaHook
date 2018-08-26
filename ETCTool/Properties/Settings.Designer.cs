@@ -82,5 +82,17 @@ namespace ETCTool.Properties {
                 this["OriPath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool CheckFileDecrypt {
+            get {
+                return ((bool)(this["CheckFileDecrypt"]));
+            }
+            set {
+                this["CheckFileDecrypt"] = value;
+            }
+        }
     }
 }

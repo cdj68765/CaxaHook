@@ -54,7 +54,7 @@
     <StartupObject />
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>System_preferences_tool_tools_128px_581754_easyicon.net.ico</ApplicationIcon>
+    <ApplicationIcon>ICO\System_preferences_tool_tools_128px_581754_easyicon.net.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EasyHook, Version=2.7.6789.0, Culture=neutral, PublicKeyToken=4b580fca19d0b0c5, processorArchitecture=MSIL">
@@ -152,7 +152,16 @@
     <EmbeddedResource Include="MaterialSkin.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="System_preferences_tool_tools_128px_581754_easyicon.net.ico" />
+    <EmbeddedResource Include="ICO\clipboard_80px_1121225_easyicon.net.ico" />
+    <EmbeddedResource Include="ICO\Clipboard_Plan_128px_1185105_easyicon.net.ico" />
+    <EmbeddedResource Include="ICO\ooopic_1535266036.ico" />
+    <EmbeddedResource Include="ICO\System_preferences_tool_tools_128px_581754_easyicon.net.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ICO\Stop.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ICO\Start.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
