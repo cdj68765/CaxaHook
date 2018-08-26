@@ -2,26 +2,32 @@
 using System.Drawing;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MaterialSkin;
 using MaterialSkin.Controls;
 using Microsoft.Win32;
-
+using static ETCTool.NativeApi;
 namespace ETCTool
 {
     public partial class MainForm : MaterialForm
     {
         private readonly MaterialSkinManager materialSkinManager;
+
         public MainForm()
         {
             InitializeComponent();
+
             #region 状态初始化
+
             CheckClipbrdFuntion.Checked = Properties.Settings.Default.CheckClipbrdFuntion;
             CheckPlmFuntion.Checked = Properties.Settings.Default.CheckPlmFuntion;
             CheckCaxaFuntion.Checked = Properties.Settings.Default.CheckCaxaFuntion;
             CheckFileDecrypt.Checked = Properties.Settings.Default.CheckFileDecrypt;
+
             #endregion
 
 
@@ -31,7 +37,7 @@ namespace ETCTool
             materialSkinManager.Theme = MaterialSkinManager.Themes.LIGHT;
             materialSkinManager.ColorScheme = new ColorScheme(Primary.BlueGrey800, Primary.BlueGrey900,
                 Primary.BlueGrey500, Accent.LightBlue200, TextShade.WHITE);
-           
+
             new Mutex(true, "ETCTool", out var Close);
             if (!Close)
             {
@@ -43,6 +49,7 @@ namespace ETCTool
                     Application.ExitThread();
                 });
             }
+
             if (Properties.Settings.Default.RunMode)
             {
                 WindowState = FormWindowState.Minimized;
@@ -50,12 +57,10 @@ namespace ETCTool
                 Task.Factory.StartNew(() =>
                 {
                     Thread.Sleep(1500);
-                    this.Invoke(new Action(() =>
-                    {
-                        StartAllFuntion.PerformClick();
-                    }));
+                    this.Invoke(new Action(() => { StartAllFuntion.PerformClick(); }));
                 });
             }
+
             this.Deactivate += delegate
             {
                 if (this.WindowState == FormWindowState.Minimized)
@@ -67,13 +72,15 @@ namespace ETCTool
                 }
             };
         }
-        bool  CheckAutoRun()
+
+        bool CheckAutoRun()
         {
             if (AutoRunServer.IsServiceExisted())
             {
-               return AutoRunServer.CheckStartMode();
+                return AutoRunServer.CheckStartMode();
             }
-          return  false;
+
+            return false;
         }
 
         #region 主界面代码段
@@ -88,7 +95,10 @@ namespace ETCTool
                 CheckPlmFuntion.Enabled = false;
                 CheckFileDecrypt.Enabled = false;
                 Properties.Settings.Default.RunMode = true;
-
+                if (CheckClipbrdFuntion.Checked && Buttom_StartCaxaClipbrd.Text.StartsWith("启动"))
+                {
+                    Buttom_StartCaxaClipbrd.Text = Buttom_StartCaxaClipbrd.Text.Replace("启动", "关闭");
+                }
             }
             else
             {
@@ -98,9 +108,18 @@ namespace ETCTool
                 CheckPlmFuntion.Enabled = true;
                 CheckFileDecrypt.Enabled = true;
                 Properties.Settings.Default.RunMode = false;
+                if (CheckClipbrdFuntion.Checked && Buttom_StartCaxaClipbrd.Text.StartsWith("关闭"))
+                {
+                    Buttom_StartCaxaClipbrd.Text = Buttom_StartCaxaClipbrd.Text.Replace("关闭", "启动");
+                }
+                Notify.Icon = ICO.ICO.System_preferences_tool_tools_128px_581754_easyicon_net;
             }
 
             Properties.Settings.Default.Save();
+        }
+        private void StartAllFuntion_MouseClick(object sender, MouseEventArgs e)
+        {
+            NotifyStartRun.PerformClick();
         }
         private void RunMode_Click(object sender, System.EventArgs e)
         {
@@ -112,7 +131,7 @@ namespace ETCTool
                 {
                     if (!AutoRunServer.IsServiceExisted())
                     {
-                        AutoRunServer.InstallService( Application.ExecutablePath);
+                        AutoRunServer.InstallService(Application.ExecutablePath);
                         //AutoRunServer.InstallService(Properties.Settings.Default.OriPath);
                     }
                     else
@@ -125,7 +144,7 @@ namespace ETCTool
                     if (AutoRunServer.IsServiceExisted())
                     {
                         //AutoRunServer.UninstallService(Properties.Settings.Default.OriPath);
-                        Status = !AutoRunServer.ChangeServiceStartType(3,"Start");
+                        Status = !AutoRunServer.ChangeServiceStartType(3, "Start");
                     }
                 }
             });
@@ -146,6 +165,7 @@ namespace ETCTool
             {
                 AutoRunServer.UnInstallService();
             }
+
             AutoRunMode.Checked = false;
             AutoRunMode.Enabled = false;
         }
@@ -157,6 +177,7 @@ namespace ETCTool
             Properties.Settings.Default.CheckClipbrdFuntion = CheckClipbrdFuntion.Checked;
             Properties.Settings.Default.Save();
         }
+
         private void CheckPlmFuntion_MouseClick(object sender, MouseEventArgs e)
         {
             Properties.Settings.Default.CheckPlmFuntion = CheckPlmFuntion.Checked;
@@ -168,11 +189,13 @@ namespace ETCTool
             Properties.Settings.Default.CheckCaxaFuntion = CheckCaxaFuntion.Checked;
             Properties.Settings.Default.Save();
         }
+
         private void CheckFileDecrypt_MouseClick(object sender, MouseEventArgs e)
         {
             Properties.Settings.Default.CheckFileDecrypt = CheckFileDecrypt.Checked;
             Properties.Settings.Default.Save();
         }
+
         #endregion
 
         #region 主窗口状态条
@@ -206,43 +229,188 @@ namespace ETCTool
         {
             MainTab.SelectedIndex = 3;
         }
+
         #endregion
 
         #endregion
+
         #region Caxa相关代码段
+
+        #region Clipbrd监控主函数
+
+        public partial class ClipbrdMonitor : Form
+        {
+            private bool Onice = true;
+
+            protected override void WndProc(ref Message m)
+            {
+                if (m.Msg == 0x031D && Onice)
+                {
+                    var Get_Text = new StringBuilder(256);
+                    GetWindowTextW(GetForegroundWindow(IntPtr.Zero), Get_Text, 256);
+                    if (Get_Text.ToString().StartsWith("CAXA"))
+                    {
+                        var Temp = GetText(13);
+                        if (!string.IsNullOrEmpty(Temp))
+                        {
+                            SetText(Temp);
+                            Onice = false;
+                        }
+                    }
+                }
+                else if (!Onice)
+                {
+                    Onice = true;
+                }
+                else
+                {
+                    base.WndProc(ref m);
+                }
+            }
+
+            public ClipbrdMonitor()
+            {
+                AddClipboardFormatListener(this.Handle);
+                this.FormClosing += delegate { RemoveClipboardFormatListener(this.Handle); };
+            }
+
+            void SetText(string text)
+            {
+                if (!OpenClipboard(IntPtr.Zero))
+                {
+                    SetText(text);
+                    Thread.Sleep(50);
+                    return;
+                }
+                EmptyClipboard();
+                SetClipboardData(13, Marshal.StringToCoTaskMemAuto(text));
+                CloseClipboard();
+            }
+
+            string GetText(int format)
+            {
+                var value = string.Empty;
+                OpenClipboard(IntPtr.Zero);
+                if (IsClipboardFormatAvailable(format))
+                {
+                    var ptr = GetClipboardData(format);
+                    if (ptr != IntPtr.Zero) value = Marshal.PtrToStringUni(ptr);
+                }
+
+                CloseClipboard();
+                return value;
+            }
+        }
+
+
+        #endregion
+
+        private ClipbrdMonitor CaxaClipbrd;
         private void Buttom_TextChanged(object sender, EventArgs e)
         {
-           var Buttom= sender as MaterialFlatButton;
-            if (!Buttom.Text.StartsWith("启动"))
+          
+            if (sender is MaterialFlatButton)
             {
-                Buttom.Icon = Image.FromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream($"ETCTool.ICO.Start.ico"));
-            }
-            else
+                var Buttom = sender as MaterialFlatButton;
+                if (!Buttom.Text.StartsWith("启动"))
+                {
+                    Buttom.Icon = Image.FromStream(Assembly.GetExecutingAssembly()
+                        .GetManifestResourceStream($"ETCTool.ICO.Start.ico"));
+                    switch (Buttom.Name)
+                    {
+                        case "Buttom_StartCaxaClipbrd":
+                        {
+                            CaxaClipbrd = new ClipbrdMonitor();
+                                Task.Factory.StartNew(() =>
+                                {
+                                    while (true)
+                                    {
+                                        Thread.Sleep(500);
+                                        if (CaxaClipbrd == null) break;
+                                        var GetText = new StringBuilder(256);
+                                        GetWindowTextW(GetForegroundWindow(IntPtr.Zero),
+                                            GetText, 256);
+                                        if (GetText.ToString().StartsWith("CAXA"))
+                                        {
+                                            Invoke(new Action(() =>
+                                                {
+                                                    Notify.Icon = ICO.ICO.clipboard_80px_1121225_easyicon_net;
+                                                }));
+                                        }
+                                        else
+                                        {
+                                            Invoke(new Action(() =>
+                                            {
+                                                Notify.Icon = ICO.ICO.Clipboard_Plan_128px_1185105_easyicon_net;
+                                            }));
+                                        }
+                                          
+                                    }
+                                 
+                                },TaskCreationOptions.LongRunning);
+                                
+                        }
+                            break;
+                    }
+                }
+                else
+                {
+                    Buttom.Icon = Image.FromStream(Assembly.GetExecutingAssembly()
+                        .GetManifestResourceStream($"ETCTool.ICO.Stop.ico"));
+                    switch (Buttom.Name)
+                    {
+                        case "Buttom_StartCaxaClipbrd":
+                        {
+                            if (CaxaClipbrd != null)
+                            {
+                                CaxaClipbrd.Close();
+                                CaxaClipbrd.Dispose();
+                                CaxaClipbrd = null;
+                                GC.Collect();
+                            }
+                        }
+                            break;
+                    }
+                }
+            }else if (sender is ToolStripMenuItem)
             {
-                Buttom.Icon = Image.FromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream($"ETCTool.ICO.Stop.ico"));
+                var Buttom = sender as ToolStripMenuItem;
+                if (!Buttom.Text.StartsWith("启动"))
+                {
+                    Buttom.Image = Image.FromStream(Assembly.GetExecutingAssembly()
+                        .GetManifestResourceStream($"ETCTool.ICO.Start.ico"));
+                }
+                else
+                {
+                    Buttom.Image = Image.FromStream(Assembly.GetExecutingAssembly()
+                        .GetManifestResourceStream($"ETCTool.ICO.Stop.ico"));
+                }
             }
+           
         }
+
         private void Buttom_Click(object sender, EventArgs e)
         {
-            var Buttom = sender as MaterialFlatButton;
-            Buttom.Text = Buttom.Text.StartsWith("启动") ? Buttom.Text.Replace("启动", "关闭") : Buttom.Text.Replace("关闭", "启动");
+            dynamic Buttom = sender as Control;
+            if (Buttom == null)
+            {
+                Buttom = sender as ToolStripMenuItem;
+            }
+            Buttom.Text = Buttom.Text.StartsWith("启动")
+                ? Buttom.Text.Replace("启动", "关闭")
+                : Buttom.Text.Replace("关闭", "启动");
         }
 
 
         #endregion
+
         #region 任务栏图标
-        private void Notify_MouseClick(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right)
-            {
-                (sender as NotifyIcon).ContextMenuStrip = NotifyContextMenuStrip;
-            }
-        }
         private void ShowForm_Click(object sender, EventArgs e)
         {
             this.WindowState = FormWindowState.Normal;
             this.ShowInTaskbar = true;
         }
+
         private void Notify_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -250,25 +418,17 @@ namespace ETCTool
                 this.WindowState = FormWindowState.Normal;
                 this.ShowInTaskbar = true;
             }
-           
         }
-        private void NotifyStartRun_MouseUp(object sender, MouseEventArgs e)
+        private void ExitClose_Click(object sender, EventArgs e)
         {
-            if (NotifyStartRun.Text.StartsWith("启动"))
-            {
-                NotifyStartRun.Text = NotifyStartRun.Text.Replace("启动", "关闭");
-
-                NotifyStartRun.Image = Image.FromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream($"ETCTool.ICO.Start.ico"));
-
-            }
-            else
-            {
-                NotifyStartRun.Text = NotifyStartRun.Text.Replace("关闭", "启动");
-                NotifyStartRun.Image = Image.FromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream($"ETCTool.ICO.Stop.ico"));
-            }
+            this.Close();
+            Application.Exit();
+            Application.ExitThread();
+        }
+        private void NotifyStartRun_MouseDown(object sender, MouseEventArgs e)
+        {
+            StartAllFuntion.PerformClick();
         }
         #endregion
-
-
     }
 }

@@ -52,16 +52,16 @@
             this.TabPlm = new System.Windows.Forms.TabPage();
             this.TabAnother = new System.Windows.Forms.TabPage();
             this.materialTabSelector1 = new MaterialSkin.Controls.MaterialTabSelector();
-            this.materialContextMenuStrip1 = new MaterialSkin.Controls.MaterialContextMenuStrip();
-            this.DeleteAutoRunService = new System.Windows.Forms.ToolStripMenuItem();
             this.Notify = new System.Windows.Forms.NotifyIcon(this.components);
             this.NotifyContextMenuStrip = new MaterialSkin.Controls.MaterialContextMenuStrip();
             this.ShowForm = new System.Windows.Forms.ToolStripMenuItem();
             this.NotifyStartRun = new System.Windows.Forms.ToolStripMenuItem();
+            this.ExitClose = new System.Windows.Forms.ToolStripMenuItem();
+            this.materialRaisedButton1 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.MainTab.SuspendLayout();
             this.TabMain.SuspendLayout();
             this.TabCaxa.SuspendLayout();
-            this.materialContextMenuStrip1.SuspendLayout();
+            this.TabAnother.SuspendLayout();
             this.NotifyContextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -347,6 +347,7 @@
             this.StartAllFuntion.Text = "启动下列勾选功能";
             this.StartAllFuntion.UseVisualStyleBackColor = true;
             this.StartAllFuntion.Click += new System.EventHandler(this.StartAllFuntion_Click);
+            this.StartAllFuntion.MouseClick += new System.Windows.Forms.MouseEventHandler(this.StartAllFuntion_MouseClick);
             // 
             // TabCaxa
             // 
@@ -417,6 +418,7 @@
             // 
             // TabAnother
             // 
+            this.TabAnother.Controls.Add(this.materialRaisedButton1);
             this.TabAnother.Location = new System.Drawing.Point(4, 22);
             this.TabAnother.Name = "TabAnother";
             this.TabAnother.Size = new System.Drawing.Size(470, 157);
@@ -437,30 +439,12 @@
             this.materialTabSelector1.TabIndex = 1;
             this.materialTabSelector1.Text = "materialTabSelector1";
             // 
-            // materialContextMenuStrip1
-            // 
-            this.materialContextMenuStrip1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.materialContextMenuStrip1.Depth = 0;
-            this.materialContextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.DeleteAutoRunService});
-            this.materialContextMenuStrip1.MouseState = MaterialSkin.MouseState.HOVER;
-            this.materialContextMenuStrip1.Name = "materialContextMenuStrip1";
-            this.materialContextMenuStrip1.Size = new System.Drawing.Size(161, 26);
-            // 
-            // DeleteAutoRunService
-            // 
-            this.DeleteAutoRunService.Name = "DeleteAutoRunService";
-            this.DeleteAutoRunService.Size = new System.Drawing.Size(160, 22);
-            this.DeleteAutoRunService.Text = "删除自启动服务";
-            this.DeleteAutoRunService.Click += new System.EventHandler(this.DeleteAutoRunService_Click);
-            // 
             // Notify
             // 
             this.Notify.ContextMenuStrip = this.NotifyContextMenuStrip;
             this.Notify.Icon = ((System.Drawing.Icon)(resources.GetObject("Notify.Icon")));
             this.Notify.Text = "ETC工具集合";
             this.Notify.Visible = true;
-            this.Notify.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Notify_MouseClick);
             this.Notify.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.Notify_MouseDoubleClick);
             // 
             // NotifyContextMenuStrip
@@ -469,10 +453,11 @@
             this.NotifyContextMenuStrip.Depth = 0;
             this.NotifyContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ShowForm,
-            this.NotifyStartRun});
+            this.NotifyStartRun,
+            this.ExitClose});
             this.NotifyContextMenuStrip.MouseState = MaterialSkin.MouseState.HOVER;
             this.NotifyContextMenuStrip.Name = "NotifyContextMenuStrip";
-            this.NotifyContextMenuStrip.Size = new System.Drawing.Size(181, 70);
+            this.NotifyContextMenuStrip.Size = new System.Drawing.Size(149, 70);
             // 
             // ShowForm
             // 
@@ -487,14 +472,38 @@
             this.NotifyStartRun.Name = "NotifyStartRun";
             this.NotifyStartRun.Size = new System.Drawing.Size(180, 22);
             this.NotifyStartRun.Text = "启动勾选功能";
-            this.NotifyStartRun.MouseUp += new System.Windows.Forms.MouseEventHandler(this.NotifyStartRun_MouseUp);
+            this.NotifyStartRun.Click += new System.EventHandler(this.Buttom_Click);
+            this.NotifyStartRun.MouseDown += new System.Windows.Forms.MouseEventHandler(this.NotifyStartRun_MouseDown);
+            this.NotifyStartRun.TextChanged += new System.EventHandler(this.Buttom_TextChanged);
+            // 
+            // ExitClose
+            // 
+            this.ExitClose.Name = "ExitClose";
+            this.ExitClose.Size = new System.Drawing.Size(180, 22);
+            this.ExitClose.Text = "退出";
+            this.ExitClose.Click += new System.EventHandler(this.ExitClose_Click);
+            // 
+            // materialRaisedButton1
+            // 
+            this.materialRaisedButton1.AutoSize = true;
+            this.materialRaisedButton1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.materialRaisedButton1.Depth = 0;
+            this.materialRaisedButton1.Icon = null;
+            this.materialRaisedButton1.Location = new System.Drawing.Point(6, 3);
+            this.materialRaisedButton1.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialRaisedButton1.Name = "materialRaisedButton1";
+            this.materialRaisedButton1.Primary = true;
+            this.materialRaisedButton1.Size = new System.Drawing.Size(127, 36);
+            this.materialRaisedButton1.TabIndex = 0;
+            this.materialRaisedButton1.Text = "删除自启动服务";
+            this.materialRaisedButton1.UseVisualStyleBackColor = true;
+            this.materialRaisedButton1.Click += new System.EventHandler(this.DeleteAutoRunService_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(480, 280);
-            this.ContextMenuStrip = this.materialContextMenuStrip1;
             this.Controls.Add(this.MainTab);
             this.Controls.Add(this.materialTabSelector1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -508,7 +517,8 @@
             this.TabMain.PerformLayout();
             this.TabCaxa.ResumeLayout(false);
             this.TabCaxa.PerformLayout();
-            this.materialContextMenuStrip1.ResumeLayout(false);
+            this.TabAnother.ResumeLayout(false);
+            this.TabAnother.PerformLayout();
             this.NotifyContextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -533,8 +543,6 @@
         private MaterialSkin.Controls.MaterialSingleLineTextField MainTabPlmStation;
         private MaterialSkin.Controls.MaterialSingleLineTextField MainTabAutoSaveStation;
         private MaterialSkin.Controls.MaterialCheckBox AutoRunMode;
-        private MaterialSkin.Controls.MaterialContextMenuStrip materialContextMenuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem DeleteAutoRunService;
         private System.Windows.Forms.NotifyIcon Notify;
         private MaterialSkin.Controls.MaterialSingleLineTextField MainTabFileDecryptStation;
         private MaterialSkin.Controls.MaterialLabel materialLabel4;
@@ -544,5 +552,7 @@
         private MaterialSkin.Controls.MaterialContextMenuStrip NotifyContextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem ShowForm;
         private System.Windows.Forms.ToolStripMenuItem NotifyStartRun;
+        private System.Windows.Forms.ToolStripMenuItem ExitClose;
+        private MaterialSkin.Controls.MaterialRaisedButton materialRaisedButton1;
     }
 }

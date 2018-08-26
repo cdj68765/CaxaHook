@@ -54,7 +54,8 @@
     <StartupObject />
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>ICO\System_preferences_tool_tools_128px_581754_easyicon.net.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EasyHook, Version=2.7.6789.0, Culture=neutral, PublicKeyToken=4b580fca19d0b0c5, processorArchitecture=MSIL">
@@ -88,12 +89,18 @@
     <Compile Include="ETCToolService.Designer.cs">
       <DependentUpon>ETCToolService.cs</DependentUpon>
     </Compile>
+    <Compile Include="ICO\ICO.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ICO.resx</DependentUpon>
+    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="NativeApi.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProjectInstaller.cs">
       <SubType>Component</SubType>
@@ -137,6 +144,10 @@
     <EmbeddedResource Include="ETCToolService.resx">
       <DependentUpon>ETCToolService.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ICO\ICO.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ICO.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -150,12 +161,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MaterialSkin.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="ICO\clipboard_80px_1121225_easyicon.net.ico" />
-    <EmbeddedResource Include="ICO\Clipboard_Plan_128px_1185105_easyicon.net.ico" />
-    <EmbeddedResource Include="ICO\ooopic_1535266036.ico" />
-    <EmbeddedResource Include="ICO\System_preferences_tool_tools_128px_581754_easyicon.net.ico" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ICO\Stop.ico" />
