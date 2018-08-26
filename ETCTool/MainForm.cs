@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MaterialSkin;
@@ -15,6 +16,7 @@ namespace ETCTool
 
         public MainForm()
         {
+          
             InitializeComponent();
             CheckClipbrdFuntion.Checked = Properties.Settings.Default.CheckClipbrdFuntion;
             CheckPlmFuntion.Checked = Properties.Settings.Default.CheckPlmFuntion;
@@ -25,6 +27,21 @@ namespace ETCTool
             materialSkinManager.Theme = MaterialSkinManager.Themes.LIGHT;
             materialSkinManager.ColorScheme = new ColorScheme(Primary.BlueGrey800, Primary.BlueGrey900,
                 Primary.BlueGrey500, Accent.LightBlue200, TextShade.WHITE);
+            WindowState = FormWindowState.Minimized;
+            // ShowInTaskbar = false;
+            new Mutex(true, "ClipboardControl", out var Close);
+            if (!Close)
+            {
+                Task.Factory.StartNew(() =>
+                {
+                    Thread.Sleep(1500);
+                    this.Close();
+                    Application.Exit();
+                    Application.ExitThread();
+
+                });
+         
+            }
         }
 
         bool  CheckAutoRun()
@@ -45,6 +62,7 @@ namespace ETCTool
                 CheckClipbrdFuntion.Enabled = false;
                 CheckCaxaFuntion.Enabled = false;
                 CheckPlmFuntion.Enabled = false;
+                Properties.Settings.Default.RunMode = true;
             }
             else
             {
@@ -52,7 +70,9 @@ namespace ETCTool
                 CheckClipbrdFuntion.Enabled = true;
                 CheckCaxaFuntion.Enabled = true;
                 CheckPlmFuntion.Enabled = true;
+                Properties.Settings.Default.RunMode = false;
             }
+            Properties.Settings.Default.Save();
         }
         private void RunMode_Click(object sender, System.EventArgs e)
         {

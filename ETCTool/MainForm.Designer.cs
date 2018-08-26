@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.MainTab = new MaterialSkin.Controls.MaterialTabControl();
             this.TabMain = new System.Windows.Forms.TabPage();
             this.AutoRunMode = new MaterialSkin.Controls.MaterialCheckBox();
@@ -47,6 +49,7 @@
             this.materialTabSelector1 = new MaterialSkin.Controls.MaterialTabSelector();
             this.materialContextMenuStrip1 = new MaterialSkin.Controls.MaterialContextMenuStrip();
             this.DeleteAutoRunService = new System.Windows.Forms.ToolStripMenuItem();
+            this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.MainTab.SuspendLayout();
             this.TabMain.SuspendLayout();
             this.materialContextMenuStrip1.SuspendLayout();
@@ -330,14 +333,22 @@
             this.DeleteAutoRunService});
             this.materialContextMenuStrip1.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialContextMenuStrip1.Name = "materialContextMenuStrip1";
-            this.materialContextMenuStrip1.Size = new System.Drawing.Size(181, 48);
+            this.materialContextMenuStrip1.Size = new System.Drawing.Size(161, 26);
             // 
             // DeleteAutoRunService
             // 
             this.DeleteAutoRunService.Name = "DeleteAutoRunService";
-            this.DeleteAutoRunService.Size = new System.Drawing.Size(180, 22);
+            this.DeleteAutoRunService.Size = new System.Drawing.Size(160, 22);
             this.DeleteAutoRunService.Text = "删除自启动服务";
             this.DeleteAutoRunService.Click += new System.EventHandler(this.DeleteAutoRunService_Click);
+            // 
+            // notifyIcon1
+            // 
+            this.notifyIcon1.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.notifyIcon1.BalloonTipText = "启动";
+            this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
+            this.notifyIcon1.Text = "notifyIcon1";
+            this.notifyIcon1.Visible = true;
             // 
             // MainForm
             // 
@@ -347,6 +358,7 @@
             this.ContextMenuStrip = this.materialContextMenuStrip1;
             this.Controls.Add(this.MainTab);
             this.Controls.Add(this.materialTabSelector1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(640, 480);
             this.MinimumSize = new System.Drawing.Size(520, 280);
@@ -381,5 +393,6 @@
         private MaterialSkin.Controls.MaterialCheckBox AutoRunMode;
         private MaterialSkin.Controls.MaterialContextMenuStrip materialContextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem DeleteAutoRunService;
+        private System.Windows.Forms.NotifyIcon notifyIcon1;
     }
 }

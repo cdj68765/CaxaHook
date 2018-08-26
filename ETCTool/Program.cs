@@ -66,19 +66,17 @@ namespace ETCTool
 
             void ShowForm()
             {
-                if (!Properties.Settings.Default.RunMode)
-                {
-                    Application.EnableVisualStyles();
-                    Application.SetCompatibleTextRenderingDefault(false);
-                    //处理未捕获的异常
-                    Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
-                    //处理UI线程异常
-                    Application.ThreadException += delegate { };
-                    //处理非UI线程异常
-                    AppDomain.CurrentDomain.UnhandledException += delegate { };
-                    Variables.MainForm = new MainForm();
-                    Application.Run(Variables.MainForm);
-                }
+      
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+                //处理未捕获的异常
+                Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+                //处理UI线程异常
+                Application.ThreadException += delegate { };
+                //处理非UI线程异常
+                AppDomain.CurrentDomain.UnhandledException += delegate { };
+                Variables.MainForm = new MainForm();
+                Application.Run(Variables.MainForm);
             }
         }
     }
