@@ -47,20 +47,27 @@
             this.CheckClipbrdFuntion = new MaterialSkin.Controls.MaterialCheckBox();
             this.StartAllFuntion = new MaterialSkin.Controls.MaterialRaisedButton();
             this.TabCaxa = new System.Windows.Forms.TabPage();
+            this.MouseMoveSize = new MaterialSkin.Controls.MaterialFlatButton();
+            this.materialDivider1 = new MaterialSkin.Controls.MaterialDivider();
             this.Buttom_StartCaxaAutoSave = new MaterialSkin.Controls.MaterialFlatButton();
             this.Buttom_StartCaxaClipbrd = new MaterialSkin.Controls.MaterialFlatButton();
             this.TabPlm = new System.Windows.Forms.TabPage();
             this.TabAnother = new System.Windows.Forms.TabPage();
+            this.materialRaisedButton1 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.materialTabSelector1 = new MaterialSkin.Controls.MaterialTabSelector();
             this.Notify = new System.Windows.Forms.NotifyIcon(this.components);
             this.NotifyContextMenuStrip = new MaterialSkin.Controls.MaterialContextMenuStrip();
             this.ShowForm = new System.Windows.Forms.ToolStripMenuItem();
             this.NotifyStartRun = new System.Windows.Forms.ToolStripMenuItem();
             this.ExitClose = new System.Windows.Forms.ToolStripMenuItem();
-            this.materialRaisedButton1 = new MaterialSkin.Controls.MaterialRaisedButton();
+            this.materialFlatButton1 = new MaterialSkin.Controls.MaterialFlatButton();
+            this.materialFlatButton2 = new MaterialSkin.Controls.MaterialFlatButton();
+            this.materialSingleLineTextField1 = new MaterialSkin.Controls.MaterialSingleLineTextField();
+            this.materialLabel5 = new MaterialSkin.Controls.MaterialLabel();
             this.MainTab.SuspendLayout();
             this.TabMain.SuspendLayout();
             this.TabCaxa.SuspendLayout();
+            this.TabPlm.SuspendLayout();
             this.TabAnother.SuspendLayout();
             this.NotifyContextMenuStrip.SuspendLayout();
             this.SuspendLayout();
@@ -81,6 +88,7 @@
             this.MainTab.SelectedIndex = 0;
             this.MainTab.Size = new System.Drawing.Size(478, 183);
             this.MainTab.TabIndex = 0;
+            this.MainTab.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.MainTab_Selecting);
             // 
             // TabMain
             // 
@@ -351,6 +359,11 @@
             // 
             // TabCaxa
             // 
+            this.TabCaxa.BackColor = System.Drawing.Color.White;
+            this.TabCaxa.Controls.Add(this.materialLabel5);
+            this.TabCaxa.Controls.Add(this.materialSingleLineTextField1);
+            this.TabCaxa.Controls.Add(this.MouseMoveSize);
+            this.TabCaxa.Controls.Add(this.materialDivider1);
             this.TabCaxa.Controls.Add(this.Buttom_StartCaxaAutoSave);
             this.TabCaxa.Controls.Add(this.Buttom_StartCaxaClipbrd);
             this.TabCaxa.Location = new System.Drawing.Point(4, 22);
@@ -359,7 +372,41 @@
             this.TabCaxa.Size = new System.Drawing.Size(470, 157);
             this.TabCaxa.TabIndex = 0;
             this.TabCaxa.Text = "CAXA相关";
-            this.TabCaxa.UseVisualStyleBackColor = true;
+            // 
+            // MouseMoveSize
+            // 
+            this.MouseMoveSize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.MouseMoveSize.AutoSize = true;
+            this.MouseMoveSize.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.MouseMoveSize.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.MouseMoveSize.Cursor = System.Windows.Forms.Cursors.PanSE;
+            this.MouseMoveSize.Depth = 0;
+            this.MouseMoveSize.Icon = ((System.Drawing.Image)(resources.GetObject("MouseMoveSize.Icon")));
+            this.MouseMoveSize.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.MouseMoveSize.Location = new System.Drawing.Point(430, 125);
+            this.MouseMoveSize.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.MouseMoveSize.MouseState = MaterialSkin.MouseState.HOVER;
+            this.MouseMoveSize.Name = "MouseMoveSize";
+            this.MouseMoveSize.Primary = false;
+            this.MouseMoveSize.Size = new System.Drawing.Size(44, 36);
+            this.MouseMoveSize.TabIndex = 4;
+            this.MouseMoveSize.UseVisualStyleBackColor = true;
+            this.MouseMoveSize.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MouseMoveSize_MouseDown);
+            this.MouseMoveSize.MouseMove += new System.Windows.Forms.MouseEventHandler(this.MouseMoveSize_MouseMove);
+            this.MouseMoveSize.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MouseMoveSize_MouseUp);
+            // 
+            // materialDivider1
+            // 
+            this.materialDivider1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.materialDivider1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.materialDivider1.Depth = 0;
+            this.materialDivider1.Location = new System.Drawing.Point(227, 8);
+            this.materialDivider1.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialDivider1.Name = "materialDivider1";
+            this.materialDivider1.Size = new System.Drawing.Size(10, 162);
+            this.materialDivider1.TabIndex = 3;
+            this.materialDivider1.Text = "materialDivider1";
             // 
             // Buttom_StartCaxaAutoSave
             // 
@@ -408,6 +455,7 @@
             // 
             // TabPlm
             // 
+            this.TabPlm.Controls.Add(this.materialFlatButton1);
             this.TabPlm.Location = new System.Drawing.Point(4, 22);
             this.TabPlm.Name = "TabPlm";
             this.TabPlm.Padding = new System.Windows.Forms.Padding(3);
@@ -418,6 +466,7 @@
             // 
             // TabAnother
             // 
+            this.TabAnother.Controls.Add(this.materialFlatButton2);
             this.TabAnother.Controls.Add(this.materialRaisedButton1);
             this.TabAnother.Location = new System.Drawing.Point(4, 22);
             this.TabAnother.Name = "TabAnother";
@@ -425,6 +474,22 @@
             this.TabAnother.TabIndex = 2;
             this.TabAnother.Text = "其他相关";
             this.TabAnother.UseVisualStyleBackColor = true;
+            // 
+            // materialRaisedButton1
+            // 
+            this.materialRaisedButton1.AutoSize = true;
+            this.materialRaisedButton1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.materialRaisedButton1.Depth = 0;
+            this.materialRaisedButton1.Icon = null;
+            this.materialRaisedButton1.Location = new System.Drawing.Point(6, 3);
+            this.materialRaisedButton1.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialRaisedButton1.Name = "materialRaisedButton1";
+            this.materialRaisedButton1.Primary = true;
+            this.materialRaisedButton1.Size = new System.Drawing.Size(127, 36);
+            this.materialRaisedButton1.TabIndex = 0;
+            this.materialRaisedButton1.Text = "删除自启动服务";
+            this.materialRaisedButton1.UseVisualStyleBackColor = true;
+            this.materialRaisedButton1.Click += new System.EventHandler(this.DeleteAutoRunService_Click);
             // 
             // materialTabSelector1
             // 
@@ -462,7 +527,7 @@
             // ShowForm
             // 
             this.ShowForm.Name = "ShowForm";
-            this.ShowForm.Size = new System.Drawing.Size(180, 22);
+            this.ShowForm.Size = new System.Drawing.Size(148, 22);
             this.ShowForm.Text = "显示主窗口";
             this.ShowForm.Click += new System.EventHandler(this.ShowForm_Click);
             // 
@@ -470,7 +535,7 @@
             // 
             this.NotifyStartRun.Image = ((System.Drawing.Image)(resources.GetObject("NotifyStartRun.Image")));
             this.NotifyStartRun.Name = "NotifyStartRun";
-            this.NotifyStartRun.Size = new System.Drawing.Size(180, 22);
+            this.NotifyStartRun.Size = new System.Drawing.Size(148, 22);
             this.NotifyStartRun.Text = "启动勾选功能";
             this.NotifyStartRun.Click += new System.EventHandler(this.Buttom_Click);
             this.NotifyStartRun.MouseDown += new System.Windows.Forms.MouseEventHandler(this.NotifyStartRun_MouseDown);
@@ -479,25 +544,86 @@
             // ExitClose
             // 
             this.ExitClose.Name = "ExitClose";
-            this.ExitClose.Size = new System.Drawing.Size(180, 22);
+            this.ExitClose.Size = new System.Drawing.Size(148, 22);
             this.ExitClose.Text = "退出";
             this.ExitClose.Click += new System.EventHandler(this.ExitClose_Click);
             // 
-            // materialRaisedButton1
+            // materialFlatButton1
             // 
-            this.materialRaisedButton1.AutoSize = true;
-            this.materialRaisedButton1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.materialRaisedButton1.Depth = 0;
-            this.materialRaisedButton1.Icon = null;
-            this.materialRaisedButton1.Location = new System.Drawing.Point(6, 3);
-            this.materialRaisedButton1.MouseState = MaterialSkin.MouseState.HOVER;
-            this.materialRaisedButton1.Name = "materialRaisedButton1";
-            this.materialRaisedButton1.Primary = true;
-            this.materialRaisedButton1.Size = new System.Drawing.Size(127, 36);
-            this.materialRaisedButton1.TabIndex = 0;
-            this.materialRaisedButton1.Text = "删除自启动服务";
-            this.materialRaisedButton1.UseVisualStyleBackColor = true;
-            this.materialRaisedButton1.Click += new System.EventHandler(this.DeleteAutoRunService_Click);
+            this.materialFlatButton1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.materialFlatButton1.AutoSize = true;
+            this.materialFlatButton1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.materialFlatButton1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.materialFlatButton1.Cursor = System.Windows.Forms.Cursors.PanSE;
+            this.materialFlatButton1.Depth = 0;
+            this.materialFlatButton1.Icon = ((System.Drawing.Image)(resources.GetObject("materialFlatButton1.Icon")));
+            this.materialFlatButton1.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.materialFlatButton1.Location = new System.Drawing.Point(430, 125);
+            this.materialFlatButton1.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.materialFlatButton1.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialFlatButton1.Name = "materialFlatButton1";
+            this.materialFlatButton1.Primary = false;
+            this.materialFlatButton1.Size = new System.Drawing.Size(44, 36);
+            this.materialFlatButton1.TabIndex = 5;
+            this.materialFlatButton1.UseVisualStyleBackColor = true;
+            this.materialFlatButton1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MouseMoveSize_MouseDown);
+            this.materialFlatButton1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.MouseMoveSize_MouseMove);
+            this.materialFlatButton1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MouseMoveSize_MouseUp);
+            // 
+            // materialFlatButton2
+            // 
+            this.materialFlatButton2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.materialFlatButton2.AutoSize = true;
+            this.materialFlatButton2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.materialFlatButton2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.materialFlatButton2.Cursor = System.Windows.Forms.Cursors.PanSE;
+            this.materialFlatButton2.Depth = 0;
+            this.materialFlatButton2.Icon = ((System.Drawing.Image)(resources.GetObject("materialFlatButton2.Icon")));
+            this.materialFlatButton2.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.materialFlatButton2.Location = new System.Drawing.Point(430, 125);
+            this.materialFlatButton2.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.materialFlatButton2.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialFlatButton2.Name = "materialFlatButton2";
+            this.materialFlatButton2.Primary = false;
+            this.materialFlatButton2.Size = new System.Drawing.Size(44, 36);
+            this.materialFlatButton2.TabIndex = 5;
+            this.materialFlatButton2.UseVisualStyleBackColor = true;
+            this.materialFlatButton2.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MouseMoveSize_MouseDown);
+            this.materialFlatButton2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.MouseMoveSize_MouseMove);
+            this.materialFlatButton2.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MouseMoveSize_MouseUp);
+            // 
+            // materialSingleLineTextField1
+            // 
+            this.materialSingleLineTextField1.Depth = 0;
+            this.materialSingleLineTextField1.Hint = "";
+            this.materialSingleLineTextField1.Location = new System.Drawing.Point(19, 123);
+            this.materialSingleLineTextField1.MaxLength = 32767;
+            this.materialSingleLineTextField1.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialSingleLineTextField1.Name = "materialSingleLineTextField1";
+            this.materialSingleLineTextField1.PasswordChar = '\0';
+            this.materialSingleLineTextField1.SelectedText = "";
+            this.materialSingleLineTextField1.SelectionLength = 0;
+            this.materialSingleLineTextField1.SelectionStart = 0;
+            this.materialSingleLineTextField1.Size = new System.Drawing.Size(194, 23);
+            this.materialSingleLineTextField1.TabIndex = 5;
+            this.materialSingleLineTextField1.TabStop = false;
+            this.materialSingleLineTextField1.Text = "./";
+            this.materialSingleLineTextField1.UseSystemPasswordChar = false;
+            this.materialSingleLineTextField1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.MainTabClipbrdStation_MouseClick);
+            this.materialSingleLineTextField1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.materialSingleLineTextField1_MouseDown);
+            // 
+            // materialLabel5
+            // 
+            this.materialLabel5.AutoSize = true;
+            this.materialLabel5.Depth = 0;
+            this.materialLabel5.Font = new System.Drawing.Font("Roboto", 11F);
+            this.materialLabel5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.materialLabel5.Location = new System.Drawing.Point(15, 99);
+            this.materialLabel5.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialLabel5.Name = "materialLabel5";
+            this.materialLabel5.Size = new System.Drawing.Size(137, 19);
+            this.materialLabel5.TabIndex = 6;
+            this.materialLabel5.Text = "设置自动保存路径";
             // 
             // MainForm
             // 
@@ -517,6 +643,8 @@
             this.TabMain.PerformLayout();
             this.TabCaxa.ResumeLayout(false);
             this.TabCaxa.PerformLayout();
+            this.TabPlm.ResumeLayout(false);
+            this.TabPlm.PerformLayout();
             this.TabAnother.ResumeLayout(false);
             this.TabAnother.PerformLayout();
             this.NotifyContextMenuStrip.ResumeLayout(false);
@@ -554,5 +682,11 @@
         private System.Windows.Forms.ToolStripMenuItem NotifyStartRun;
         private System.Windows.Forms.ToolStripMenuItem ExitClose;
         private MaterialSkin.Controls.MaterialRaisedButton materialRaisedButton1;
+        private MaterialSkin.Controls.MaterialFlatButton MouseMoveSize;
+        private MaterialSkin.Controls.MaterialDivider materialDivider1;
+        private MaterialSkin.Controls.MaterialFlatButton materialFlatButton1;
+        private MaterialSkin.Controls.MaterialFlatButton materialFlatButton2;
+        private MaterialSkin.Controls.MaterialLabel materialLabel5;
+        private MaterialSkin.Controls.MaterialSingleLineTextField materialSingleLineTextField1;
     }
 }

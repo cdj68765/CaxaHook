@@ -94,5 +94,16 @@ namespace ETCTool.Properties {
                 this["CheckFileDecrypt"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Collections.Specialized.StringCollection FormSize {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["FormSize"]));
+            }
+            set {
+                this["FormSize"] = value;
+            }
+        }
     }
 }

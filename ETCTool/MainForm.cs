@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using MaterialSkin;
 using MaterialSkin.Controls;
-using Microsoft.Win32;
 using static ETCTool.NativeApi;
 namespace ETCTool
 {
@@ -27,6 +26,12 @@ namespace ETCTool
             CheckPlmFuntion.Checked = Properties.Settings.Default.CheckPlmFuntion;
             CheckCaxaFuntion.Checked = Properties.Settings.Default.CheckCaxaFuntion;
             CheckFileDecrypt.Checked = Properties.Settings.Default.CheckFileDecrypt;
+            if (Properties.Settings.Default.FormSize == null)
+            {
+                Properties.Settings.Default.FormSize = new System.Collections.Specialized.StringCollection();
+                Properties.Settings.Default.FormSize.AddRange(new[] {"480", "280", "480", "280", "480", "280"});
+                Properties.Settings.Default.Save();
+            }
 
             #endregion
 
@@ -99,6 +104,11 @@ namespace ETCTool
                 {
                     Buttom_StartCaxaClipbrd.Text = Buttom_StartCaxaClipbrd.Text.Replace("启动", "关闭");
                 }
+
+                if (CheckCaxaFuntion.Checked && Buttom_StartCaxaAutoSave.Text.StartsWith("启动"))
+                {
+                    Buttom_StartCaxaAutoSave.Text = Buttom_StartCaxaAutoSave.Text.Replace("启动", "关闭");
+                }
             }
             else
             {
@@ -112,15 +122,23 @@ namespace ETCTool
                 {
                     Buttom_StartCaxaClipbrd.Text = Buttom_StartCaxaClipbrd.Text.Replace("关闭", "启动");
                 }
+
+                if (CheckCaxaFuntion.Checked && Buttom_StartCaxaAutoSave.Text.StartsWith("关闭"))
+                {
+                    Buttom_StartCaxaAutoSave.Text = Buttom_StartCaxaAutoSave.Text.Replace("关闭", "启动");
+                }
+
                 Notify.Icon = ICO.ICO.System_preferences_tool_tools_128px_581754_easyicon_net;
             }
 
             Properties.Settings.Default.Save();
         }
+
         private void StartAllFuntion_MouseClick(object sender, MouseEventArgs e)
         {
             NotifyStartRun.PerformClick();
         }
+
         private void RunMode_Click(object sender, System.EventArgs e)
         {
             var Status = AutoRunMode.Checked;
@@ -282,6 +300,7 @@ namespace ETCTool
                     Thread.Sleep(50);
                     return;
                 }
+
                 EmptyClipboard();
                 SetClipboardData(13, Marshal.StringToCoTaskMemAuto(text));
                 CloseClipboard();
@@ -306,9 +325,10 @@ namespace ETCTool
         #endregion
 
         private ClipbrdMonitor CaxaClipbrd;
+
         private void Buttom_TextChanged(object sender, EventArgs e)
         {
-          
+
             if (sender is MaterialFlatButton)
             {
                 var Buttom = sender as MaterialFlatButton;
@@ -321,34 +341,34 @@ namespace ETCTool
                         case "Buttom_StartCaxaClipbrd":
                         {
                             CaxaClipbrd = new ClipbrdMonitor();
-                                Task.Factory.StartNew(() =>
+                            Task.Factory.StartNew(() =>
+                            {
+                                while (true)
                                 {
-                                    while (true)
+                                    Thread.Sleep(500);
+                                    if (CaxaClipbrd == null) break;
+                                    var GetText = new StringBuilder(256);
+                                    GetWindowTextW(GetForegroundWindow(IntPtr.Zero),
+                                        GetText, 256);
+                                    if (GetText.ToString().StartsWith("CAXA"))
                                     {
-                                        Thread.Sleep(500);
-                                        if (CaxaClipbrd == null) break;
-                                        var GetText = new StringBuilder(256);
-                                        GetWindowTextW(GetForegroundWindow(IntPtr.Zero),
-                                            GetText, 256);
-                                        if (GetText.ToString().StartsWith("CAXA"))
+                                        Invoke(new Action(() =>
                                         {
-                                            Invoke(new Action(() =>
-                                                {
-                                                    Notify.Icon = ICO.ICO.clipboard_80px_1121225_easyicon_net;
-                                                }));
-                                        }
-                                        else
-                                        {
-                                            Invoke(new Action(() =>
-                                            {
-                                                Notify.Icon = ICO.ICO.Clipboard_Plan_128px_1185105_easyicon_net;
-                                            }));
-                                        }
-                                          
+                                            Notify.Icon = ICO.ICO.clipboard_80px_1121225_easyicon_net;
+                                        }));
                                     }
-                                 
-                                },TaskCreationOptions.LongRunning);
-                                
+                                    else
+                                    {
+                                        Invoke(new Action(() =>
+                                        {
+                                            Notify.Icon = ICO.ICO.Clipboard_Plan_128px_1185105_easyicon_net;
+                                        }));
+                                    }
+
+                                }
+
+                            }, TaskCreationOptions.LongRunning);
+
                         }
                             break;
                     }
@@ -372,7 +392,8 @@ namespace ETCTool
                             break;
                     }
                 }
-            }else if (sender is ToolStripMenuItem)
+            }
+            else if (sender is ToolStripMenuItem)
             {
                 var Buttom = sender as ToolStripMenuItem;
                 if (!Buttom.Text.StartsWith("启动"))
@@ -386,25 +407,39 @@ namespace ETCTool
                         .GetManifestResourceStream($"ETCTool.ICO.Stop.ico"));
                 }
             }
-           
+
         }
 
         private void Buttom_Click(object sender, EventArgs e)
         {
-            dynamic Buttom = sender as Control;
-            if (Buttom == null)
+            ThreadPool.QueueUserWorkItem((state) =>
             {
-                Buttom = sender as ToolStripMenuItem;
-            }
-            Buttom.Text = Buttom.Text.StartsWith("启动")
-                ? Buttom.Text.Replace("启动", "关闭")
-                : Buttom.Text.Replace("关闭", "启动");
+                dynamic Buttom = sender as Control;
+                if (Buttom == null)
+                {
+                    Buttom = sender as ToolStripMenuItem;
+                }
+
+                Invoke(new Action(() =>
+                {
+                    Buttom.Text = Buttom.Text.StartsWith("启动")
+                        ? Buttom.Text.Replace("启动", "关闭")
+                        : Buttom.Text.Replace("关闭", "启动");
+                }));
+
+            });
+
         }
 
+        private void materialSingleLineTextField1_MouseDown(object sender, MouseEventArgs e)
+        {
+
+        }
 
         #endregion
 
         #region 任务栏图标
+
         private void ShowForm_Click(object sender, EventArgs e)
         {
             this.WindowState = FormWindowState.Normal;
@@ -419,16 +454,90 @@ namespace ETCTool
                 this.ShowInTaskbar = true;
             }
         }
+
         private void ExitClose_Click(object sender, EventArgs e)
         {
             this.Close();
             Application.Exit();
             Application.ExitThread();
         }
+
         private void NotifyStartRun_MouseDown(object sender, MouseEventArgs e)
         {
             StartAllFuntion.PerformClick();
         }
+
+        #endregion
+
+        #region 鼠标控制窗体
+
+        bool isMouseDown = false; //表示鼠标当前是否处于按下状态，初始值为否
+
+        private void MouseMoveSize_MouseDown(object sender, MouseEventArgs e)
+        {
+            isMouseDown = true;
+        }
+
+        private void MouseMoveSize_MouseUp(object sender, MouseEventArgs e)
+        {
+            isMouseDown = false;
+            switch (MainTab.SelectedIndex)
+            {
+                case 0:
+                    this.Width = 480;
+                    this.Height = 280;
+                    break;
+                case 1:
+                    Properties.Settings.Default.FormSize[0] = this.Width.ToString();
+                    Properties.Settings.Default.FormSize[1] = this.Height.ToString();
+                    break;
+                case 2:
+                    Properties.Settings.Default.FormSize[2] = this.Width.ToString();
+                    Properties.Settings.Default.FormSize[3] = this.Height.ToString();
+                    break;
+                case 3:
+                    Properties.Settings.Default.FormSize[4] = this.Width.ToString();
+                    Properties.Settings.Default.FormSize[5] = this.Height.ToString();
+                    break;
+
+            }
+
+            Properties.Settings.Default.Save();
+        }
+
+        private void MouseMoveSize_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (!isMouseDown)
+                return;
+            this.Cursor = Cursors.SizeNWSE;
+            this.Width = MousePosition.X - this.Left;
+            this.Height = MousePosition.Y - this.Top;
+        }
+
+        private void MainTab_Selecting(object sender, TabControlCancelEventArgs e)
+        {
+            switch (e.TabPageIndex)
+            {
+                case 0:
+                    this.Width = 480;
+                    this.Height = 280;
+                    break;
+                case 1:
+                    this.Width = int.Parse(Properties.Settings.Default.FormSize[0]);
+                    this.Height = int.Parse(Properties.Settings.Default.FormSize[1]);
+                    break;
+                case 2:
+                    this.Width = int.Parse(Properties.Settings.Default.FormSize[2]);
+                    this.Height = int.Parse(Properties.Settings.Default.FormSize[3]);
+                    break;
+                case 3:
+                    this.Width = int.Parse(Properties.Settings.Default.FormSize[4]);
+                    this.Height = int.Parse(Properties.Settings.Default.FormSize[5]);
+                    break;
+
+            }
+        }
+
         #endregion
     }
 }
