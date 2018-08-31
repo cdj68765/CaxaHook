@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using MaterialSkin;
 using MaterialSkin.Controls;
 using static ETCTool.NativeApi;
+
 namespace ETCTool
 {
     public partial class MainForm : MaterialForm
@@ -19,6 +20,25 @@ namespace ETCTool
         public MainForm()
         {
             InitializeComponent();
+            Task.Factory.StartNew(() =>
+            {
+                do
+                {
+                    Thread.Sleep(1000);
+                    GetCursorPos(out NativeApi.Point lpPoint);
+                    try
+                    {
+                        Invoke(new Action(() =>
+                        {
+                            MainTabPlmStation.Text = lpPoint.ToString();
+                        }));
+                    }
+                    catch (Exception)
+                    {
+                        throw;
+                    }
+                } while (true);
+            });
 
             #region 状态初始化
 
@@ -29,12 +49,11 @@ namespace ETCTool
             if (Properties.Settings.Default.FormSize == null)
             {
                 Properties.Settings.Default.FormSize = new System.Collections.Specialized.StringCollection();
-                Properties.Settings.Default.FormSize.AddRange(new[] {"480", "280", "480", "280", "480", "280"});
+                Properties.Settings.Default.FormSize.AddRange(new[] { "480", "280", "480", "280", "480", "280" });
                 Properties.Settings.Default.Save();
             }
 
-            #endregion
-
+            #endregion 状态初始化
 
             AutoRunMode.Checked = CheckAutoRun();
             materialSkinManager = MaterialSkinManager.Instance;
@@ -78,7 +97,7 @@ namespace ETCTool
             };
         }
 
-        bool CheckAutoRun()
+        private bool CheckAutoRun()
         {
             if (AutoRunServer.IsServiceExisted())
             {
@@ -214,7 +233,7 @@ namespace ETCTool
             Properties.Settings.Default.Save();
         }
 
-        #endregion
+        #endregion 功能勾选段
 
         #region 主窗口状态条
 
@@ -248,9 +267,9 @@ namespace ETCTool
             MainTab.SelectedIndex = 3;
         }
 
-        #endregion
+        #endregion 主窗口状态条
 
-        #endregion
+        #endregion 主界面代码段
 
         #region Caxa相关代码段
 
@@ -292,7 +311,7 @@ namespace ETCTool
                 this.FormClosing += delegate { RemoveClipboardFormatListener(this.Handle); };
             }
 
-            void SetText(string text)
+            private void SetText(string text)
             {
                 if (!OpenClipboard(IntPtr.Zero))
                 {
@@ -306,7 +325,7 @@ namespace ETCTool
                 CloseClipboard();
             }
 
-            string GetText(int format)
+            private string GetText(int format)
             {
                 var value = string.Empty;
                 OpenClipboard(IntPtr.Zero);
@@ -321,14 +340,12 @@ namespace ETCTool
             }
         }
 
-
-        #endregion
+        #endregion Clipbrd监控主函数
 
         private ClipbrdMonitor CaxaClipbrd;
 
         private void Buttom_TextChanged(object sender, EventArgs e)
         {
-
             if (sender is MaterialFlatButton)
             {
                 var Buttom = sender as MaterialFlatButton;
@@ -339,37 +356,34 @@ namespace ETCTool
                     switch (Buttom.Name)
                     {
                         case "Buttom_StartCaxaClipbrd":
-                        {
-                            CaxaClipbrd = new ClipbrdMonitor();
-                            Task.Factory.StartNew(() =>
                             {
-                                while (true)
+                                CaxaClipbrd = new ClipbrdMonitor();
+                                Task.Factory.StartNew(() =>
                                 {
-                                    Thread.Sleep(500);
-                                    if (CaxaClipbrd == null) break;
-                                    var GetText = new StringBuilder(256);
-                                    GetWindowTextW(GetForegroundWindow(IntPtr.Zero),
-                                        GetText, 256);
-                                    if (GetText.ToString().StartsWith("CAXA"))
+                                    while (true)
                                     {
-                                        Invoke(new Action(() =>
+                                        Thread.Sleep(500);
+                                        if (CaxaClipbrd == null) break;
+                                        var GetText = new StringBuilder(256);
+                                        GetWindowTextW(GetForegroundWindow(IntPtr.Zero),
+                                            GetText, 256);
+                                        if (GetText.ToString().StartsWith("CAXA"))
                                         {
-                                            Notify.Icon = ICO.ICO.clipboard_80px_1121225_easyicon_net;
-                                        }));
-                                    }
-                                    else
-                                    {
-                                        Invoke(new Action(() =>
+                                            Invoke(new Action(() =>
+                                            {
+                                                Notify.Icon = ICO.ICO.clipboard_80px_1121225_easyicon_net;
+                                            }));
+                                        }
+                                        else
                                         {
-                                            Notify.Icon = ICO.ICO.Clipboard_Plan_128px_1185105_easyicon_net;
-                                        }));
+                                            Invoke(new Action(() =>
+                                            {
+                                                Notify.Icon = ICO.ICO.Clipboard_Plan_128px_1185105_easyicon_net;
+                                            }));
+                                        }
                                     }
-
-                                }
-
-                            }, TaskCreationOptions.LongRunning);
-
-                        }
+                                }, TaskCreationOptions.LongRunning);
+                            }
                             break;
                     }
                 }
@@ -380,15 +394,15 @@ namespace ETCTool
                     switch (Buttom.Name)
                     {
                         case "Buttom_StartCaxaClipbrd":
-                        {
-                            if (CaxaClipbrd != null)
                             {
-                                CaxaClipbrd.Close();
-                                CaxaClipbrd.Dispose();
-                                CaxaClipbrd = null;
-                                GC.Collect();
+                                if (CaxaClipbrd != null)
+                                {
+                                    CaxaClipbrd.Close();
+                                    CaxaClipbrd.Dispose();
+                                    CaxaClipbrd = null;
+                                    GC.Collect();
+                                }
                             }
-                        }
                             break;
                     }
                 }
@@ -407,7 +421,6 @@ namespace ETCTool
                         .GetManifestResourceStream($"ETCTool.ICO.Stop.ico"));
                 }
             }
-
         }
 
         private void Buttom_Click(object sender, EventArgs e)
@@ -426,17 +439,14 @@ namespace ETCTool
                         ? Buttom.Text.Replace("启动", "关闭")
                         : Buttom.Text.Replace("关闭", "启动");
                 }));
-
             });
-
         }
 
         private void materialSingleLineTextField1_MouseDown(object sender, MouseEventArgs e)
         {
-
         }
 
-        #endregion
+        #endregion Caxa相关代码段
 
         #region 任务栏图标
 
@@ -467,11 +477,11 @@ namespace ETCTool
             StartAllFuntion.PerformClick();
         }
 
-        #endregion
+        #endregion 任务栏图标
 
         #region 鼠标控制窗体
 
-        bool isMouseDown = false; //表示鼠标当前是否处于按下状态，初始值为否
+        private bool isMouseDown = false; //表示鼠标当前是否处于按下状态，初始值为否
 
         private void MouseMoveSize_MouseDown(object sender, MouseEventArgs e)
         {
@@ -487,19 +497,21 @@ namespace ETCTool
                     this.Width = 480;
                     this.Height = 280;
                     break;
+
                 case 1:
                     Properties.Settings.Default.FormSize[0] = this.Width.ToString();
                     Properties.Settings.Default.FormSize[1] = this.Height.ToString();
                     break;
+
                 case 2:
                     Properties.Settings.Default.FormSize[2] = this.Width.ToString();
                     Properties.Settings.Default.FormSize[3] = this.Height.ToString();
                     break;
+
                 case 3:
                     Properties.Settings.Default.FormSize[4] = this.Width.ToString();
                     Properties.Settings.Default.FormSize[5] = this.Height.ToString();
                     break;
-
             }
 
             Properties.Settings.Default.Save();
@@ -522,22 +534,24 @@ namespace ETCTool
                     this.Width = 480;
                     this.Height = 280;
                     break;
+
                 case 1:
                     this.Width = int.Parse(Properties.Settings.Default.FormSize[0]);
                     this.Height = int.Parse(Properties.Settings.Default.FormSize[1]);
                     break;
+
                 case 2:
                     this.Width = int.Parse(Properties.Settings.Default.FormSize[2]);
                     this.Height = int.Parse(Properties.Settings.Default.FormSize[3]);
                     break;
+
                 case 3:
                     this.Width = int.Parse(Properties.Settings.Default.FormSize[4]);
                     this.Height = int.Parse(Properties.Settings.Default.FormSize[5]);
                     break;
-
             }
         }
 
-        #endregion
+        #endregion 鼠标控制窗体
     }
 }

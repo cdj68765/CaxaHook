@@ -12,8 +12,10 @@ namespace ETCTool
 
         [DllImport("user32.dll")]
         internal static extern bool AddClipboardFormatListener(IntPtr hwnd);
+
         [DllImport("user32.dll")]
         internal static extern bool RemoveClipboardFormatListener(IntPtr hwnd);
+
         [DllImport("user32.dll")]
         public static extern int GetWindowTextW(IntPtr hWnd, [MarshalAs(UnmanagedType.LPWStr)] StringBuilder lpString,
             int nMaxCount);
@@ -39,7 +41,32 @@ namespace ETCTool
         [DllImport("User32")]
         internal static extern IntPtr GetClipboardData(int uFormat);
 
-        #endregion
+        #endregion 剪切板用API
 
+        #region 获得鼠标指针
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct Point
+        {
+            public int X;
+            public int Y;
+
+            public Point(int x, int y)
+            {
+                X = x;
+                Y = y;
+            }
+
+            public override string ToString()
+            {
+                return $"X:{X},Y:{Y}";
+            }
+        }
+
+        [DllImport("user32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool GetCursorPos(out Point lpPoint);
+
+        #endregion 获得鼠标指针
     }
 }

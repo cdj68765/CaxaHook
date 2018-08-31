@@ -47,12 +47,16 @@
             this.CheckClipbrdFuntion = new MaterialSkin.Controls.MaterialCheckBox();
             this.StartAllFuntion = new MaterialSkin.Controls.MaterialRaisedButton();
             this.TabCaxa = new System.Windows.Forms.TabPage();
+            this.materialLabel5 = new MaterialSkin.Controls.MaterialLabel();
+            this.materialSingleLineTextField1 = new MaterialSkin.Controls.MaterialSingleLineTextField();
             this.MouseMoveSize = new MaterialSkin.Controls.MaterialFlatButton();
             this.materialDivider1 = new MaterialSkin.Controls.MaterialDivider();
             this.Buttom_StartCaxaAutoSave = new MaterialSkin.Controls.MaterialFlatButton();
             this.Buttom_StartCaxaClipbrd = new MaterialSkin.Controls.MaterialFlatButton();
             this.TabPlm = new System.Windows.Forms.TabPage();
+            this.materialFlatButton1 = new MaterialSkin.Controls.MaterialFlatButton();
             this.TabAnother = new System.Windows.Forms.TabPage();
+            this.materialFlatButton2 = new MaterialSkin.Controls.MaterialFlatButton();
             this.materialRaisedButton1 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.materialTabSelector1 = new MaterialSkin.Controls.MaterialTabSelector();
             this.Notify = new System.Windows.Forms.NotifyIcon(this.components);
@@ -60,10 +64,7 @@
             this.ShowForm = new System.Windows.Forms.ToolStripMenuItem();
             this.NotifyStartRun = new System.Windows.Forms.ToolStripMenuItem();
             this.ExitClose = new System.Windows.Forms.ToolStripMenuItem();
-            this.materialFlatButton1 = new MaterialSkin.Controls.MaterialFlatButton();
-            this.materialFlatButton2 = new MaterialSkin.Controls.MaterialFlatButton();
-            this.materialSingleLineTextField1 = new MaterialSkin.Controls.MaterialSingleLineTextField();
-            this.materialLabel5 = new MaterialSkin.Controls.MaterialLabel();
+            this.materialDivider2 = new MaterialSkin.Controls.MaterialDivider();
             this.MainTab.SuspendLayout();
             this.TabMain.SuspendLayout();
             this.TabCaxa.SuspendLayout();
@@ -373,6 +374,39 @@
             this.TabCaxa.TabIndex = 0;
             this.TabCaxa.Text = "CAXA相关";
             // 
+            // materialLabel5
+            // 
+            this.materialLabel5.AutoSize = true;
+            this.materialLabel5.Depth = 0;
+            this.materialLabel5.Font = new System.Drawing.Font("Roboto", 11F);
+            this.materialLabel5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.materialLabel5.Location = new System.Drawing.Point(15, 99);
+            this.materialLabel5.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialLabel5.Name = "materialLabel5";
+            this.materialLabel5.Size = new System.Drawing.Size(137, 19);
+            this.materialLabel5.TabIndex = 6;
+            this.materialLabel5.Text = "设置自动保存路径";
+            // 
+            // materialSingleLineTextField1
+            // 
+            this.materialSingleLineTextField1.Depth = 0;
+            this.materialSingleLineTextField1.Hint = "";
+            this.materialSingleLineTextField1.Location = new System.Drawing.Point(19, 123);
+            this.materialSingleLineTextField1.MaxLength = 32767;
+            this.materialSingleLineTextField1.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialSingleLineTextField1.Name = "materialSingleLineTextField1";
+            this.materialSingleLineTextField1.PasswordChar = '\0';
+            this.materialSingleLineTextField1.SelectedText = "";
+            this.materialSingleLineTextField1.SelectionLength = 0;
+            this.materialSingleLineTextField1.SelectionStart = 0;
+            this.materialSingleLineTextField1.Size = new System.Drawing.Size(194, 23);
+            this.materialSingleLineTextField1.TabIndex = 5;
+            this.materialSingleLineTextField1.TabStop = false;
+            this.materialSingleLineTextField1.Text = "./";
+            this.materialSingleLineTextField1.UseSystemPasswordChar = false;
+            this.materialSingleLineTextField1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.MainTabClipbrdStation_MouseClick);
+            this.materialSingleLineTextField1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.materialSingleLineTextField1_MouseDown);
+            // 
             // MouseMoveSize
             // 
             this.MouseMoveSize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -404,7 +438,7 @@
             this.materialDivider1.Location = new System.Drawing.Point(227, 8);
             this.materialDivider1.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialDivider1.Name = "materialDivider1";
-            this.materialDivider1.Size = new System.Drawing.Size(10, 162);
+            this.materialDivider1.Size = new System.Drawing.Size(10, 160);
             this.materialDivider1.TabIndex = 3;
             this.materialDivider1.Text = "materialDivider1";
             // 
@@ -455,6 +489,7 @@
             // 
             // TabPlm
             // 
+            this.TabPlm.Controls.Add(this.materialDivider2);
             this.TabPlm.Controls.Add(this.materialFlatButton1);
             this.TabPlm.Location = new System.Drawing.Point(4, 22);
             this.TabPlm.Name = "TabPlm";
@@ -463,6 +498,28 @@
             this.TabPlm.TabIndex = 1;
             this.TabPlm.Text = "PLM相关";
             this.TabPlm.UseVisualStyleBackColor = true;
+            // 
+            // materialFlatButton1
+            // 
+            this.materialFlatButton1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.materialFlatButton1.AutoSize = true;
+            this.materialFlatButton1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.materialFlatButton1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.materialFlatButton1.Cursor = System.Windows.Forms.Cursors.PanSE;
+            this.materialFlatButton1.Depth = 0;
+            this.materialFlatButton1.Icon = ((System.Drawing.Image)(resources.GetObject("materialFlatButton1.Icon")));
+            this.materialFlatButton1.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.materialFlatButton1.Location = new System.Drawing.Point(430, 125);
+            this.materialFlatButton1.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.materialFlatButton1.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialFlatButton1.Name = "materialFlatButton1";
+            this.materialFlatButton1.Primary = false;
+            this.materialFlatButton1.Size = new System.Drawing.Size(44, 36);
+            this.materialFlatButton1.TabIndex = 5;
+            this.materialFlatButton1.UseVisualStyleBackColor = true;
+            this.materialFlatButton1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MouseMoveSize_MouseDown);
+            this.materialFlatButton1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.MouseMoveSize_MouseMove);
+            this.materialFlatButton1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MouseMoveSize_MouseUp);
             // 
             // TabAnother
             // 
@@ -474,6 +531,28 @@
             this.TabAnother.TabIndex = 2;
             this.TabAnother.Text = "其他相关";
             this.TabAnother.UseVisualStyleBackColor = true;
+            // 
+            // materialFlatButton2
+            // 
+            this.materialFlatButton2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.materialFlatButton2.AutoSize = true;
+            this.materialFlatButton2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.materialFlatButton2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.materialFlatButton2.Cursor = System.Windows.Forms.Cursors.PanSE;
+            this.materialFlatButton2.Depth = 0;
+            this.materialFlatButton2.Icon = ((System.Drawing.Image)(resources.GetObject("materialFlatButton2.Icon")));
+            this.materialFlatButton2.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.materialFlatButton2.Location = new System.Drawing.Point(430, 125);
+            this.materialFlatButton2.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.materialFlatButton2.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialFlatButton2.Name = "materialFlatButton2";
+            this.materialFlatButton2.Primary = false;
+            this.materialFlatButton2.Size = new System.Drawing.Size(44, 36);
+            this.materialFlatButton2.TabIndex = 5;
+            this.materialFlatButton2.UseVisualStyleBackColor = true;
+            this.materialFlatButton2.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MouseMoveSize_MouseDown);
+            this.materialFlatButton2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.MouseMoveSize_MouseMove);
+            this.materialFlatButton2.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MouseMoveSize_MouseUp);
             // 
             // materialRaisedButton1
             // 
@@ -548,82 +627,18 @@
             this.ExitClose.Text = "退出";
             this.ExitClose.Click += new System.EventHandler(this.ExitClose_Click);
             // 
-            // materialFlatButton1
+            // materialDivider2
             // 
-            this.materialFlatButton1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.materialFlatButton1.AutoSize = true;
-            this.materialFlatButton1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.materialFlatButton1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.materialFlatButton1.Cursor = System.Windows.Forms.Cursors.PanSE;
-            this.materialFlatButton1.Depth = 0;
-            this.materialFlatButton1.Icon = ((System.Drawing.Image)(resources.GetObject("materialFlatButton1.Icon")));
-            this.materialFlatButton1.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.materialFlatButton1.Location = new System.Drawing.Point(430, 125);
-            this.materialFlatButton1.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
-            this.materialFlatButton1.MouseState = MaterialSkin.MouseState.HOVER;
-            this.materialFlatButton1.Name = "materialFlatButton1";
-            this.materialFlatButton1.Primary = false;
-            this.materialFlatButton1.Size = new System.Drawing.Size(44, 36);
-            this.materialFlatButton1.TabIndex = 5;
-            this.materialFlatButton1.UseVisualStyleBackColor = true;
-            this.materialFlatButton1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MouseMoveSize_MouseDown);
-            this.materialFlatButton1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.MouseMoveSize_MouseMove);
-            this.materialFlatButton1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MouseMoveSize_MouseUp);
-            // 
-            // materialFlatButton2
-            // 
-            this.materialFlatButton2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.materialFlatButton2.AutoSize = true;
-            this.materialFlatButton2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.materialFlatButton2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.materialFlatButton2.Cursor = System.Windows.Forms.Cursors.PanSE;
-            this.materialFlatButton2.Depth = 0;
-            this.materialFlatButton2.Icon = ((System.Drawing.Image)(resources.GetObject("materialFlatButton2.Icon")));
-            this.materialFlatButton2.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.materialFlatButton2.Location = new System.Drawing.Point(430, 125);
-            this.materialFlatButton2.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
-            this.materialFlatButton2.MouseState = MaterialSkin.MouseState.HOVER;
-            this.materialFlatButton2.Name = "materialFlatButton2";
-            this.materialFlatButton2.Primary = false;
-            this.materialFlatButton2.Size = new System.Drawing.Size(44, 36);
-            this.materialFlatButton2.TabIndex = 5;
-            this.materialFlatButton2.UseVisualStyleBackColor = true;
-            this.materialFlatButton2.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MouseMoveSize_MouseDown);
-            this.materialFlatButton2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.MouseMoveSize_MouseMove);
-            this.materialFlatButton2.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MouseMoveSize_MouseUp);
-            // 
-            // materialSingleLineTextField1
-            // 
-            this.materialSingleLineTextField1.Depth = 0;
-            this.materialSingleLineTextField1.Hint = "";
-            this.materialSingleLineTextField1.Location = new System.Drawing.Point(19, 123);
-            this.materialSingleLineTextField1.MaxLength = 32767;
-            this.materialSingleLineTextField1.MouseState = MaterialSkin.MouseState.HOVER;
-            this.materialSingleLineTextField1.Name = "materialSingleLineTextField1";
-            this.materialSingleLineTextField1.PasswordChar = '\0';
-            this.materialSingleLineTextField1.SelectedText = "";
-            this.materialSingleLineTextField1.SelectionLength = 0;
-            this.materialSingleLineTextField1.SelectionStart = 0;
-            this.materialSingleLineTextField1.Size = new System.Drawing.Size(194, 23);
-            this.materialSingleLineTextField1.TabIndex = 5;
-            this.materialSingleLineTextField1.TabStop = false;
-            this.materialSingleLineTextField1.Text = "./";
-            this.materialSingleLineTextField1.UseSystemPasswordChar = false;
-            this.materialSingleLineTextField1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.MainTabClipbrdStation_MouseClick);
-            this.materialSingleLineTextField1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.materialSingleLineTextField1_MouseDown);
-            // 
-            // materialLabel5
-            // 
-            this.materialLabel5.AutoSize = true;
-            this.materialLabel5.Depth = 0;
-            this.materialLabel5.Font = new System.Drawing.Font("Roboto", 11F);
-            this.materialLabel5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.materialLabel5.Location = new System.Drawing.Point(15, 99);
-            this.materialLabel5.MouseState = MaterialSkin.MouseState.HOVER;
-            this.materialLabel5.Name = "materialLabel5";
-            this.materialLabel5.Size = new System.Drawing.Size(137, 19);
-            this.materialLabel5.TabIndex = 6;
-            this.materialLabel5.Text = "设置自动保存路径";
+            this.materialDivider2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.materialDivider2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.materialDivider2.Depth = 0;
+            this.materialDivider2.Location = new System.Drawing.Point(227, 8);
+            this.materialDivider2.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialDivider2.Name = "materialDivider2";
+            this.materialDivider2.Size = new System.Drawing.Size(10, 160);
+            this.materialDivider2.TabIndex = 6;
+            this.materialDivider2.Text = "materialDivider2";
             // 
             // MainForm
             // 
@@ -688,5 +703,6 @@
         private MaterialSkin.Controls.MaterialFlatButton materialFlatButton2;
         private MaterialSkin.Controls.MaterialLabel materialLabel5;
         private MaterialSkin.Controls.MaterialSingleLineTextField materialSingleLineTextField1;
+        private MaterialSkin.Controls.MaterialDivider materialDivider2;
     }
 }
