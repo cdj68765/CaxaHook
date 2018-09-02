@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
+using System.IO.MemoryMappedFiles;
+using System.IO.Pipes;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -16,6 +18,74 @@ namespace ETCTool
     public partial class MainForm : MaterialForm
     {
         private readonly MaterialSkinManager materialSkinManager;
+
+        private void 管道通讯()
+        {
+            var memoryFile = MemoryMappedFile.CreateFromFile(@"C:\Users\Administrator\Desktop\FA7-10B-A10-N003.pdf", FileMode.Open, "MyFile");
+            var stream = memoryFile.CreateViewStream();
+            using (FileStream Cfile = new FileStream(@"C:\Users\Administrator\Desktop\FA7-10B-A10-N003-2.pdf", FileMode.OpenOrCreate))
+            {
+                var file = MemoryMappedFile.OpenExisting("MyFile");
+                var accessor = file.CreateViewStream();
+                int b = -1;
+                do
+                {
+                    b = accessor.ReadByte();
+                    if (b == -1)
+                    {
+                        break;
+                    }
+                    Cfile.WriteByte(Convert.ToByte(b));
+                } while (b != -1);
+            }
+            using (NamedPipeServerStream pipeServer = new NamedPipeServerStream("mynamedpipe", PipeDirection.InOut))//创建管道
+            {
+                try
+                {
+                    pipeServer.WaitForConnection();//等待客户端连接
+                    pipeServer.ReadMode = PipeTransmissionMode.Byte;
+                    Console.WriteLine("sucess connected?" + pipeServer.IsConnected);
+                    StreamReader sr = new StreamReader(pipeServer);//获取管道输入流
+                    StreamWriter sw = new StreamWriter(pipeServer);//获取管道输出流
+                    string result;
+                    while (true)//循环接收客户端消息
+                    {
+                        result = sr.ReadLine();
+                        if (result == null || result == "bye")
+                            break;
+                        Console.WriteLine(result);
+                        sw.WriteLine("I'm Sever!");//返回客户端信息
+                        sw.Flush();//清除缓存流，注意必须有这一步，否则会造成管道堵塞
+                    }
+                    Console.ReadKey();
+                }
+                catch (IOException e)
+                {
+                    throw e;
+                }
+            }
+            using (NamedPipeClientStream pipeStream = new NamedPipeClientStream("localhost", "mynamedpipe"))//与服务端管道名一致，如果连接C++服务端，名称一致即可，“localhost”可以更换为IP地址，也可以进行网络通信
+            {
+                pipeStream.Connect();//连接服务端
+                if (!pipeStream.IsConnected)
+                {
+                    Console.WriteLine("Failed to connect ....");
+                    return;
+                }
+                StreamWriter sw = new StreamWriter(pipeStream);
+                StreamReader sr = new StreamReader(pipeStream);
+                while (true)//循环输入
+                {
+                    input = Console.ReadLine();
+                    Console.WriteLine("SendMessage:" + input);
+                    sw.WriteLine(input);//传递消息到服务端
+                    sw.Flush();//注意一定要有，同服务端一样
+                    string temp = "";
+                    temp = sr.ReadLine();//获取服务端返回信息
+                    Console.WriteLine("replyContent:" + temp);
+                }
+            }
+        }
 
         public MainForm()
         {
@@ -81,7 +151,11 @@ namespace ETCTool
                 Task.Factory.StartNew(() =>
                 {
                     Thread.Sleep(1500);
-                    this.Invoke(new Action(() => { StartAllFuntion.PerformClick(); }));
+                    this.Invoke(new Action(() =>
+                    {
+                        StartAllFuntion.PerformClick();
+                        NotifyStartRun.PerformClick();
+                    }));
                 });
             }
 
@@ -128,6 +202,10 @@ namespace ETCTool
                 {
                     Buttom_StartCaxaAutoSave.Text = Buttom_StartCaxaAutoSave.Text.Replace("启动", "关闭");
                 }
+                if (CheckPlmFuntion.Checked && Buttom_StartPlmMonitor.Text.StartsWith("启动"))
+                {
+                    Buttom_StartPlmMonitor.Text = Buttom_StartPlmMonitor.Text.Replace("启动", "关闭");
+                }
             }
             else
             {
@@ -146,7 +224,10 @@ namespace ETCTool
                 {
                     Buttom_StartCaxaAutoSave.Text = Buttom_StartCaxaAutoSave.Text.Replace("关闭", "启动");
                 }
-
+                if (CheckPlmFuntion.Checked && Buttom_StartPlmMonitor.Text.StartsWith("关闭"))
+                {
+                    Buttom_StartPlmMonitor.Text = Buttom_StartPlmMonitor.Text.Replace("关闭", "启动");
+                }
                 Notify.Icon = ICO.ICO.System_preferences_tool_tools_128px_581754_easyicon_net;
             }
 
@@ -160,6 +241,7 @@ namespace ETCTool
 
         private void RunMode_Click(object sender, System.EventArgs e)
         {
+            TabAnother.Select();
             var Status = AutoRunMode.Checked;
             AutoRunMode.Enabled = false;
             var StartChange = new Task(() =>
@@ -187,10 +269,10 @@ namespace ETCTool
             });
             StartChange.ContinueWith(obj =>
             {
-                Invoke(new Action(() =>
+                BeginInvoke(new MethodInvoker(() =>
                 {
-                    AutoRunMode.Checked = Status;
                     AutoRunMode.Enabled = true;
+                    AutoRunMode.Checked = Status;
                 }));
             });
             StartChange.Start();
@@ -384,6 +466,10 @@ namespace ETCTool
                                     }
                                 }, TaskCreationOptions.LongRunning);
                             }
+                            break;
+
+                        case "Buttom_StartPlmMonitor":
+
                             break;
                     }
                 }
