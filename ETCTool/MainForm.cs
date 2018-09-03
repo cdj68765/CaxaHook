@@ -76,13 +76,13 @@ namespace ETCTool
                 StreamReader sr = new StreamReader(pipeStream);
                 while (true)//循环输入
                 {
-                    input = Console.ReadLine();
-                    Console.WriteLine("SendMessage:" + input);
-                    sw.WriteLine(input);//传递消息到服务端
-                    sw.Flush();//注意一定要有，同服务端一样
-                    string temp = "";
-                    temp = sr.ReadLine();//获取服务端返回信息
-                    Console.WriteLine("replyContent:" + temp);
+                    /* input = Console.ReadLine();
+                     Console.WriteLine("SendMessage:" + input);
+                     sw.WriteLine(input);//传递消息到服务端
+                     sw.Flush();//注意一定要有，同服务端一样
+                     string temp = "";
+                     temp = sr.ReadLine();//获取服务端返回信息
+                     Console.WriteLine("replyContent:" + temp);*/
                 }
             }
         }
@@ -206,6 +206,10 @@ namespace ETCTool
                 {
                     Buttom_StartPlmMonitor.Text = Buttom_StartPlmMonitor.Text.Replace("启动", "关闭");
                 }
+                if (CheckFileDecrypt.Checked && Buttom_StartFileDecrypt.Text.StartsWith("启动"))
+                {
+                    Buttom_StartFileDecrypt.Text = Buttom_StartFileDecrypt.Text.Replace("启动", "关闭");
+                }
             }
             else
             {
@@ -228,6 +232,10 @@ namespace ETCTool
                 {
                     Buttom_StartPlmMonitor.Text = Buttom_StartPlmMonitor.Text.Replace("关闭", "启动");
                 }
+                if (CheckFileDecrypt.Checked && Buttom_StartFileDecrypt.Text.StartsWith("关闭"))
+                {
+                    Buttom_StartFileDecrypt.Text = Buttom_StartFileDecrypt.Text.Replace("关闭", "启动");
+                }
                 Notify.Icon = ICO.ICO.System_preferences_tool_tools_128px_581754_easyicon_net;
             }
 
@@ -241,9 +249,9 @@ namespace ETCTool
 
         private void RunMode_Click(object sender, System.EventArgs e)
         {
-            TabAnother.Select();
+            // TabAnother.Select();
             var Status = AutoRunMode.Checked;
-            AutoRunMode.Enabled = false;
+
             var StartChange = new Task(() =>
             {
                 if (Status)
@@ -271,7 +279,6 @@ namespace ETCTool
             {
                 BeginInvoke(new MethodInvoker(() =>
                 {
-                    AutoRunMode.Enabled = true;
                     AutoRunMode.Checked = Status;
                 }));
             });

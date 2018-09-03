@@ -54,9 +54,11 @@
             this.Buttom_StartCaxaAutoSave = new MaterialSkin.Controls.MaterialFlatButton();
             this.Buttom_StartCaxaClipbrd = new MaterialSkin.Controls.MaterialFlatButton();
             this.TabPlm = new System.Windows.Forms.TabPage();
+            this.Buttom_StartPlmMonitor = new MaterialSkin.Controls.MaterialFlatButton();
             this.materialDivider2 = new MaterialSkin.Controls.MaterialDivider();
             this.materialFlatButton1 = new MaterialSkin.Controls.MaterialFlatButton();
             this.TabAnother = new System.Windows.Forms.TabPage();
+            this.Buttom_StartFileDecrypt = new MaterialSkin.Controls.MaterialFlatButton();
             this.materialFlatButton2 = new MaterialSkin.Controls.MaterialFlatButton();
             this.materialRaisedButton1 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.materialTabSelector1 = new MaterialSkin.Controls.MaterialTabSelector();
@@ -65,7 +67,7 @@
             this.ShowForm = new System.Windows.Forms.ToolStripMenuItem();
             this.NotifyStartRun = new System.Windows.Forms.ToolStripMenuItem();
             this.ExitClose = new System.Windows.Forms.ToolStripMenuItem();
-            this.Buttom_StartPlmMonitor = new MaterialSkin.Controls.MaterialFlatButton();
+            this.materialDivider3 = new MaterialSkin.Controls.MaterialDivider();
             this.MainTab.SuspendLayout();
             this.TabMain.SuspendLayout();
             this.TabCaxa.SuspendLayout();
@@ -407,7 +409,6 @@
             this.materialSingleLineTextField1.Text = "./";
             this.materialSingleLineTextField1.UseSystemPasswordChar = false;
             this.materialSingleLineTextField1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.MainTabClipbrdStation_MouseClick);
-            this.materialSingleLineTextField1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.materialSingleLineTextField1_MouseDown);
             // 
             // MouseMoveSize
             // 
@@ -502,6 +503,28 @@
             this.TabPlm.Text = "PLM相关";
             this.TabPlm.UseVisualStyleBackColor = true;
             // 
+            // Buttom_StartPlmMonitor
+            // 
+            this.Buttom_StartPlmMonitor.AutoSize = true;
+            this.Buttom_StartPlmMonitor.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.Buttom_StartPlmMonitor.BackColor = System.Drawing.Color.DimGray;
+            this.Buttom_StartPlmMonitor.Depth = 0;
+            this.Buttom_StartPlmMonitor.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.Buttom_StartPlmMonitor.Icon = ((System.Drawing.Image)(resources.GetObject("Buttom_StartPlmMonitor.Icon")));
+            this.Buttom_StartPlmMonitor.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Buttom_StartPlmMonitor.Location = new System.Drawing.Point(7, 9);
+            this.Buttom_StartPlmMonitor.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.Buttom_StartPlmMonitor.MouseState = MaterialSkin.MouseState.HOVER;
+            this.Buttom_StartPlmMonitor.Name = "Buttom_StartPlmMonitor";
+            this.Buttom_StartPlmMonitor.Primary = false;
+            this.Buttom_StartPlmMonitor.Size = new System.Drawing.Size(138, 36);
+            this.Buttom_StartPlmMonitor.TabIndex = 7;
+            this.Buttom_StartPlmMonitor.Text = "启动Plm监控";
+            this.Buttom_StartPlmMonitor.UseCompatibleTextRendering = true;
+            this.Buttom_StartPlmMonitor.UseVisualStyleBackColor = false;
+            this.Buttom_StartPlmMonitor.TextChanged += new System.EventHandler(this.Buttom_TextChanged);
+            this.Buttom_StartPlmMonitor.Click += new System.EventHandler(this.Buttom_Click);
+            // 
             // materialDivider2
             // 
             this.materialDivider2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -540,6 +563,8 @@
             // 
             // TabAnother
             // 
+            this.TabAnother.Controls.Add(this.materialDivider3);
+            this.TabAnother.Controls.Add(this.Buttom_StartFileDecrypt);
             this.TabAnother.Controls.Add(this.materialFlatButton2);
             this.TabAnother.Controls.Add(this.materialRaisedButton1);
             this.TabAnother.Location = new System.Drawing.Point(4, 22);
@@ -548,6 +573,28 @@
             this.TabAnother.TabIndex = 2;
             this.TabAnother.Text = "其他相关";
             this.TabAnother.UseVisualStyleBackColor = true;
+            // 
+            // Buttom_StartFileDecrypt
+            // 
+            this.Buttom_StartFileDecrypt.AutoSize = true;
+            this.Buttom_StartFileDecrypt.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.Buttom_StartFileDecrypt.BackColor = System.Drawing.Color.DimGray;
+            this.Buttom_StartFileDecrypt.Depth = 0;
+            this.Buttom_StartFileDecrypt.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.Buttom_StartFileDecrypt.Icon = ((System.Drawing.Image)(resources.GetObject("Buttom_StartFileDecrypt.Icon")));
+            this.Buttom_StartFileDecrypt.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Buttom_StartFileDecrypt.Location = new System.Drawing.Point(7, 48);
+            this.Buttom_StartFileDecrypt.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.Buttom_StartFileDecrypt.MouseState = MaterialSkin.MouseState.HOVER;
+            this.Buttom_StartFileDecrypt.Name = "Buttom_StartFileDecrypt";
+            this.Buttom_StartFileDecrypt.Primary = false;
+            this.Buttom_StartFileDecrypt.Size = new System.Drawing.Size(170, 36);
+            this.Buttom_StartFileDecrypt.TabIndex = 8;
+            this.Buttom_StartFileDecrypt.Text = "启动文件解密功能";
+            this.Buttom_StartFileDecrypt.UseCompatibleTextRendering = true;
+            this.Buttom_StartFileDecrypt.UseVisualStyleBackColor = false;
+            this.Buttom_StartFileDecrypt.TextChanged += new System.EventHandler(this.Buttom_TextChanged);
+            this.Buttom_StartFileDecrypt.Click += new System.EventHandler(this.Buttom_Click);
             // 
             // materialFlatButton2
             // 
@@ -644,27 +691,18 @@
             this.ExitClose.Text = "退出";
             this.ExitClose.Click += new System.EventHandler(this.ExitClose_Click);
             // 
-            // Buttom_StartPlmMonitor
+            // materialDivider3
             // 
-            this.Buttom_StartPlmMonitor.AutoSize = true;
-            this.Buttom_StartPlmMonitor.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.Buttom_StartPlmMonitor.BackColor = System.Drawing.Color.DimGray;
-            this.Buttom_StartPlmMonitor.Depth = 0;
-            this.Buttom_StartPlmMonitor.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
-            this.Buttom_StartPlmMonitor.Icon = ((System.Drawing.Image)(resources.GetObject("Buttom_StartPlmMonitor.Icon")));
-            this.Buttom_StartPlmMonitor.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Buttom_StartPlmMonitor.Location = new System.Drawing.Point(7, 9);
-            this.Buttom_StartPlmMonitor.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
-            this.Buttom_StartPlmMonitor.MouseState = MaterialSkin.MouseState.HOVER;
-            this.Buttom_StartPlmMonitor.Name = "Buttom_StartPlmMonitor";
-            this.Buttom_StartPlmMonitor.Primary = false;
-            this.Buttom_StartPlmMonitor.Size = new System.Drawing.Size(138, 36);
-            this.Buttom_StartPlmMonitor.TabIndex = 7;
-            this.Buttom_StartPlmMonitor.Text = "启动Plm监控";
-            this.Buttom_StartPlmMonitor.UseCompatibleTextRendering = true;
-            this.Buttom_StartPlmMonitor.UseVisualStyleBackColor = false;
-            this.Buttom_StartPlmMonitor.TextChanged += new System.EventHandler(this.Buttom_TextChanged);
-            this.Buttom_StartPlmMonitor.Click += new System.EventHandler(this.Buttom_Click);
+            this.materialDivider3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.materialDivider3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.materialDivider3.Depth = 0;
+            this.materialDivider3.Location = new System.Drawing.Point(230, -2);
+            this.materialDivider3.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialDivider3.Name = "materialDivider3";
+            this.materialDivider3.Size = new System.Drawing.Size(10, 160);
+            this.materialDivider3.TabIndex = 9;
+            this.materialDivider3.Text = "materialDivider3";
             // 
             // MainForm
             // 
@@ -731,5 +769,7 @@
         private MaterialSkin.Controls.MaterialSingleLineTextField materialSingleLineTextField1;
         private MaterialSkin.Controls.MaterialDivider materialDivider2;
         private MaterialSkin.Controls.MaterialFlatButton Buttom_StartPlmMonitor;
+        private MaterialSkin.Controls.MaterialFlatButton Buttom_StartFileDecrypt;
+        private MaterialSkin.Controls.MaterialDivider materialDivider3;
     }
 }
