@@ -30,6 +30,14 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            System.Windows.Forms.ListViewItem listViewItem17 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem18 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem19 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem20 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem21 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem22 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem23 = new System.Windows.Forms.ListViewItem("");
+            System.Windows.Forms.ListViewItem listViewItem24 = new System.Windows.Forms.ListViewItem("");
             this.MainTab = new MaterialSkin.Controls.MaterialTabControl();
             this.TabMain = new System.Windows.Forms.TabPage();
             this.MainTabFileDecryptStation = new MaterialSkin.Controls.MaterialSingleLineTextField();
@@ -47,9 +55,13 @@
             this.CheckClipbrdFuntion = new MaterialSkin.Controls.MaterialCheckBox();
             this.StartAllFuntion = new MaterialSkin.Controls.MaterialRaisedButton();
             this.TabCaxa = new System.Windows.Forms.TabPage();
+            this.ChangeAutoSavePath = new MaterialSkin.Controls.MaterialRaisedButton();
+            this.AutoSaveRadio = new MaterialSkin.Controls.MaterialRadioButton();
+            this.CliRadio = new MaterialSkin.Controls.MaterialRadioButton();
+            this.MouseMoveSize = new MaterialSkin.Controls.MaterialFlatButton();
+            this.CaxaList = new MaterialSkin.Controls.MaterialListView();
             this.materialLabel5 = new MaterialSkin.Controls.MaterialLabel();
             this.materialSingleLineTextField1 = new MaterialSkin.Controls.MaterialSingleLineTextField();
-            this.MouseMoveSize = new MaterialSkin.Controls.MaterialFlatButton();
             this.materialDivider1 = new MaterialSkin.Controls.MaterialDivider();
             this.Buttom_StartCaxaAutoSave = new MaterialSkin.Controls.MaterialFlatButton();
             this.Buttom_StartCaxaClipbrd = new MaterialSkin.Controls.MaterialFlatButton();
@@ -58,6 +70,7 @@
             this.materialDivider2 = new MaterialSkin.Controls.MaterialDivider();
             this.materialFlatButton1 = new MaterialSkin.Controls.MaterialFlatButton();
             this.TabAnother = new System.Windows.Forms.TabPage();
+            this.materialDivider3 = new MaterialSkin.Controls.MaterialDivider();
             this.Buttom_StartFileDecrypt = new MaterialSkin.Controls.MaterialFlatButton();
             this.materialFlatButton2 = new MaterialSkin.Controls.MaterialFlatButton();
             this.materialRaisedButton1 = new MaterialSkin.Controls.MaterialRaisedButton();
@@ -67,7 +80,6 @@
             this.ShowForm = new System.Windows.Forms.ToolStripMenuItem();
             this.NotifyStartRun = new System.Windows.Forms.ToolStripMenuItem();
             this.ExitClose = new System.Windows.Forms.ToolStripMenuItem();
-            this.materialDivider3 = new MaterialSkin.Controls.MaterialDivider();
             this.MainTab.SuspendLayout();
             this.TabMain.SuspendLayout();
             this.TabCaxa.SuspendLayout();
@@ -364,9 +376,13 @@
             // TabCaxa
             // 
             this.TabCaxa.BackColor = System.Drawing.Color.White;
+            this.TabCaxa.Controls.Add(this.ChangeAutoSavePath);
+            this.TabCaxa.Controls.Add(this.AutoSaveRadio);
+            this.TabCaxa.Controls.Add(this.CliRadio);
+            this.TabCaxa.Controls.Add(this.MouseMoveSize);
+            this.TabCaxa.Controls.Add(this.CaxaList);
             this.TabCaxa.Controls.Add(this.materialLabel5);
             this.TabCaxa.Controls.Add(this.materialSingleLineTextField1);
-            this.TabCaxa.Controls.Add(this.MouseMoveSize);
             this.TabCaxa.Controls.Add(this.materialDivider1);
             this.TabCaxa.Controls.Add(this.Buttom_StartCaxaAutoSave);
             this.TabCaxa.Controls.Add(this.Buttom_StartCaxaClipbrd);
@@ -376,6 +392,109 @@
             this.TabCaxa.Size = new System.Drawing.Size(470, 157);
             this.TabCaxa.TabIndex = 0;
             this.TabCaxa.Text = "CAXA相关";
+            // 
+            // ChangeAutoSavePath
+            // 
+            this.ChangeAutoSavePath.AutoSize = true;
+            this.ChangeAutoSavePath.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.ChangeAutoSavePath.Depth = 0;
+            this.ChangeAutoSavePath.Font = new System.Drawing.Font("宋体", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.ChangeAutoSavePath.Icon = null;
+            this.ChangeAutoSavePath.Location = new System.Drawing.Point(170, 78);
+            this.ChangeAutoSavePath.MouseState = MaterialSkin.MouseState.HOVER;
+            this.ChangeAutoSavePath.Name = "ChangeAutoSavePath";
+            this.ChangeAutoSavePath.Primary = true;
+            this.ChangeAutoSavePath.Size = new System.Drawing.Size(51, 36);
+            this.ChangeAutoSavePath.TabIndex = 10;
+            this.ChangeAutoSavePath.Text = "浏览";
+            this.ChangeAutoSavePath.UseVisualStyleBackColor = true;
+            this.ChangeAutoSavePath.MouseClick += new System.Windows.Forms.MouseEventHandler(this.MainTabClipbrdStation_MouseClick);
+            // 
+            // AutoSaveRadio
+            // 
+            this.AutoSaveRadio.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.AutoSaveRadio.AutoSize = true;
+            this.AutoSaveRadio.Depth = 0;
+            this.AutoSaveRadio.Font = new System.Drawing.Font("Roboto", 10F);
+            this.AutoSaveRadio.Location = new System.Drawing.Point(316, 124);
+            this.AutoSaveRadio.Margin = new System.Windows.Forms.Padding(0);
+            this.AutoSaveRadio.MouseLocation = new System.Drawing.Point(-1, -1);
+            this.AutoSaveRadio.MouseState = MaterialSkin.MouseState.HOVER;
+            this.AutoSaveRadio.Name = "AutoSaveRadio";
+            this.AutoSaveRadio.Ripple = true;
+            this.AutoSaveRadio.Size = new System.Drawing.Size(89, 30);
+            this.AutoSaveRadio.TabIndex = 9;
+            this.AutoSaveRadio.Text = "自动保存";
+            this.AutoSaveRadio.UseVisualStyleBackColor = true;
+            // 
+            // CliRadio
+            // 
+            this.CliRadio.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.CliRadio.AutoSize = true;
+            this.CliRadio.Checked = true;
+            this.CliRadio.Depth = 0;
+            this.CliRadio.Font = new System.Drawing.Font("Roboto", 10F);
+            this.CliRadio.Location = new System.Drawing.Point(240, 124);
+            this.CliRadio.Margin = new System.Windows.Forms.Padding(0);
+            this.CliRadio.MouseLocation = new System.Drawing.Point(-1, -1);
+            this.CliRadio.MouseState = MaterialSkin.MouseState.HOVER;
+            this.CliRadio.Name = "CliRadio";
+            this.CliRadio.Ripple = true;
+            this.CliRadio.Size = new System.Drawing.Size(74, 30);
+            this.CliRadio.TabIndex = 8;
+            this.CliRadio.TabStop = true;
+            this.CliRadio.Text = "剪切板";
+            this.CliRadio.UseVisualStyleBackColor = true;
+            // 
+            // MouseMoveSize
+            // 
+            this.MouseMoveSize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.MouseMoveSize.AutoSize = true;
+            this.MouseMoveSize.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.MouseMoveSize.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.MouseMoveSize.Cursor = System.Windows.Forms.Cursors.PanSE;
+            this.MouseMoveSize.Depth = 0;
+            this.MouseMoveSize.Icon = ((System.Drawing.Image)(resources.GetObject("MouseMoveSize.Icon")));
+            this.MouseMoveSize.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.MouseMoveSize.Location = new System.Drawing.Point(437, 125);
+            this.MouseMoveSize.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.MouseMoveSize.MouseState = MaterialSkin.MouseState.HOVER;
+            this.MouseMoveSize.Name = "MouseMoveSize";
+            this.MouseMoveSize.Primary = false;
+            this.MouseMoveSize.Size = new System.Drawing.Size(44, 36);
+            this.MouseMoveSize.TabIndex = 4;
+            this.MouseMoveSize.UseVisualStyleBackColor = true;
+            this.MouseMoveSize.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MouseMoveSize_MouseDown);
+            this.MouseMoveSize.MouseMove += new System.Windows.Forms.MouseEventHandler(this.MouseMoveSize_MouseMove);
+            this.MouseMoveSize.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MouseMoveSize_MouseUp);
+            // 
+            // CaxaList
+            // 
+            this.CaxaList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.CaxaList.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.CaxaList.Depth = 0;
+            this.CaxaList.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F);
+            this.CaxaList.FullRowSelect = true;
+            this.CaxaList.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.CaxaList.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
+            listViewItem17,
+            listViewItem18,
+            listViewItem19,
+            listViewItem20,
+            listViewItem21,
+            listViewItem22,
+            listViewItem23,
+            listViewItem24});
+            this.CaxaList.Location = new System.Drawing.Point(243, 7);
+            this.CaxaList.MouseLocation = new System.Drawing.Point(-1, -1);
+            this.CaxaList.MouseState = MaterialSkin.MouseState.OUT;
+            this.CaxaList.Name = "CaxaList";
+            this.CaxaList.OwnerDraw = true;
+            this.CaxaList.Size = new System.Drawing.Size(224, 118);
+            this.CaxaList.TabIndex = 7;
+            this.CaxaList.UseCompatibleStateImageBehavior = false;
+            this.CaxaList.View = System.Windows.Forms.View.Details;
             // 
             // materialLabel5
             // 
@@ -403,34 +522,11 @@
             this.materialSingleLineTextField1.SelectedText = "";
             this.materialSingleLineTextField1.SelectionLength = 0;
             this.materialSingleLineTextField1.SelectionStart = 0;
-            this.materialSingleLineTextField1.Size = new System.Drawing.Size(194, 23);
+            this.materialSingleLineTextField1.Size = new System.Drawing.Size(152, 23);
             this.materialSingleLineTextField1.TabIndex = 5;
             this.materialSingleLineTextField1.TabStop = false;
-            this.materialSingleLineTextField1.Text = "./";
             this.materialSingleLineTextField1.UseSystemPasswordChar = false;
             this.materialSingleLineTextField1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.MainTabClipbrdStation_MouseClick);
-            // 
-            // MouseMoveSize
-            // 
-            this.MouseMoveSize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.MouseMoveSize.AutoSize = true;
-            this.MouseMoveSize.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.MouseMoveSize.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.MouseMoveSize.Cursor = System.Windows.Forms.Cursors.PanSE;
-            this.MouseMoveSize.Depth = 0;
-            this.MouseMoveSize.Icon = ((System.Drawing.Image)(resources.GetObject("MouseMoveSize.Icon")));
-            this.MouseMoveSize.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.MouseMoveSize.Location = new System.Drawing.Point(437, 125);
-            this.MouseMoveSize.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
-            this.MouseMoveSize.MouseState = MaterialSkin.MouseState.HOVER;
-            this.MouseMoveSize.Name = "MouseMoveSize";
-            this.MouseMoveSize.Primary = false;
-            this.MouseMoveSize.Size = new System.Drawing.Size(44, 36);
-            this.MouseMoveSize.TabIndex = 4;
-            this.MouseMoveSize.UseVisualStyleBackColor = true;
-            this.MouseMoveSize.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MouseMoveSize_MouseDown);
-            this.MouseMoveSize.MouseMove += new System.Windows.Forms.MouseEventHandler(this.MouseMoveSize_MouseMove);
-            this.MouseMoveSize.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MouseMoveSize_MouseUp);
             // 
             // materialDivider1
             // 
@@ -466,7 +562,7 @@
             this.Buttom_StartCaxaAutoSave.UseCompatibleTextRendering = true;
             this.Buttom_StartCaxaAutoSave.UseVisualStyleBackColor = false;
             this.Buttom_StartCaxaAutoSave.TextChanged += new System.EventHandler(this.Buttom_TextChanged);
-            this.Buttom_StartCaxaAutoSave.Click += new System.EventHandler(this.Buttom_Click);
+            this.Buttom_StartCaxaAutoSave.Click += new System.EventHandler(this.Button_Click);
             // 
             // Buttom_StartCaxaClipbrd
             // 
@@ -488,7 +584,7 @@
             this.Buttom_StartCaxaClipbrd.UseCompatibleTextRendering = true;
             this.Buttom_StartCaxaClipbrd.UseVisualStyleBackColor = false;
             this.Buttom_StartCaxaClipbrd.TextChanged += new System.EventHandler(this.Buttom_TextChanged);
-            this.Buttom_StartCaxaClipbrd.Click += new System.EventHandler(this.Buttom_Click);
+            this.Buttom_StartCaxaClipbrd.Click += new System.EventHandler(this.Button_Click);
             // 
             // TabPlm
             // 
@@ -523,7 +619,7 @@
             this.Buttom_StartPlmMonitor.UseCompatibleTextRendering = true;
             this.Buttom_StartPlmMonitor.UseVisualStyleBackColor = false;
             this.Buttom_StartPlmMonitor.TextChanged += new System.EventHandler(this.Buttom_TextChanged);
-            this.Buttom_StartPlmMonitor.Click += new System.EventHandler(this.Buttom_Click);
+            this.Buttom_StartPlmMonitor.Click += new System.EventHandler(this.Button_Click);
             // 
             // materialDivider2
             // 
@@ -574,6 +670,19 @@
             this.TabAnother.Text = "其他相关";
             this.TabAnother.UseVisualStyleBackColor = true;
             // 
+            // materialDivider3
+            // 
+            this.materialDivider3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.materialDivider3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.materialDivider3.Depth = 0;
+            this.materialDivider3.Location = new System.Drawing.Point(230, -2);
+            this.materialDivider3.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialDivider3.Name = "materialDivider3";
+            this.materialDivider3.Size = new System.Drawing.Size(10, 160);
+            this.materialDivider3.TabIndex = 9;
+            this.materialDivider3.Text = "materialDivider3";
+            // 
             // Buttom_StartFileDecrypt
             // 
             this.Buttom_StartFileDecrypt.AutoSize = true;
@@ -594,7 +703,7 @@
             this.Buttom_StartFileDecrypt.UseCompatibleTextRendering = true;
             this.Buttom_StartFileDecrypt.UseVisualStyleBackColor = false;
             this.Buttom_StartFileDecrypt.TextChanged += new System.EventHandler(this.Buttom_TextChanged);
-            this.Buttom_StartFileDecrypt.Click += new System.EventHandler(this.Buttom_Click);
+            this.Buttom_StartFileDecrypt.Click += new System.EventHandler(this.Button_Click);
             // 
             // materialFlatButton2
             // 
@@ -680,7 +789,7 @@
             this.NotifyStartRun.Name = "NotifyStartRun";
             this.NotifyStartRun.Size = new System.Drawing.Size(148, 22);
             this.NotifyStartRun.Text = "启动勾选功能";
-            this.NotifyStartRun.Click += new System.EventHandler(this.Buttom_Click);
+            this.NotifyStartRun.Click += new System.EventHandler(this.Button_Click);
             this.NotifyStartRun.MouseDown += new System.Windows.Forms.MouseEventHandler(this.NotifyStartRun_MouseDown);
             this.NotifyStartRun.TextChanged += new System.EventHandler(this.Buttom_TextChanged);
             // 
@@ -690,19 +799,6 @@
             this.ExitClose.Size = new System.Drawing.Size(148, 22);
             this.ExitClose.Text = "退出";
             this.ExitClose.Click += new System.EventHandler(this.ExitClose_Click);
-            // 
-            // materialDivider3
-            // 
-            this.materialDivider3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.materialDivider3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.materialDivider3.Depth = 0;
-            this.materialDivider3.Location = new System.Drawing.Point(230, -2);
-            this.materialDivider3.MouseState = MaterialSkin.MouseState.HOVER;
-            this.materialDivider3.Name = "materialDivider3";
-            this.materialDivider3.Size = new System.Drawing.Size(10, 160);
-            this.materialDivider3.TabIndex = 9;
-            this.materialDivider3.Text = "materialDivider3";
             // 
             // MainForm
             // 
@@ -771,5 +867,9 @@
         private MaterialSkin.Controls.MaterialFlatButton Buttom_StartPlmMonitor;
         private MaterialSkin.Controls.MaterialFlatButton Buttom_StartFileDecrypt;
         private MaterialSkin.Controls.MaterialDivider materialDivider3;
+        private MaterialSkin.Controls.MaterialListView CaxaList;
+        private MaterialSkin.Controls.MaterialRadioButton AutoSaveRadio;
+        private MaterialSkin.Controls.MaterialRadioButton CliRadio;
+        private MaterialSkin.Controls.MaterialRaisedButton ChangeAutoSavePath;
     }
 }

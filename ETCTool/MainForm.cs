@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.IO.MemoryMappedFiles;
@@ -185,61 +186,63 @@ namespace ETCTool
 
         private void StartAllFuntion_Click(object sender, System.EventArgs e)
         {
-            if (StartAllFuntion.Text == @"启动下列勾选功能")
+            try
             {
-                StartAllFuntion.Text = @"关闭所有功能";
-                CheckClipbrdFuntion.Enabled = false;
-                CheckCaxaFuntion.Enabled = false;
-                CheckPlmFuntion.Enabled = false;
-                CheckFileDecrypt.Enabled = false;
-                Properties.Settings.Default.RunMode = true;
-                if (CheckClipbrdFuntion.Checked && Buttom_StartCaxaClipbrd.Text.StartsWith("启动"))
+                if (StartAllFuntion.Text == @"启动下列勾选功能")
                 {
-                    Buttom_StartCaxaClipbrd.Text = Buttom_StartCaxaClipbrd.Text.Replace("启动", "关闭");
-                }
+                    StartAllFuntion.Text = @"关闭所有功能";
+                    CheckClipbrdFuntion.Enabled = false;
+                    CheckCaxaFuntion.Enabled = false;
+                    CheckPlmFuntion.Enabled = false;
+                    CheckFileDecrypt.Enabled = false;
+                    Properties.Settings.Default.RunMode = true;
+                    if (CheckClipbrdFuntion.Checked && Buttom_StartCaxaClipbrd.Text.StartsWith("启动"))
+                    {
+                        Buttom_StartCaxaClipbrd.Text = Buttom_StartCaxaClipbrd.Text.Replace("启动", "关闭");
+                    }
 
-                if (CheckCaxaFuntion.Checked && Buttom_StartCaxaAutoSave.Text.StartsWith("启动"))
-                {
-                    Buttom_StartCaxaAutoSave.Text = Buttom_StartCaxaAutoSave.Text.Replace("启动", "关闭");
+                    if (CheckCaxaFuntion.Checked && Buttom_StartCaxaAutoSave.Text.StartsWith("启动"))
+                    {
+                        Buttom_StartCaxaAutoSave.Text = Buttom_StartCaxaAutoSave.Text.Replace("启动", "关闭");
+                    }
+                    if (CheckPlmFuntion.Checked && Buttom_StartPlmMonitor.Text.StartsWith("启动"))
+                    {
+                        Buttom_StartPlmMonitor.Text = Buttom_StartPlmMonitor.Text.Replace("启动", "关闭");
+                    }
+                    if (CheckFileDecrypt.Checked && Buttom_StartFileDecrypt.Text.StartsWith("启动"))
+                    {
+                        Buttom_StartFileDecrypt.Text = Buttom_StartFileDecrypt.Text.Replace("启动", "关闭");
+                    }
                 }
-                if (CheckPlmFuntion.Checked && Buttom_StartPlmMonitor.Text.StartsWith("启动"))
+                else
                 {
-                    Buttom_StartPlmMonitor.Text = Buttom_StartPlmMonitor.Text.Replace("启动", "关闭");
-                }
-                if (CheckFileDecrypt.Checked && Buttom_StartFileDecrypt.Text.StartsWith("启动"))
-                {
-                    Buttom_StartFileDecrypt.Text = Buttom_StartFileDecrypt.Text.Replace("启动", "关闭");
+                    StartAllFuntion.Text = @"启动下列勾选功能";
+                    CheckClipbrdFuntion.Enabled = true;
+                    CheckCaxaFuntion.Enabled = true;
+                    CheckPlmFuntion.Enabled = true;
+                    CheckFileDecrypt.Enabled = true;
+                    Properties.Settings.Default.RunMode = false;
+                    if (CheckClipbrdFuntion.Checked && Buttom_StartCaxaClipbrd.Text.StartsWith("关闭"))
+                    {
+                        Buttom_StartCaxaClipbrd.Text = Buttom_StartCaxaClipbrd.Text.Replace("关闭", "启动");
+                    } 
+
+                    if (CheckCaxaFuntion.Checked && Buttom_StartCaxaAutoSave.Text.StartsWith("关闭"))
+                    {
+                        Buttom_StartCaxaAutoSave.Text = Buttom_StartCaxaAutoSave.Text.Replace("关闭", "启动");
+                    }
+                    if (CheckPlmFuntion.Checked && Buttom_StartPlmMonitor.Text.StartsWith("关闭"))
+                    {
+                        Buttom_StartPlmMonitor.Text = Buttom_StartPlmMonitor.Text.Replace("关闭", "启动");
+                    }
+                    if (CheckFileDecrypt.Checked && Buttom_StartFileDecrypt.Text.StartsWith("关闭"))
+                    {
+                        Buttom_StartFileDecrypt.Text = Buttom_StartFileDecrypt.Text.Replace("关闭", "启动");
+                    }
+                    Notify.Icon = ICO.ICO.System_preferences_tool_tools_128px_581754_easyicon_net;
                 }
             }
-            else
-            {
-                StartAllFuntion.Text = @"启动下列勾选功能";
-                CheckClipbrdFuntion.Enabled = true;
-                CheckCaxaFuntion.Enabled = true;
-                CheckPlmFuntion.Enabled = true;
-                CheckFileDecrypt.Enabled = true;
-                Properties.Settings.Default.RunMode = false;
-                if (CheckClipbrdFuntion.Checked && Buttom_StartCaxaClipbrd.Text.StartsWith("关闭"))
-                {
-                    Buttom_StartCaxaClipbrd.Text = Buttom_StartCaxaClipbrd.Text.Replace("关闭", "启动");
-                }
-
-                if (CheckCaxaFuntion.Checked && Buttom_StartCaxaAutoSave.Text.StartsWith("关闭"))
-                {
-                    Buttom_StartCaxaAutoSave.Text = Buttom_StartCaxaAutoSave.Text.Replace("关闭", "启动");
-                }
-                if (CheckPlmFuntion.Checked && Buttom_StartPlmMonitor.Text.StartsWith("关闭"))
-                {
-                    Buttom_StartPlmMonitor.Text = Buttom_StartPlmMonitor.Text.Replace("关闭", "启动");
-                }
-                if (CheckFileDecrypt.Checked && Buttom_StartFileDecrypt.Text.StartsWith("关闭"))
-                {
-                    Buttom_StartFileDecrypt.Text = Buttom_StartFileDecrypt.Text.Replace("关闭", "启动");
-                }
-                Notify.Icon = ICO.ICO.System_preferences_tool_tools_128px_581754_easyicon_net;
-            }
-
-            Properties.Settings.Default.Save();
+            finally { Properties.Settings.Default.Save(); }
         }
 
         private void StartAllFuntion_MouseClick(object sender, MouseEventArgs e)
@@ -312,8 +315,18 @@ namespace ETCTool
 
         private void CheckCaxaFuntion_MouseClick(object sender, MouseEventArgs e)
         {
-            Properties.Settings.Default.CheckCaxaFuntion = CheckCaxaFuntion.Checked;
-            Properties.Settings.Default.Save();
+            if (Directory.Exists(Properties.Settings.Default.AutoSavePath))
+            {
+                Properties.Settings.Default.CheckCaxaFuntion = CheckCaxaFuntion.Checked;
+                Properties.Settings.Default.Save();
+            }
+            else
+            {
+                if (!CheckCaxaFuntion.Checked) return;
+                new MessageBoxForm("未找到自动保存目录，请设置", MessageBoxButtons.OK, 5).ShowDialog();
+                CheckCaxaFuntion.Checked = false;
+                MainTab.SelectedIndex = 1;
+            }
         }
 
         private void CheckFileDecrypt_MouseClick(object sender, MouseEventArgs e)
@@ -329,6 +342,24 @@ namespace ETCTool
         private void MainTabClipbrdStation_MouseClick(object sender, MouseEventArgs e)
         {
             TabCaxa.Select();
+            Thread Nt = new Thread(() =>
+            {
+                using (FolderBrowserDialog SeleSavePath = new FolderBrowserDialog())
+                {
+                    SeleSavePath.SelectedPath = Properties.Settings.Default.AutoSavePath;
+                    SeleSavePath.ShowDialog();
+                    materialSingleLineTextField1.Invoke(new Action(() =>
+                    {
+                        {
+                            materialSingleLineTextField1.Text = SeleSavePath.SelectedPath;
+                        }
+                    }));
+
+                }
+            });
+            Nt.TrySetApartmentState(ApartmentState.STA);
+            Nt.Start();
+
         }
 
         private void MainTabClipbrdStation_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -363,7 +394,6 @@ namespace ETCTool
         #region Caxa相关代码段
 
         #region Clipbrd监控主函数
-
         public partial class ClipbrdMonitor : Form
         {
             private bool Onice = true;
@@ -474,7 +504,9 @@ namespace ETCTool
                                 }, TaskCreationOptions.LongRunning);
                             }
                             break;
-
+                        case "Buttom_StartCaxaAutoSave":
+                            StartCaxaAutoSaveFun(true);
+                            break;
                         case "Buttom_StartPlmMonitor":
 
                             break;
@@ -497,46 +529,66 @@ namespace ETCTool
                                 }
                             }
                             break;
+                        case "Buttom_StartCaxaAutoSave":
+                            StartCaxaAutoSaveFun(false);
+                            break;
                     }
                 }
             }
-            else if (sender is ToolStripMenuItem)
+            else if (sender is ToolStripMenuItem buttom)
             {
-                var Buttom = sender as ToolStripMenuItem;
-                if (!Buttom.Text.StartsWith("启动"))
+                if (!buttom.Text.StartsWith("启动"))
                 {
-                    Buttom.Image = Image.FromStream(Assembly.GetExecutingAssembly()
+                    buttom.Image = Image.FromStream(Assembly.GetExecutingAssembly()
                         .GetManifestResourceStream($"ETCTool.ICO.Start.ico"));
                 }
                 else
                 {
-                    Buttom.Image = Image.FromStream(Assembly.GetExecutingAssembly()
+                    buttom.Image = Image.FromStream(Assembly.GetExecutingAssembly()
                         .GetManifestResourceStream($"ETCTool.ICO.Stop.ico"));
                 }
             }
         }
 
-        private void Buttom_Click(object sender, EventArgs e)
+        private void StartCaxaAutoSaveFun(bool Run)
+        {
+            if (Run)
+            {
+                if (Directory.Exists(Properties.Settings.Default.AutoSavePath))
+                {
+
+                }
+                else
+                {
+                    new MessageBoxForm("未找到自动保存目录，请设置",MessageBoxButtons.OK,5).ShowDialog();
+                    Properties.Settings.Default.AutoSavePath = "";
+                    Properties.Settings.Default.Save();
+                    StartCaxaAutoSaveFun(false);
+                }
+            }
+            else
+            {
+
+            }
+        }
+
+        private void Button_Click(object sender, EventArgs e)
         {
             ThreadPool.QueueUserWorkItem((state) =>
             {
-                dynamic Buttom = sender as Control;
-                if (Buttom == null)
+                dynamic Button = sender as Control;
+                if (Button == null)
                 {
-                    Buttom = sender as ToolStripMenuItem;
+                    Button = sender as ToolStripMenuItem;
                 }
 
                 Invoke(new Action(() =>
                 {
-                    Buttom.Text = Buttom.Text.StartsWith("启动")
-                        ? Buttom.Text.Replace("启动", "关闭")
-                        : Buttom.Text.Replace("关闭", "启动");
+                    Button.Text = Button.Text.StartsWith("启动")
+                        ? Button.Text.Replace("启动", "关闭")
+                        : Button.Text.Replace("关闭", "启动");
                 }));
             });
-        }
-
-        private void materialSingleLineTextField1_MouseDown(object sender, MouseEventArgs e)
-        {
         }
 
         #endregion Caxa相关代码段
