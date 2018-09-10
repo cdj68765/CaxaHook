@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -23,10 +17,10 @@ namespace ETCTool
         public MessageBoxForm(string Message, MessageBoxButtons buttons, int Time)
         {
             InitializeComponent();
-            this.Text = Message;
-            Countdown.Maximum = Time*20;
-            Countdown.Value = Time*20;
-            bool CountdownClose = true;
+            Text = Message;
+            Countdown.Maximum = Time * 20;
+            Countdown.Value = Time * 20;
+            var CountdownClose = true;
             Task.Factory.StartNew(() =>
             {
                 do
@@ -41,7 +35,7 @@ namespace ETCTool
                     CountdownClose = false;
                     BeginInvoke(new Action(Close));
                 } while (CountdownClose);
-            },TaskCreationOptions.AttachedToParent);
+            }, TaskCreationOptions.AttachedToParent);
         }
 
         private void ChangeAutoSavePath_Click(object sender, EventArgs e)

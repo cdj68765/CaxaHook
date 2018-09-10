@@ -1,32 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.ServiceProcess;
-using System.Text;
-using System.Threading;
-using System.Windows.Forms;
+﻿using System.ServiceProcess;
 
 namespace ETCTool
 {
-    partial class ETCToolService : ServiceBase
+    internal partial class ETCToolService : ServiceBase
     {
-        private string RunPath;
+        private readonly string RunPath;
+
         public ETCToolService(string executablePath)
         {
             InitializeComponent();
-           
+
             RunPath = executablePath;
         }
+
         protected override void OnStart(string[] args)
         {
-            createProcessAsUser.StartProcessAndBypassUAC(RunPath," Service",out createProcessAsUser.PROCESS_INFORMATION info);
-      
+            createProcessAsUser.StartProcessAndBypassUAC(RunPath, " Service", out var info);
+
             //  Process.Start(RunPath);
         }
-
     }
 }

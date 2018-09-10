@@ -1,23 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Management;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Runtime.Remoting;
 using System.ServiceProcess;
-using System.Threading;
 using System.Windows.Forms;
+using ETCTool.Properties;
 
 namespace ETCTool
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             if (!Environment.UserInteractive)
             {
@@ -35,19 +27,16 @@ namespace ETCTool
             var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             var Guid = ((GuidAttribute) Attribute.GetCustomAttribute(Assembly.GetExecutingAssembly(),
                 typeof(GuidAttribute))).Value;
-            if (args.Length == 0 || args[0] == "Service")
-            {
-                AssemblyHandler.AssemblyFileSaveToCaxaAutoSave(path);
-            }
+            if (args.Length == 0 || args[0] == "Service") AssemblyHandler.AssemblyFileSaveToCaxaAutoSave(path);
 
             if (AppDomain.CurrentDomain.IsDefaultAppDomain() && args.Length == 0 || args[0] == "Service")
             {
-                AppDomain newDomain = AppDomain.CreateDomain("StartNewProcess", null, new AppDomainSetup()
+                var newDomain = AppDomain.CreateDomain("StartNewProcess", null, new AppDomainSetup
                 {
                     PrivateBinPath = $"{path}\\EtcTool",
                     ApplicationBase = $"{path}\\EtcTool"
                 });
-                int ret = newDomain.ExecuteAssemblyByName(Assembly.GetExecutingAssembly().FullName, Guid,
+                var ret = newDomain.ExecuteAssemblyByName(Assembly.GetExecutingAssembly().FullName, Guid,
                     Application.ExecutablePath, "RunByService");
                 AppDomain.Unload(newDomain);
                 Environment.ExitCode = ret;
@@ -55,10 +44,10 @@ namespace ETCTool
             }
             else
             {
-                if (args[1] != Properties.Settings.Default.OriPath)
+                if (args[1] != Settings.Default.OriPath)
                 {
-                    Properties.Settings.Default.OriPath = args[1];
-                    Properties.Settings.Default.Save();
+                    Settings.Default.OriPath = args[1];
+                    Settings.Default.Save();
                 }
 
                 ShowForm();
@@ -66,7 +55,6 @@ namespace ETCTool
 
             void ShowForm()
             {
-      
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
                 //处理未捕获的异常

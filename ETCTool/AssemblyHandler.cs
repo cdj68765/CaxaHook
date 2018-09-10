@@ -30,15 +30,14 @@ namespace ETCTool
                 {
                 }
             }
+
             if (!File.Exists($"{Ass}\\EasyLoad64.dll") || true)
-            {
                 foreach (var VARIABLE in new[]
                 {
                     "EasyHook32.dll", "EasyHook32Svc.exe", "EasyLoad32.dll",
                     "EasyHook64Svc.exe", "EasyHook64.dll", "EasyLoad64.dll",
                     "MaterialSkin.dll", "EasyHook.dll", "CaxaInject.dll", "PLMInject.dll"
                 })
-                {
                     try
                     {
                         SaveToDisk(Ass.FullName, VARIABLE);
@@ -46,12 +45,12 @@ namespace ETCTool
                     finally
                     {
                     }
-                }
-            }
+
             Directory.SetCurrentDirectory(Ass.FullName);
+
             void SaveToDisk(string fullName, string v)
             {
-                Stream sm = Assembly.GetExecutingAssembly().GetManifestResourceStream($"ETCTool.{v}");
+                var sm = Assembly.GetExecutingAssembly().GetManifestResourceStream($"ETCTool.{v}");
                 if (sm != null)
                 {
                     using (var File = new FileStream($"{fullName}\\{v}", FileMode.Create))

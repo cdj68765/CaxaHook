@@ -30,14 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            System.Windows.Forms.ListViewItem listViewItem17 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem18 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem19 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem20 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem21 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem22 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem23 = new System.Windows.Forms.ListViewItem("");
-            System.Windows.Forms.ListViewItem listViewItem24 = new System.Windows.Forms.ListViewItem("");
             this.MainTab = new MaterialSkin.Controls.MaterialTabControl();
             this.TabMain = new System.Windows.Forms.TabPage();
             this.MainTabFileDecryptStation = new MaterialSkin.Controls.MaterialSingleLineTextField();
@@ -59,7 +51,6 @@
             this.AutoSaveRadio = new MaterialSkin.Controls.MaterialRadioButton();
             this.CliRadio = new MaterialSkin.Controls.MaterialRadioButton();
             this.MouseMoveSize = new MaterialSkin.Controls.MaterialFlatButton();
-            this.CaxaList = new MaterialSkin.Controls.MaterialListView();
             this.materialLabel5 = new MaterialSkin.Controls.MaterialLabel();
             this.materialSingleLineTextField1 = new MaterialSkin.Controls.MaterialSingleLineTextField();
             this.materialDivider1 = new MaterialSkin.Controls.MaterialDivider();
@@ -80,12 +71,16 @@
             this.ShowForm = new System.Windows.Forms.ToolStripMenuItem();
             this.NotifyStartRun = new System.Windows.Forms.ToolStripMenuItem();
             this.ExitClose = new System.Windows.Forms.ToolStripMenuItem();
+            this.CaxaList = new System.Windows.Forms.ListBox();
+            this.CliCopyMenuStrip = new MaterialSkin.Controls.MaterialContextMenuStrip();
+            this.CLICurrentText = new System.Windows.Forms.ToolStripMenuItem();
             this.MainTab.SuspendLayout();
             this.TabMain.SuspendLayout();
             this.TabCaxa.SuspendLayout();
             this.TabPlm.SuspendLayout();
             this.TabAnother.SuspendLayout();
             this.NotifyContextMenuStrip.SuspendLayout();
+            this.CliCopyMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // MainTab
@@ -376,11 +371,11 @@
             // TabCaxa
             // 
             this.TabCaxa.BackColor = System.Drawing.Color.White;
+            this.TabCaxa.Controls.Add(this.CaxaList);
             this.TabCaxa.Controls.Add(this.ChangeAutoSavePath);
             this.TabCaxa.Controls.Add(this.AutoSaveRadio);
             this.TabCaxa.Controls.Add(this.CliRadio);
             this.TabCaxa.Controls.Add(this.MouseMoveSize);
-            this.TabCaxa.Controls.Add(this.CaxaList);
             this.TabCaxa.Controls.Add(this.materialLabel5);
             this.TabCaxa.Controls.Add(this.materialSingleLineTextField1);
             this.TabCaxa.Controls.Add(this.materialDivider1);
@@ -468,34 +463,6 @@
             this.MouseMoveSize.MouseMove += new System.Windows.Forms.MouseEventHandler(this.MouseMoveSize_MouseMove);
             this.MouseMoveSize.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MouseMoveSize_MouseUp);
             // 
-            // CaxaList
-            // 
-            this.CaxaList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.CaxaList.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.CaxaList.Depth = 0;
-            this.CaxaList.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F);
-            this.CaxaList.FullRowSelect = true;
-            this.CaxaList.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.CaxaList.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem17,
-            listViewItem18,
-            listViewItem19,
-            listViewItem20,
-            listViewItem21,
-            listViewItem22,
-            listViewItem23,
-            listViewItem24});
-            this.CaxaList.Location = new System.Drawing.Point(243, 7);
-            this.CaxaList.MouseLocation = new System.Drawing.Point(-1, -1);
-            this.CaxaList.MouseState = MaterialSkin.MouseState.OUT;
-            this.CaxaList.Name = "CaxaList";
-            this.CaxaList.OwnerDraw = true;
-            this.CaxaList.Size = new System.Drawing.Size(224, 118);
-            this.CaxaList.TabIndex = 7;
-            this.CaxaList.UseCompatibleStateImageBehavior = false;
-            this.CaxaList.View = System.Windows.Forms.View.Details;
-            // 
             // materialLabel5
             // 
             this.materialLabel5.AutoSize = true;
@@ -526,6 +493,7 @@
             this.materialSingleLineTextField1.TabIndex = 5;
             this.materialSingleLineTextField1.TabStop = false;
             this.materialSingleLineTextField1.UseSystemPasswordChar = false;
+            this.materialSingleLineTextField1.Click += new System.EventHandler(this.materialSingleLineTextField1_Click);
             this.materialSingleLineTextField1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.MainTabClipbrdStation_MouseClick);
             // 
             // materialDivider1
@@ -800,6 +768,36 @@
             this.ExitClose.Text = "退出";
             this.ExitClose.Click += new System.EventHandler(this.ExitClose_Click);
             // 
+            // CaxaList
+            // 
+            this.CaxaList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.CaxaList.ContextMenuStrip = this.CliCopyMenuStrip;
+            this.CaxaList.FormattingEnabled = true;
+            this.CaxaList.HorizontalScrollbar = true;
+            this.CaxaList.ItemHeight = 12;
+            this.CaxaList.Location = new System.Drawing.Point(243, 7);
+            this.CaxaList.Name = "CaxaList";
+            this.CaxaList.Size = new System.Drawing.Size(224, 112);
+            this.CaxaList.TabIndex = 11;
+            // 
+            // CliCopyMenuStrip
+            // 
+            this.CliCopyMenuStrip.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.CliCopyMenuStrip.Depth = 0;
+            this.CliCopyMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.CLICurrentText});
+            this.CliCopyMenuStrip.MouseState = MaterialSkin.MouseState.HOVER;
+            this.CliCopyMenuStrip.Name = "CliCopyMenuStrip";
+            this.CliCopyMenuStrip.Size = new System.Drawing.Size(181, 48);
+            // 
+            // CLICurrentText
+            // 
+            this.CLICurrentText.Name = "CLICurrentText";
+            this.CLICurrentText.Size = new System.Drawing.Size(180, 22);
+            this.CLICurrentText.Text = "复制当前文本";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -823,6 +821,7 @@
             this.TabAnother.ResumeLayout(false);
             this.TabAnother.PerformLayout();
             this.NotifyContextMenuStrip.ResumeLayout(false);
+            this.CliCopyMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -867,9 +866,11 @@
         private MaterialSkin.Controls.MaterialFlatButton Buttom_StartPlmMonitor;
         private MaterialSkin.Controls.MaterialFlatButton Buttom_StartFileDecrypt;
         private MaterialSkin.Controls.MaterialDivider materialDivider3;
-        private MaterialSkin.Controls.MaterialListView CaxaList;
         private MaterialSkin.Controls.MaterialRadioButton AutoSaveRadio;
         private MaterialSkin.Controls.MaterialRadioButton CliRadio;
         private MaterialSkin.Controls.MaterialRaisedButton ChangeAutoSavePath;
+        private System.Windows.Forms.ListBox CaxaList;
+        private MaterialSkin.Controls.MaterialContextMenuStrip CliCopyMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem CLICurrentText;
     }
 }
