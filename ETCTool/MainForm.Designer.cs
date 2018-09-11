@@ -32,6 +32,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.MainTab = new MaterialSkin.Controls.MaterialTabControl();
             this.TabMain = new System.Windows.Forms.TabPage();
+            this.TOPMOST = new MaterialSkin.Controls.MaterialCheckBox();
             this.MainTabFileDecryptStation = new MaterialSkin.Controls.MaterialSingleLineTextField();
             this.materialLabel4 = new MaterialSkin.Controls.MaterialLabel();
             this.CheckFileDecrypt = new MaterialSkin.Controls.MaterialCheckBox();
@@ -39,6 +40,8 @@
             this.MainTabAutoSaveStation = new MaterialSkin.Controls.MaterialSingleLineTextField();
             this.MainTabPlmStation = new MaterialSkin.Controls.MaterialSingleLineTextField();
             this.MainTabClipbrdStation = new MaterialSkin.Controls.MaterialSingleLineTextField();
+            this.CliCopyMenuStrip = new MaterialSkin.Controls.MaterialContextMenuStrip();
+            this.CLICurrentText = new System.Windows.Forms.ToolStripMenuItem();
             this.materialLabel3 = new MaterialSkin.Controls.MaterialLabel();
             this.materialLabel2 = new MaterialSkin.Controls.MaterialLabel();
             this.materialLabel1 = new MaterialSkin.Controls.MaterialLabel();
@@ -48,14 +51,12 @@
             this.StartAllFuntion = new MaterialSkin.Controls.MaterialRaisedButton();
             this.TabCaxa = new System.Windows.Forms.TabPage();
             this.CaxaList = new System.Windows.Forms.ListBox();
-            this.CliCopyMenuStrip = new MaterialSkin.Controls.MaterialContextMenuStrip();
-            this.CLICurrentText = new System.Windows.Forms.ToolStripMenuItem();
             this.ChangeAutoSavePath = new MaterialSkin.Controls.MaterialRaisedButton();
             this.AutoSaveRadio = new MaterialSkin.Controls.MaterialRadioButton();
             this.CliRadio = new MaterialSkin.Controls.MaterialRadioButton();
             this.MouseMoveSize = new MaterialSkin.Controls.MaterialFlatButton();
             this.materialLabel5 = new MaterialSkin.Controls.MaterialLabel();
-            this.materialSingleLineTextField1 = new MaterialSkin.Controls.MaterialSingleLineTextField();
+            this.AutoSavePathLine = new MaterialSkin.Controls.MaterialSingleLineTextField();
             this.materialDivider1 = new MaterialSkin.Controls.MaterialDivider();
             this.Buttom_StartCaxaAutoSave = new MaterialSkin.Controls.MaterialFlatButton();
             this.Buttom_StartCaxaClipbrd = new MaterialSkin.Controls.MaterialFlatButton();
@@ -74,11 +75,13 @@
             this.ShowForm = new System.Windows.Forms.ToolStripMenuItem();
             this.NotifyStartRun = new System.Windows.Forms.ToolStripMenuItem();
             this.ExitClose = new System.Windows.Forms.ToolStripMenuItem();
-            this.TOPMOST = new MaterialSkin.Controls.MaterialCheckBox();
+            this.OpenTheLastAutoSaveButton = new MaterialSkin.Controls.MaterialRaisedButton();
+            this.SetAutoSaveTimeSpan = new MaterialSkin.Controls.MaterialSingleLineTextField();
+            this.materialLabel6 = new MaterialSkin.Controls.MaterialLabel();
             this.MainTab.SuspendLayout();
             this.TabMain.SuspendLayout();
-            this.TabCaxa.SuspendLayout();
             this.CliCopyMenuStrip.SuspendLayout();
+            this.TabCaxa.SuspendLayout();
             this.TabPlm.SuspendLayout();
             this.TabAnother.SuspendLayout();
             this.NotifyContextMenuStrip.SuspendLayout();
@@ -125,6 +128,23 @@
             this.TabMain.Size = new System.Drawing.Size(470, 157);
             this.TabMain.TabIndex = 3;
             this.TabMain.Text = "主界面";
+            // 
+            // TOPMOST
+            // 
+            this.TOPMOST.AutoSize = true;
+            this.TOPMOST.Depth = 0;
+            this.TOPMOST.Font = new System.Drawing.Font("Roboto", 10F);
+            this.TOPMOST.Location = new System.Drawing.Point(287, 9);
+            this.TOPMOST.Margin = new System.Windows.Forms.Padding(0);
+            this.TOPMOST.MouseLocation = new System.Drawing.Point(-1, -1);
+            this.TOPMOST.MouseState = MaterialSkin.MouseState.HOVER;
+            this.TOPMOST.Name = "TOPMOST";
+            this.TOPMOST.Ripple = true;
+            this.TOPMOST.Size = new System.Drawing.Size(90, 30);
+            this.TOPMOST.TabIndex = 15;
+            this.TOPMOST.Text = "窗口前置";
+            this.TOPMOST.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.TOPMOST.UseVisualStyleBackColor = true;
             // 
             // MainTabFileDecryptStation
             // 
@@ -263,6 +283,22 @@
             this.MainTabClipbrdStation.MouseClick += new System.Windows.Forms.MouseEventHandler(this.MainTabClipbrdStation_MouseClick);
             this.MainTabClipbrdStation.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.MainTabClipbrdStation_MouseDoubleClick);
             // 
+            // CliCopyMenuStrip
+            // 
+            this.CliCopyMenuStrip.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.CliCopyMenuStrip.Depth = 0;
+            this.CliCopyMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.CLICurrentText});
+            this.CliCopyMenuStrip.MouseState = MaterialSkin.MouseState.HOVER;
+            this.CliCopyMenuStrip.Name = "CliCopyMenuStrip";
+            this.CliCopyMenuStrip.Size = new System.Drawing.Size(149, 26);
+            // 
+            // CLICurrentText
+            // 
+            this.CLICurrentText.Name = "CLICurrentText";
+            this.CLICurrentText.Size = new System.Drawing.Size(148, 22);
+            this.CLICurrentText.Text = "复制当前文本";
+            // 
             // materialLabel3
             // 
             this.materialLabel3.AutoSize = true;
@@ -374,13 +410,16 @@
             // TabCaxa
             // 
             this.TabCaxa.BackColor = System.Drawing.Color.White;
+            this.TabCaxa.Controls.Add(this.materialLabel6);
+            this.TabCaxa.Controls.Add(this.SetAutoSaveTimeSpan);
+            this.TabCaxa.Controls.Add(this.OpenTheLastAutoSaveButton);
             this.TabCaxa.Controls.Add(this.CaxaList);
             this.TabCaxa.Controls.Add(this.ChangeAutoSavePath);
             this.TabCaxa.Controls.Add(this.AutoSaveRadio);
             this.TabCaxa.Controls.Add(this.CliRadio);
             this.TabCaxa.Controls.Add(this.MouseMoveSize);
             this.TabCaxa.Controls.Add(this.materialLabel5);
-            this.TabCaxa.Controls.Add(this.materialSingleLineTextField1);
+            this.TabCaxa.Controls.Add(this.AutoSavePathLine);
             this.TabCaxa.Controls.Add(this.materialDivider1);
             this.TabCaxa.Controls.Add(this.Buttom_StartCaxaAutoSave);
             this.TabCaxa.Controls.Add(this.Buttom_StartCaxaClipbrd);
@@ -405,22 +444,6 @@
             this.CaxaList.Size = new System.Drawing.Size(224, 112);
             this.CaxaList.TabIndex = 11;
             // 
-            // CliCopyMenuStrip
-            // 
-            this.CliCopyMenuStrip.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.CliCopyMenuStrip.Depth = 0;
-            this.CliCopyMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.CLICurrentText});
-            this.CliCopyMenuStrip.MouseState = MaterialSkin.MouseState.HOVER;
-            this.CliCopyMenuStrip.Name = "CliCopyMenuStrip";
-            this.CliCopyMenuStrip.Size = new System.Drawing.Size(149, 26);
-            // 
-            // CLICurrentText
-            // 
-            this.CLICurrentText.Name = "CLICurrentText";
-            this.CLICurrentText.Size = new System.Drawing.Size(148, 22);
-            this.CLICurrentText.Text = "复制当前文本";
-            // 
             // ChangeAutoSavePath
             // 
             this.ChangeAutoSavePath.AutoSize = true;
@@ -436,7 +459,7 @@
             this.ChangeAutoSavePath.TabIndex = 10;
             this.ChangeAutoSavePath.Text = "浏览";
             this.ChangeAutoSavePath.UseVisualStyleBackColor = true;
-            this.ChangeAutoSavePath.MouseClick += new System.Windows.Forms.MouseEventHandler(this.MainTabClipbrdStation_MouseClick);
+            this.ChangeAutoSavePath.Click += new System.EventHandler(this.AutoSavePathLine_Click);
             // 
             // AutoSaveRadio
             // 
@@ -510,24 +533,24 @@
             this.materialLabel5.TabIndex = 6;
             this.materialLabel5.Text = "设置自动保存路径";
             // 
-            // materialSingleLineTextField1
+            // AutoSavePathLine
             // 
-            this.materialSingleLineTextField1.Depth = 0;
-            this.materialSingleLineTextField1.Hint = "";
-            this.materialSingleLineTextField1.Location = new System.Drawing.Point(19, 91);
-            this.materialSingleLineTextField1.MaxLength = 32767;
-            this.materialSingleLineTextField1.MouseState = MaterialSkin.MouseState.HOVER;
-            this.materialSingleLineTextField1.Name = "materialSingleLineTextField1";
-            this.materialSingleLineTextField1.PasswordChar = '\0';
-            this.materialSingleLineTextField1.SelectedText = "";
-            this.materialSingleLineTextField1.SelectionLength = 0;
-            this.materialSingleLineTextField1.SelectionStart = 0;
-            this.materialSingleLineTextField1.Size = new System.Drawing.Size(152, 23);
-            this.materialSingleLineTextField1.TabIndex = 5;
-            this.materialSingleLineTextField1.TabStop = false;
-            this.materialSingleLineTextField1.UseSystemPasswordChar = false;
-            this.materialSingleLineTextField1.Click += new System.EventHandler(this.materialSingleLineTextField1_Click);
-            this.materialSingleLineTextField1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.MainTabClipbrdStation_MouseClick);
+            this.AutoSavePathLine.Depth = 0;
+            this.AutoSavePathLine.Hint = "";
+            this.AutoSavePathLine.Location = new System.Drawing.Point(19, 91);
+            this.AutoSavePathLine.MaxLength = 32767;
+            this.AutoSavePathLine.MouseState = MaterialSkin.MouseState.HOVER;
+            this.AutoSavePathLine.Name = "AutoSavePathLine";
+            this.AutoSavePathLine.PasswordChar = '\0';
+            this.AutoSavePathLine.SelectedText = "";
+            this.AutoSavePathLine.SelectionLength = 0;
+            this.AutoSavePathLine.SelectionStart = 0;
+            this.AutoSavePathLine.Size = new System.Drawing.Size(152, 23);
+            this.AutoSavePathLine.TabIndex = 5;
+            this.AutoSavePathLine.TabStop = false;
+            this.AutoSavePathLine.UseSystemPasswordChar = false;
+            this.AutoSavePathLine.Click += new System.EventHandler(this.AutoSavePathLine_Click);
+            this.AutoSavePathLine.MouseClick += new System.Windows.Forms.MouseEventHandler(this.MainTabClipbrdStation_MouseClick);
             // 
             // materialDivider1
             // 
@@ -801,22 +824,53 @@
             this.ExitClose.Text = "退出";
             this.ExitClose.Click += new System.EventHandler(this.ExitClose_Click);
             // 
-            // TOPMOST
+            // OpenTheLastAutoSaveButton
             // 
-            this.TOPMOST.AutoSize = true;
-            this.TOPMOST.Depth = 0;
-            this.TOPMOST.Font = new System.Drawing.Font("Roboto", 10F);
-            this.TOPMOST.Location = new System.Drawing.Point(287, 9);
-            this.TOPMOST.Margin = new System.Windows.Forms.Padding(0);
-            this.TOPMOST.MouseLocation = new System.Drawing.Point(-1, -1);
-            this.TOPMOST.MouseState = MaterialSkin.MouseState.HOVER;
-            this.TOPMOST.Name = "TOPMOST";
-            this.TOPMOST.Ripple = true;
-            this.TOPMOST.Size = new System.Drawing.Size(90, 30);
-            this.TOPMOST.TabIndex = 15;
-            this.TOPMOST.Text = "窗口前置";
-            this.TOPMOST.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.TOPMOST.UseVisualStyleBackColor = true;
+            this.OpenTheLastAutoSaveButton.AutoSize = true;
+            this.OpenTheLastAutoSaveButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.OpenTheLastAutoSaveButton.Depth = 0;
+            this.OpenTheLastAutoSaveButton.Icon = null;
+            this.OpenTheLastAutoSaveButton.Location = new System.Drawing.Point(19, 118);
+            this.OpenTheLastAutoSaveButton.MouseState = MaterialSkin.MouseState.HOVER;
+            this.OpenTheLastAutoSaveButton.Name = "OpenTheLastAutoSaveButton";
+            this.OpenTheLastAutoSaveButton.Primary = true;
+            this.OpenTheLastAutoSaveButton.Size = new System.Drawing.Size(172, 36);
+            this.OpenTheLastAutoSaveButton.TabIndex = 12;
+            this.OpenTheLastAutoSaveButton.Text = "打开最后一次保存文件";
+            this.OpenTheLastAutoSaveButton.UseVisualStyleBackColor = true;
+            // 
+            // SetAutoSaveTimeSpan
+            // 
+            this.SetAutoSaveTimeSpan.Depth = 0;
+            this.SetAutoSaveTimeSpan.Hint = "";
+            this.SetAutoSaveTimeSpan.Location = new System.Drawing.Point(19, 156);
+            this.SetAutoSaveTimeSpan.MaxLength = 32767;
+            this.SetAutoSaveTimeSpan.MouseState = MaterialSkin.MouseState.HOVER;
+            this.SetAutoSaveTimeSpan.Name = "SetAutoSaveTimeSpan";
+            this.SetAutoSaveTimeSpan.PasswordChar = '\0';
+            this.SetAutoSaveTimeSpan.SelectedText = "";
+            this.SetAutoSaveTimeSpan.SelectionLength = 0;
+            this.SetAutoSaveTimeSpan.SelectionStart = 1;
+            this.SetAutoSaveTimeSpan.Size = new System.Drawing.Size(66, 23);
+            this.SetAutoSaveTimeSpan.TabIndex = 13;
+            this.SetAutoSaveTimeSpan.TabStop = false;
+            this.SetAutoSaveTimeSpan.Text = "1";
+            this.SetAutoSaveTimeSpan.UseSystemPasswordChar = false;
+            this.SetAutoSaveTimeSpan.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.SetAutoSaveTimeSpan_KeyPress);
+            // 
+            // materialLabel6
+            // 
+            this.materialLabel6.AutoSize = true;
+            this.materialLabel6.BackColor = System.Drawing.Color.Transparent;
+            this.materialLabel6.Depth = 0;
+            this.materialLabel6.Font = new System.Drawing.Font("Roboto", 11F);
+            this.materialLabel6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.materialLabel6.Location = new System.Drawing.Point(87, 159);
+            this.materialLabel6.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialLabel6.Name = "materialLabel6";
+            this.materialLabel6.Size = new System.Drawing.Size(137, 19);
+            this.materialLabel6.TabIndex = 14;
+            this.materialLabel6.Text = "自动保存间隔分钟";
             // 
             // MainForm
             // 
@@ -834,9 +888,9 @@
             this.MainTab.ResumeLayout(false);
             this.TabMain.ResumeLayout(false);
             this.TabMain.PerformLayout();
+            this.CliCopyMenuStrip.ResumeLayout(false);
             this.TabCaxa.ResumeLayout(false);
             this.TabCaxa.PerformLayout();
-            this.CliCopyMenuStrip.ResumeLayout(false);
             this.TabPlm.ResumeLayout(false);
             this.TabPlm.PerformLayout();
             this.TabAnother.ResumeLayout(false);
@@ -881,7 +935,7 @@
         private MaterialSkin.Controls.MaterialFlatButton materialFlatButton1;
         private MaterialSkin.Controls.MaterialFlatButton materialFlatButton2;
         private MaterialSkin.Controls.MaterialLabel materialLabel5;
-        private MaterialSkin.Controls.MaterialSingleLineTextField materialSingleLineTextField1;
+        private MaterialSkin.Controls.MaterialSingleLineTextField AutoSavePathLine;
         private MaterialSkin.Controls.MaterialDivider materialDivider2;
         private MaterialSkin.Controls.MaterialFlatButton Buttom_StartPlmMonitor;
         private MaterialSkin.Controls.MaterialFlatButton Buttom_StartFileDecrypt;
@@ -893,5 +947,8 @@
         private MaterialSkin.Controls.MaterialContextMenuStrip CliCopyMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem CLICurrentText;
         private MaterialSkin.Controls.MaterialCheckBox TOPMOST;
+        private MaterialSkin.Controls.MaterialRaisedButton OpenTheLastAutoSaveButton;
+        private MaterialSkin.Controls.MaterialSingleLineTextField SetAutoSaveTimeSpan;
+        private MaterialSkin.Controls.MaterialLabel materialLabel6;
     }
 }

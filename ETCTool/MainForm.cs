@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.IO.MemoryMappedFiles;
 using System.IO.Pipes;
@@ -23,7 +25,7 @@ namespace ETCTool
         #region 日志管理
 
         public readonly BindingList<string[]> CliLog;
-
+        public readonly BindingList<string[]> AutoSaveLog;
         #endregion 日志管理
 
         private readonly MaterialSkinManager materialSkinManager;
@@ -31,25 +33,29 @@ namespace ETCTool
         public MainForm()
         {
             InitializeComponent();
-            Task.Factory.StartNew(() =>
-            {
-                do
-                {
-                    Thread.Sleep(1000);
-                    GetCursorPos(out var lpPoint);
-                    try
-                    {
-                        Invoke(new Action(() => { MainTabPlmStation.Text = lpPoint.ToString(); }));
-                    }
-                    catch (Exception)
-                    {
-                    }
-                } while (true);
-            });
-            TOPMOST.CheckedChanged += delegate
-            {
-                this.TopMost = TOPMOST.Checked;
-            };
+            SetStyle(
+                ControlStyles.OptimizedDoubleBuffer
+                | ControlStyles.ResizeRedraw
+                | ControlStyles.Selectable
+                | ControlStyles.AllPaintingInWmPaint
+                | ControlStyles.UserPaint
+                | ControlStyles.SupportsTransparentBackColor, true);
+            /*  Task.Factory.StartNew(() =>
+              {
+                  do
+                  {
+                      Thread.Sleep(1000);
+                      GetCursorPos(out var lpPoint);
+                      try
+                      {
+                          Invoke(new Action(() => { MainTabPlmStation.Text = lpPoint.ToString(); }));
+                      }
+                      catch (Exception)
+                      {
+                      }
+                  } while (true);
+              });*/
+            TOPMOST.CheckedChanged += delegate { this.TopMost = TOPMOST.Checked; };
 
             #region 状态初始化
 
@@ -60,8 +66,13 @@ namespace ETCTool
             if (Settings.Default.FormSize == null)
             {
                 Settings.Default.FormSize = new StringCollection();
-                Settings.Default.FormSize.AddRange(new[] { "480", "280", "480", "280", "480", "280" });
+                Settings.Default.FormSize.AddRange(new[] {"480", "280", "480", "280", "480", "280"});
                 Settings.Default.Save();
+            }
+
+            if (!string.IsNullOrEmpty(Settings.Default.AutoSavePath))
+            {
+                AutoSavePathLine.Text = Settings.Default.AutoSavePath;
             }
 
             #endregion 状态初始化
@@ -71,9 +82,28 @@ namespace ETCTool
             CliLog = new BindingList<string[]>();
             CliLog.ListChanged += (s, d) =>
             {
+                if (d.ListChangedType == ListChangedType.ItemDeleted) return;
+                var Item = CliLog[d.NewIndex];
+                var FindCount = CliLog.Count(x => x[1] == Item[1] && x[1] != "");
+                if (FindCount > 1)
+                {
+                    for (int i = 0; i < FindCount - 1; i++)
+                    {
+                        var Find = CliLog.FirstOrDefault(x => x[1] == Item[1] && x[1] != "");
+                        if (Find != null)
+                        {
+                            CliLog.Remove(Find);
+                            MainTabClipbrdStation.BeginInvoke(new Action(() =>
+                            {
+                                CaxaList.Items.Remove(Find[0] + Find[1]);
+                            }));
+                        }
+                    }
+                }
+
                 MainTabClipbrdStation.BeginInvoke(new Action(() =>
                 {
-                    var Item = CliLog[d.NewIndex];
+
                     MainTabClipbrdStation.Text = Item[0] + Item[1];
                     if (CliRadio.Checked)
                     {
@@ -248,7 +278,6 @@ namespace ETCTool
                     Settings.Default.RunMode = true;
                     if (CheckClipbrdFuntion.Checked && Buttom_StartCaxaClipbrd.Text.StartsWith("启动"))
                         Buttom_StartCaxaClipbrd.Text = Buttom_StartCaxaClipbrd.Text.Replace("启动", "关闭");
-
                     if (CheckCaxaFuntion.Checked && Buttom_StartCaxaAutoSave.Text.StartsWith("启动"))
                         Buttom_StartCaxaAutoSave.Text = Buttom_StartCaxaAutoSave.Text.Replace("启动", "关闭");
                     if (CheckPlmFuntion.Checked && Buttom_StartPlmMonitor.Text.StartsWith("启动"))
@@ -266,7 +295,6 @@ namespace ETCTool
                     Settings.Default.RunMode = false;
                     if (CheckClipbrdFuntion.Checked && Buttom_StartCaxaClipbrd.Text.StartsWith("关闭"))
                         Buttom_StartCaxaClipbrd.Text = Buttom_StartCaxaClipbrd.Text.Replace("关闭", "启动");
-
                     if (CheckCaxaFuntion.Checked && Buttom_StartCaxaAutoSave.Text.StartsWith("关闭"))
                         Buttom_StartCaxaAutoSave.Text = Buttom_StartCaxaAutoSave.Text.Replace("关闭", "启动");
                     if (CheckPlmFuntion.Checked && Buttom_StartPlmMonitor.Text.StartsWith("关闭"))
@@ -364,7 +392,7 @@ namespace ETCTool
             TabCaxa.Select();
         }
 
-        private void materialSingleLineTextField1_Click(object sender, EventArgs e)
+        private void AutoSavePathLine_Click(object sender, EventArgs e)
         {
             TabCaxa.Select();
             var Nt = new Thread(() =>
@@ -373,12 +401,14 @@ namespace ETCTool
                 {
                     SeleSavePath.SelectedPath = Settings.Default.AutoSavePath;
                     SeleSavePath.ShowDialog();
-                    materialSingleLineTextField1.Invoke(new Action(() =>
+                    AutoSavePathLine.Invoke(new Action(() =>
                     {
                         {
-                            materialSingleLineTextField1.Text = SeleSavePath.SelectedPath;
+                            AutoSavePathLine.Text = SeleSavePath.SelectedPath;
                         }
                     }));
+                    Settings.Default.AutoSavePath = SeleSavePath.SelectedPath;
+                    Settings.Default.Save();
                 }
             });
             Nt.TrySetApartmentState(ApartmentState.STA);
@@ -425,10 +455,10 @@ namespace ETCTool
             public ClipbrdMonitor()
             {
                 AddClipboardFormatListener(Handle);
-                Variables.MainForm.CliLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->启动剪切板监控", "" });
+                Variables.MainForm.CliLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->启动剪切板监控", ""});
                 FormClosing += delegate
                 {
-                    Variables.MainForm.CliLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->关闭剪切板监控", "" });
+                    Variables.MainForm.CliLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->关闭剪切板监控", ""});
                     RemoveClipboardFormatListener(Handle);
                 };
             }
@@ -447,7 +477,7 @@ namespace ETCTool
                         {
                             ThreadPool.QueueUserWorkItem(obj =>
                             {
-                                Variables.MainForm.CliLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->获得字符:", Temp });
+                                Variables.MainForm.CliLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->获得字符:", Temp});
                             });
                             SetText(Temp);
                             Onice = false;
@@ -495,6 +525,28 @@ namespace ETCTool
 
         #endregion Clipbrd监控主函数
 
+        #region Caxa自动保存代码段
+
+        private void SetAutoSaveTimeSpan_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar != '\b' && e.KeyChar != '.' && e.KeyChar != '\u0016'&& e.KeyChar != '\u0003')
+            {
+                if (e.KeyChar < '0' || e.KeyChar > '9') //这是允许输入0-9数字
+                {
+                    e.Handled = true;
+                }
+                else if (SetAutoSaveTimeSpan.Text.Length >= 3 && e.KeyChar != '\b')
+                {
+                    e.Handled = true;
+                }
+            }
+            else if (e.KeyChar != '\b'&&!float.TryParse($"{SetAutoSaveTimeSpan.Text}{e.KeyChar}", out float res))
+            { 
+                e.Handled = true;
+            }
+        }
+
+        #endregion
         private ClipbrdMonitor CaxaClipbrd;
 
         private void Buttom_TextChanged(object sender, EventArgs e)
@@ -511,35 +563,35 @@ namespace ETCTool
                         switch (Button.Name)
                         {
                             case "Buttom_StartCaxaClipbrd":
+                            {
+                                CaxaClipbrd = new ClipbrdMonitor();
+                                Task.Factory.StartNew(() =>
                                 {
-                                    CaxaClipbrd = new ClipbrdMonitor();
-                                    Task.Factory.StartNew(() =>
+                                    while (true)
                                     {
-                                        while (true)
+                                        Thread.Sleep(500);
+                                        if (CaxaClipbrd == null) break;
+                                        var GetText = new StringBuilder(256);
+                                        GetWindowTextW(GetForegroundWindow(IntPtr.Zero),
+                                            GetText, 256);
+                                        if (GetText.ToString().StartsWith("CAXA"))
                                         {
-                                            Thread.Sleep(500);
-                                            if (CaxaClipbrd == null) break;
-                                            var GetText = new StringBuilder(256);
-                                            GetWindowTextW(GetForegroundWindow(IntPtr.Zero),
-                                                GetText, 256);
-                                            if (GetText.ToString().StartsWith("CAXA"))
+                                            Invoke(new Action(() =>
                                             {
-                                                Invoke(new Action(() =>
-                                                {
-                                                    Notify.Icon = ICO.ICO.clipboard_80px_1121225_easyicon_net;
-                                                }));
-                                            }
-                                            else
-                                            {
-                                                if (Variables.MainForm == null) return;
-                                                BeginInvoke(new Action(() =>
-                                                {
-                                                    Notify.Icon = ICO.ICO.Clipboard_Plan_128px_1185105_easyicon_net;
-                                                }));
-                                            }
+                                                Notify.Icon = ICO.ICO.clipboard_80px_1121225_easyicon_net;
+                                            }));
                                         }
-                                    }, TaskCreationOptions.LongRunning);
-                                }
+                                        else
+                                        {
+                                            if (Variables.MainForm == null) return;
+                                            BeginInvoke(new Action(() =>
+                                            {
+                                                Notify.Icon = ICO.ICO.Clipboard_Plan_128px_1185105_easyicon_net;
+                                            }));
+                                        }
+                                    }
+                                }, TaskCreationOptions.LongRunning);
+                            }
                                 break;
 
                             case "Buttom_StartCaxaAutoSave":
@@ -558,15 +610,15 @@ namespace ETCTool
                         switch (Button.Name)
                         {
                             case "Buttom_StartCaxaClipbrd":
+                            {
+                                if (CaxaClipbrd != null)
                                 {
-                                    if (CaxaClipbrd != null)
-                                    {
-                                        CaxaClipbrd.Close();
-                                        CaxaClipbrd.Dispose();
-                                        CaxaClipbrd = null;
-                                        GC.Collect();
-                                    }
+                                    CaxaClipbrd.Close();
+                                    CaxaClipbrd.Dispose();
+                                    CaxaClipbrd = null;
+                                    GC.Collect();
                                 }
+                            }
                                 break;
 
                             case "Buttom_StartCaxaAutoSave":
@@ -646,6 +698,7 @@ namespace ETCTool
                     ShowInTaskbar = false;
                     return;
                 }
+
                 WindowState = FormWindowState.Normal;
                 ShowInTaskbar = true;
             }

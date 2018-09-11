@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MaterialSkin;
 using MaterialSkin.Controls;
 
 namespace ETCTool
@@ -23,18 +24,26 @@ namespace ETCTool
             var CountdownClose = true;
             Task.Factory.StartNew(() =>
             {
-                do
+                try
                 {
-                    Thread.Sleep(50);
-                    BeginInvoke(new Action(() =>
+                    do
                     {
-                        if (Countdown.Value != 0)
-                            Countdown.Value--;
-                    }));
-                    if (Countdown.Value != 0) continue;
-                    CountdownClose = false;
-                    BeginInvoke(new Action(Close));
-                } while (CountdownClose);
+                        Thread.Sleep(50);
+                        BeginInvoke(new Action(() =>
+                        {
+                           
+                            if (Countdown.Value != 0)
+                                Countdown.Value--;
+                        }));
+                        if (Countdown.Value != 0) continue;
+                        CountdownClose = false;
+                        BeginInvoke(new Action(Close));
+                    } while (CountdownClose);
+                }
+                catch (Exception e)
+                {
+                }
+               
             }, TaskCreationOptions.AttachedToParent);
         }
 
