@@ -47,6 +47,9 @@
             this.CheckClipbrdFuntion = new MaterialSkin.Controls.MaterialCheckBox();
             this.StartAllFuntion = new MaterialSkin.Controls.MaterialRaisedButton();
             this.TabCaxa = new System.Windows.Forms.TabPage();
+            this.CaxaList = new System.Windows.Forms.ListBox();
+            this.CliCopyMenuStrip = new MaterialSkin.Controls.MaterialContextMenuStrip();
+            this.CLICurrentText = new System.Windows.Forms.ToolStripMenuItem();
             this.ChangeAutoSavePath = new MaterialSkin.Controls.MaterialRaisedButton();
             this.AutoSaveRadio = new MaterialSkin.Controls.MaterialRadioButton();
             this.CliRadio = new MaterialSkin.Controls.MaterialRadioButton();
@@ -71,16 +74,14 @@
             this.ShowForm = new System.Windows.Forms.ToolStripMenuItem();
             this.NotifyStartRun = new System.Windows.Forms.ToolStripMenuItem();
             this.ExitClose = new System.Windows.Forms.ToolStripMenuItem();
-            this.CaxaList = new System.Windows.Forms.ListBox();
-            this.CliCopyMenuStrip = new MaterialSkin.Controls.MaterialContextMenuStrip();
-            this.CLICurrentText = new System.Windows.Forms.ToolStripMenuItem();
+            this.TOPMOST = new MaterialSkin.Controls.MaterialCheckBox();
             this.MainTab.SuspendLayout();
             this.TabMain.SuspendLayout();
             this.TabCaxa.SuspendLayout();
+            this.CliCopyMenuStrip.SuspendLayout();
             this.TabPlm.SuspendLayout();
             this.TabAnother.SuspendLayout();
             this.NotifyContextMenuStrip.SuspendLayout();
-            this.CliCopyMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // MainTab
@@ -104,6 +105,7 @@
             // TabMain
             // 
             this.TabMain.BackColor = System.Drawing.Color.White;
+            this.TabMain.Controls.Add(this.TOPMOST);
             this.TabMain.Controls.Add(this.MainTabFileDecryptStation);
             this.TabMain.Controls.Add(this.materialLabel4);
             this.TabMain.Controls.Add(this.CheckFileDecrypt);
@@ -242,6 +244,7 @@
             // 
             this.MainTabClipbrdStation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.MainTabClipbrdStation.ContextMenuStrip = this.CliCopyMenuStrip;
             this.MainTabClipbrdStation.Depth = 0;
             this.MainTabClipbrdStation.Hint = "";
             this.MainTabClipbrdStation.Location = new System.Drawing.Point(233, 50);
@@ -387,6 +390,36 @@
             this.TabCaxa.Size = new System.Drawing.Size(470, 157);
             this.TabCaxa.TabIndex = 0;
             this.TabCaxa.Text = "CAXA相关";
+            // 
+            // CaxaList
+            // 
+            this.CaxaList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.CaxaList.ContextMenuStrip = this.CliCopyMenuStrip;
+            this.CaxaList.FormattingEnabled = true;
+            this.CaxaList.HorizontalScrollbar = true;
+            this.CaxaList.ItemHeight = 12;
+            this.CaxaList.Location = new System.Drawing.Point(243, 7);
+            this.CaxaList.Name = "CaxaList";
+            this.CaxaList.Size = new System.Drawing.Size(224, 112);
+            this.CaxaList.TabIndex = 11;
+            // 
+            // CliCopyMenuStrip
+            // 
+            this.CliCopyMenuStrip.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.CliCopyMenuStrip.Depth = 0;
+            this.CliCopyMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.CLICurrentText});
+            this.CliCopyMenuStrip.MouseState = MaterialSkin.MouseState.HOVER;
+            this.CliCopyMenuStrip.Name = "CliCopyMenuStrip";
+            this.CliCopyMenuStrip.Size = new System.Drawing.Size(149, 26);
+            // 
+            // CLICurrentText
+            // 
+            this.CLICurrentText.Name = "CLICurrentText";
+            this.CLICurrentText.Size = new System.Drawing.Size(148, 22);
+            this.CLICurrentText.Text = "复制当前文本";
             // 
             // ChangeAutoSavePath
             // 
@@ -768,35 +801,22 @@
             this.ExitClose.Text = "退出";
             this.ExitClose.Click += new System.EventHandler(this.ExitClose_Click);
             // 
-            // CaxaList
+            // TOPMOST
             // 
-            this.CaxaList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.CaxaList.ContextMenuStrip = this.CliCopyMenuStrip;
-            this.CaxaList.FormattingEnabled = true;
-            this.CaxaList.HorizontalScrollbar = true;
-            this.CaxaList.ItemHeight = 12;
-            this.CaxaList.Location = new System.Drawing.Point(243, 7);
-            this.CaxaList.Name = "CaxaList";
-            this.CaxaList.Size = new System.Drawing.Size(224, 112);
-            this.CaxaList.TabIndex = 11;
-            // 
-            // CliCopyMenuStrip
-            // 
-            this.CliCopyMenuStrip.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.CliCopyMenuStrip.Depth = 0;
-            this.CliCopyMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.CLICurrentText});
-            this.CliCopyMenuStrip.MouseState = MaterialSkin.MouseState.HOVER;
-            this.CliCopyMenuStrip.Name = "CliCopyMenuStrip";
-            this.CliCopyMenuStrip.Size = new System.Drawing.Size(181, 48);
-            // 
-            // CLICurrentText
-            // 
-            this.CLICurrentText.Name = "CLICurrentText";
-            this.CLICurrentText.Size = new System.Drawing.Size(180, 22);
-            this.CLICurrentText.Text = "复制当前文本";
+            this.TOPMOST.AutoSize = true;
+            this.TOPMOST.Depth = 0;
+            this.TOPMOST.Font = new System.Drawing.Font("Roboto", 10F);
+            this.TOPMOST.Location = new System.Drawing.Point(287, 9);
+            this.TOPMOST.Margin = new System.Windows.Forms.Padding(0);
+            this.TOPMOST.MouseLocation = new System.Drawing.Point(-1, -1);
+            this.TOPMOST.MouseState = MaterialSkin.MouseState.HOVER;
+            this.TOPMOST.Name = "TOPMOST";
+            this.TOPMOST.Ripple = true;
+            this.TOPMOST.Size = new System.Drawing.Size(90, 30);
+            this.TOPMOST.TabIndex = 15;
+            this.TOPMOST.Text = "窗口前置";
+            this.TOPMOST.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.TOPMOST.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
@@ -816,12 +836,12 @@
             this.TabMain.PerformLayout();
             this.TabCaxa.ResumeLayout(false);
             this.TabCaxa.PerformLayout();
+            this.CliCopyMenuStrip.ResumeLayout(false);
             this.TabPlm.ResumeLayout(false);
             this.TabPlm.PerformLayout();
             this.TabAnother.ResumeLayout(false);
             this.TabAnother.PerformLayout();
             this.NotifyContextMenuStrip.ResumeLayout(false);
-            this.CliCopyMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -872,5 +892,6 @@
         private System.Windows.Forms.ListBox CaxaList;
         private MaterialSkin.Controls.MaterialContextMenuStrip CliCopyMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem CLICurrentText;
+        private MaterialSkin.Controls.MaterialCheckBox TOPMOST;
     }
 }
