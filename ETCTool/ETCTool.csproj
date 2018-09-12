@@ -82,6 +82,7 @@
   <ItemGroup>
     <Compile Include="AssemblyHandler.cs" />
     <Compile Include="AutoRunServer.cs" />
+    <Compile Include="CaxaHookInterface.cs" />
     <Compile Include="CreateProcessAsUser.cs" />
     <Compile Include="ETCToolService.cs">
       <SubType>Component</SubType>
@@ -176,6 +177,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ICO\Start.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="CaxaInject.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

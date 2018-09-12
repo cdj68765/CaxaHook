@@ -66,5 +66,12 @@ namespace ETCTool
         public static extern bool GetCursorPos(out Point lpPoint);
 
         #endregion 获得鼠标指针
+
+        #region 自动保存用API
+
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern uint GetWindowThreadProcessId(IntPtr hWnd, out int lpdwProcessId);
+
+        #endregion 自动保存用API
     }
 }

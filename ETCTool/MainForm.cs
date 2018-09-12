@@ -17,6 +17,9 @@ using ETCTool.Properties;
 using MaterialSkin;
 using MaterialSkin.Controls;
 using static ETCTool.NativeApi;
+using EasyHook;
+using System.Runtime.Remoting;
+using System.Collections.Generic;
 
 namespace ETCTool
 {
@@ -26,6 +29,7 @@ namespace ETCTool
 
         public readonly BindingList<string[]> CliLog;
         public readonly BindingList<string[]> AutoSaveLog;
+
         #endregion 日志管理
 
         private readonly MaterialSkinManager materialSkinManager;
@@ -66,7 +70,7 @@ namespace ETCTool
             if (Settings.Default.FormSize == null)
             {
                 Settings.Default.FormSize = new StringCollection();
-                Settings.Default.FormSize.AddRange(new[] {"480", "280", "480", "280", "480", "280"});
+                Settings.Default.FormSize.AddRange(new[] { "480", "280", "480", "280", "480", "280" });
                 Settings.Default.Save();
             }
 
@@ -103,7 +107,6 @@ namespace ETCTool
 
                 MainTabClipbrdStation.BeginInvoke(new Action(() =>
                 {
-
                     MainTabClipbrdStation.Text = Item[0] + Item[1];
                     if (CliRadio.Checked)
                     {
@@ -116,7 +119,6 @@ namespace ETCTool
                             CaxaList.Items.Clear();
                             foreach (var VARIABLE in CliLog) CaxaList.Items.Add(VARIABLE[0] + VARIABLE[1]);
                         }
-
                         CaxaList.SelectedIndex = CaxaList.Items.Count - 1;
                     }
                 }));
@@ -133,12 +135,37 @@ namespace ETCTool
                 else
                 {
                     CaxaList.ContextMenuStrip = null;
+                    CaxaList.Items.Clear();
+                    foreach (var VARIABLE in AutoSaveLog) CaxaList.Items.Add(VARIABLE[0] + VARIABLE[1]);
+                    CaxaList.SelectedIndex = CaxaList.Items.Count - 1;
                 }
             };
             CLICurrentText.MouseDown += delegate
             {
                 ClipbrdMonitor.Onice = false;
                 ClipbrdMonitor.SetText(CliLog[CaxaList.SelectedIndex][1]);
+            };
+            AutoSaveLog = new BindingList<string[]>();
+            AutoSaveLog.ListChanged += (s, d) =>
+            {
+                if (d.ListChangedType == ListChangedType.ItemDeleted) return;
+                var Item = AutoSaveLog[d.NewIndex];
+                MainTabClipbrdStation.BeginInvoke(new Action(() =>
+                {
+                    MainTabAutoSaveStation.Text = Item[0] + Item[1];
+                    if (!CliRadio.Checked)
+                    {
+                        if (CaxaList.Items.Count == AutoSaveLog.Count)
+                        {
+                            CaxaList.Items.Add(MainTabAutoSaveStation.Text);
+                        }
+                        else
+                        {
+                            CaxaList.Items.Clear();
+                            foreach (var VARIABLE in AutoSaveLog) CaxaList.Items.Add(VARIABLE[0] + VARIABLE[1]);
+                        }
+                    }
+                }));
             };
 
             #endregion 初始化日志库
@@ -446,7 +473,118 @@ namespace ETCTool
 
         #region Caxa相关代码段
 
+        private void Buttom_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (sender is MaterialFlatButton)
+                {
+                    var Button = sender as MaterialFlatButton;
+                    if (!Button.Text.StartsWith("启动"))
+                    {
+                        Button.Icon = Image.FromStream(Assembly.GetExecutingAssembly()
+                            .GetManifestResourceStream($"ETCTool.ICO.Start.ico"));
+                        switch (Button.Name)
+                        {
+                            case "Buttom_StartCaxaClipbrd":
+                                {
+                                    CaxaClipbrd = new ClipbrdMonitor();
+                                    Task.Factory.StartNew(() =>
+                                    {
+                                        while (true)
+                                        {
+                                            Thread.Sleep(500);
+                                            if (CaxaClipbrd == null) break;
+                                            var GetText = new StringBuilder(256);
+                                            GetWindowTextW(GetForegroundWindow(IntPtr.Zero),
+                                                GetText, 256);
+                                            if (GetText.ToString().StartsWith("CAXA"))
+                                            {
+                                                Invoke(new Action(() =>
+                                                {
+                                                    Notify.Icon = ICO.ICO.clipboard_80px_1121225_easyicon_net;
+                                                }));
+                                            }
+                                            else
+                                            {
+                                                if (Variables.MainForm == null) return;
+                                                BeginInvoke(new Action(() =>
+                                                {
+                                                    Notify.Icon = ICO.ICO.Clipboard_Plan_128px_1185105_easyicon_net;
+                                                }));
+                                            }
+                                        }
+                                    }, TaskCreationOptions.LongRunning);
+                                }
+                                break;
+
+                            case "Buttom_StartCaxaAutoSave":
+                                StartCaxaAutoSaveFun(true, Button);
+                                break;
+
+                            case "Buttom_StartPlmMonitor":
+
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        Button.Icon = Image.FromStream(Assembly.GetExecutingAssembly()
+                            .GetManifestResourceStream($"ETCTool.ICO.Stop.ico"));
+                        switch (Button.Name)
+                        {
+                            case "Buttom_StartCaxaClipbrd":
+                                {
+                                    if (CaxaClipbrd != null)
+                                    {
+                                        CaxaClipbrd.Close();
+                                        CaxaClipbrd.Dispose();
+                                        CaxaClipbrd = null;
+                                        GC.Collect();
+                                    }
+                                }
+                                break;
+
+                            case "Buttom_StartCaxaAutoSave":
+                                StartCaxaAutoSaveFun(false);
+                                break;
+                        }
+                    }
+                }
+                else if (sender is ToolStripMenuItem buttom)
+                {
+                    if (!buttom.Text.StartsWith("启动"))
+                        buttom.Image = Image.FromStream(Assembly.GetExecutingAssembly()
+                            .GetManifestResourceStream($"ETCTool.ICO.Start.ico"));
+                    else
+                        buttom.Image = Image.FromStream(Assembly.GetExecutingAssembly()
+                            .GetManifestResourceStream($"ETCTool.ICO.Stop.ico"));
+                }
+            }
+            catch (Exception exception)
+            {
+            }
+        }
+
+        private void Button_Click(object sender, EventArgs e)
+        {
+            ThreadPool.QueueUserWorkItem(state =>
+            {
+                dynamic Button = sender as Control;
+                if (Button == null) Button = sender as ToolStripMenuItem;
+
+                Invoke(new Action(() =>
+                {
+                    Button.Text = Button.Text.StartsWith("启动")
+                        ? Button.Text.Replace("启动", "关闭")
+                        : Button.Text.Replace("关闭", "启动");
+                }));
+            });
+        }
+
         #region Clipbrd监控主函数
+
+        private ClipbrdMonitor CaxaClipbrd;
 
         public class ClipbrdMonitor : Form
         {
@@ -455,10 +593,10 @@ namespace ETCTool
             public ClipbrdMonitor()
             {
                 AddClipboardFormatListener(Handle);
-                Variables.MainForm.CliLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->启动剪切板监控", ""});
+                Variables.MainForm.CliLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->启动剪切板监控", "" });
                 FormClosing += delegate
                 {
-                    Variables.MainForm.CliLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->关闭剪切板监控", ""});
+                    Variables.MainForm.CliLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->关闭剪切板监控", "" });
                     RemoveClipboardFormatListener(Handle);
                 };
             }
@@ -477,7 +615,7 @@ namespace ETCTool
                         {
                             ThreadPool.QueueUserWorkItem(obj =>
                             {
-                                Variables.MainForm.CliLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->获得字符:", Temp});
+                                Variables.MainForm.CliLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->获得字符:", Temp });
                             });
                             SetText(Temp);
                             Onice = false;
@@ -527,9 +665,12 @@ namespace ETCTool
 
         #region Caxa自动保存代码段
 
+        // private System.Timers.Timer AutoSaveTimeSpan = new System.Timers.Timer(1000);
+        private Dictionary<int, string> CaxaPid = new Dictionary<int, string>();
+
         private void SetAutoSaveTimeSpan_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar != '\b' && e.KeyChar != '.' && e.KeyChar != '\u0016'&& e.KeyChar != '\u0003')
+            if (e.KeyChar != '\b' && e.KeyChar != '.' && e.KeyChar != '\u0016' && e.KeyChar != '\u0003')
             {
                 if (e.KeyChar < '0' || e.KeyChar > '9') //这是允许输入0-9数字
                 {
@@ -540,105 +681,9 @@ namespace ETCTool
                     e.Handled = true;
                 }
             }
-            else if (e.KeyChar != '\b'&&!float.TryParse($"{SetAutoSaveTimeSpan.Text}{e.KeyChar}", out float res))
-            { 
+            else if (e.KeyChar != '\b' && !float.TryParse($"{SetAutoSaveTimeSpan.Text}{e.KeyChar}", out float res))
+            {
                 e.Handled = true;
-            }
-        }
-
-        #endregion
-        private ClipbrdMonitor CaxaClipbrd;
-
-        private void Buttom_TextChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                if (sender is MaterialFlatButton)
-                {
-                    var Button = sender as MaterialFlatButton;
-                    if (!Button.Text.StartsWith("启动"))
-                    {
-                        Button.Icon = Image.FromStream(Assembly.GetExecutingAssembly()
-                            .GetManifestResourceStream($"ETCTool.ICO.Start.ico"));
-                        switch (Button.Name)
-                        {
-                            case "Buttom_StartCaxaClipbrd":
-                            {
-                                CaxaClipbrd = new ClipbrdMonitor();
-                                Task.Factory.StartNew(() =>
-                                {
-                                    while (true)
-                                    {
-                                        Thread.Sleep(500);
-                                        if (CaxaClipbrd == null) break;
-                                        var GetText = new StringBuilder(256);
-                                        GetWindowTextW(GetForegroundWindow(IntPtr.Zero),
-                                            GetText, 256);
-                                        if (GetText.ToString().StartsWith("CAXA"))
-                                        {
-                                            Invoke(new Action(() =>
-                                            {
-                                                Notify.Icon = ICO.ICO.clipboard_80px_1121225_easyicon_net;
-                                            }));
-                                        }
-                                        else
-                                        {
-                                            if (Variables.MainForm == null) return;
-                                            BeginInvoke(new Action(() =>
-                                            {
-                                                Notify.Icon = ICO.ICO.Clipboard_Plan_128px_1185105_easyicon_net;
-                                            }));
-                                        }
-                                    }
-                                }, TaskCreationOptions.LongRunning);
-                            }
-                                break;
-
-                            case "Buttom_StartCaxaAutoSave":
-                                StartCaxaAutoSaveFun(true, Button);
-                                break;
-
-                            case "Buttom_StartPlmMonitor":
-
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        Button.Icon = Image.FromStream(Assembly.GetExecutingAssembly()
-                            .GetManifestResourceStream($"ETCTool.ICO.Stop.ico"));
-                        switch (Button.Name)
-                        {
-                            case "Buttom_StartCaxaClipbrd":
-                            {
-                                if (CaxaClipbrd != null)
-                                {
-                                    CaxaClipbrd.Close();
-                                    CaxaClipbrd.Dispose();
-                                    CaxaClipbrd = null;
-                                    GC.Collect();
-                                }
-                            }
-                                break;
-
-                            case "Buttom_StartCaxaAutoSave":
-                                StartCaxaAutoSaveFun(false);
-                                break;
-                        }
-                    }
-                }
-                else if (sender is ToolStripMenuItem buttom)
-                {
-                    if (!buttom.Text.StartsWith("启动"))
-                        buttom.Image = Image.FromStream(Assembly.GetExecutingAssembly()
-                            .GetManifestResourceStream($"ETCTool.ICO.Start.ico"));
-                    else
-                        buttom.Image = Image.FromStream(Assembly.GetExecutingAssembly()
-                            .GetManifestResourceStream($"ETCTool.ICO.Stop.ico"));
-                }
-            }
-            catch (Exception exception)
-            {
             }
         }
 
@@ -648,6 +693,34 @@ namespace ETCTool
             {
                 if (Directory.Exists(Settings.Default.AutoSavePath))
                 {
+                    var AutoSaveTimeSpan = new System.Timers.Timer(1000);
+                    AutoSaveTimeSpan.AutoReset = true;
+                    AutoSaveTimeSpan.Elapsed += delegate
+                    {
+                        GetWindowThreadProcessId(GetForegroundWindow(IntPtr.Zero), out int Pid);
+                        if (!CaxaPid.ContainsKey(Pid))
+                        {
+                            try
+                            {
+                                string ChannelName = null;
+                                RemoteHooking.IpcCreateServer<CaxaHookInterface>(ref ChannelName,
+                                    WellKnownObjectMode.SingleCall);
+                                RemoteHooking.Inject(
+                                    Pid,
+                                    InjectionOptions.Default,
+                                    $"CaxaInject.dll",
+                                    $"CaxaInject.dll",
+                                    ChannelName);
+                                CaxaPid.Add(Pid, ChannelName);
+                                Variables.MainForm.AutoSaveLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->捕获成功:", $"{Pid}" });
+                            }
+                            catch (Exception exception)
+                            {
+                                Variables.MainForm.AutoSaveLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->错误信息:", $"{exception}" });
+                            }
+                        }
+                    };
+                    AutoSaveTimeSpan.Start();
                 }
                 else
                 {
@@ -659,24 +732,11 @@ namespace ETCTool
             }
             else
             {
+                // AutoSaveTimeSpan.Dispose();
             }
         }
 
-        private void Button_Click(object sender, EventArgs e)
-        {
-            ThreadPool.QueueUserWorkItem(state =>
-            {
-                dynamic Button = sender as Control;
-                if (Button == null) Button = sender as ToolStripMenuItem;
-
-                Invoke(new Action(() =>
-                {
-                    Button.Text = Button.Text.StartsWith("启动")
-                        ? Button.Text.Replace("启动", "关闭")
-                        : Button.Text.Replace("关闭", "启动");
-                }));
-            });
-        }
+        #endregion Caxa自动保存代码段
 
         #endregion Caxa相关代码段
 

@@ -25,10 +25,9 @@ namespace ETCTool
             }
 
             var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            var Guid = ((GuidAttribute) Attribute.GetCustomAttribute(Assembly.GetExecutingAssembly(),
+            var Guid = ((GuidAttribute)Attribute.GetCustomAttribute(Assembly.GetExecutingAssembly(),
                 typeof(GuidAttribute))).Value;
             if (args.Length == 0 || args[0] == "Service") AssemblyHandler.AssemblyFileSaveToCaxaAutoSave(path);
-
             if (AppDomain.CurrentDomain.IsDefaultAppDomain() && args.Length == 0 || args[0] == "Service")
             {
                 var newDomain = AppDomain.CreateDomain("StartNewProcess", null, new AppDomainSetup
