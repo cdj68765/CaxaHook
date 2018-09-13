@@ -18,7 +18,7 @@ namespace ETCTool
         public static extern int GetWindowTextW(IntPtr hWnd, [MarshalAs(UnmanagedType.LPWStr)] StringBuilder lpString,
             int nMaxCount);
 
-        [DllImport("user32.dll")]
+        [DllImport("user32.dll", SetLastError = true)]
         public static extern IntPtr GetForegroundWindow(IntPtr hWnd);
 
         [DllImport("User32")]

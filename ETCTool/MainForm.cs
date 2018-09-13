@@ -695,32 +695,40 @@ namespace ETCTool
                 {
                     var AutoSaveTimeSpan = new System.Timers.Timer(1000);
                     AutoSaveTimeSpan.AutoReset = true;
+                    AutoSaveTimeSpan.Enabled = true;
                     AutoSaveTimeSpan.Elapsed += delegate
                     {
-                        GetWindowThreadProcessId(GetForegroundWindow(IntPtr.Zero), out int Pid);
-                        if (!CaxaPid.ContainsKey(Pid))
+                        var Get_Text = new StringBuilder(256);
+                        var ForegroundWindow = GetForegroundWindow(IntPtr.Zero);
+                        GetWindowTextW(ForegroundWindow, Get_Text, 256);
+                        if (Get_Text.ToString().StartsWith("CAXA"))
                         {
-                            try
+                            GetWindowThreadProcessId(ForegroundWindow, out int Pid);
+                            if (!CaxaPid.ContainsKey(Pid))
                             {
-                                string ChannelName = null;
-                                RemoteHooking.IpcCreateServer<CaxaHookInterface>(ref ChannelName,
-                                    WellKnownObjectMode.SingleCall);
-                                RemoteHooking.Inject(
-                                    Pid,
-                                    InjectionOptions.Default,
-                                    $"CaxaInject.dll",
-                                    $"CaxaInject.dll",
-                                    ChannelName);
-                                CaxaPid.Add(Pid, ChannelName);
-                                Variables.MainForm.AutoSaveLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->捕获成功:", $"{Pid}" });
-                            }
-                            catch (Exception exception)
-                            {
-                                Variables.MainForm.AutoSaveLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->错误信息:", $"{exception}" });
+                                try
+                                {
+                                    string ChannelName = null;
+                                    RemoteHooking.IpcCreateServer<CaxaHookInterface>(ref ChannelName,
+                                        WellKnownObjectMode.SingleCall);
+                                    var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+                                    RemoteHooking.Inject(
+                                        Pid,
+                                        InjectionOptions.Default,
+                                         $"{path}\\EtcTool\\CaxaInject.dll",
+                                          $"{path}\\EtcTool\\CaxaInject.dll",
+                                        ChannelName);
+                                    CaxaPid.Add(Pid, ChannelName);
+                                    Variables.MainForm.AutoSaveLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->捕获成功:", $"{Pid}" });
+                                }
+                                catch (Exception exception)
+                                {
+                                    Variables.MainForm.AutoSaveLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->错误信息:", $"{exception}" });
+                                }
                             }
                         }
                     };
-                    AutoSaveTimeSpan.Start();
+                    // AutoSaveTimeSpan.Start();
                 }
                 else
                 {

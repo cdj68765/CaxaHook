@@ -28,14 +28,26 @@ namespace CaxaInject
             RemoteHooking.IContext InContext,
             String InChannelName)
         {
-            var CreateHook = LocalHook.Create(
-           LocalHook.GetProcAddress("dftdb.dll", "StgCreateStorageEx"),
-           new StgCreateStorageEx(StgCreateStorageEx_Hooked),
-           this);
-            CreateHook.ThreadACL.SetExclusiveACL(new Int32[] { 0 });
-            while (true)
+            LocalHook CreateHook = null;
+            try
             {
-                Thread.Sleep(1000);
+                CreateHook = LocalHook.Create(LocalHook.GetProcAddress("dftdb.dll", "StgCreateStorageEx"), new StgCreateStorageEx(StgCreateStorageEx_Hooked), this);
+                CreateHook.ThreadACL.SetExclusiveACL(new Int32[] { 0 });
+                Interface.Info("安装成功");
+                while (true)
+                {
+                    Interface.Ping(out bool Ping);
+                    if (Ping == false) break;
+                    Thread.Sleep(1000);
+                }
+            }
+            catch (Exception ex)
+            {
+                Interface.Info(ex.ToString());
+            }
+            finally
+            {
+                CreateHook.Dispose();
             }
         }
 

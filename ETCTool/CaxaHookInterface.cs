@@ -11,5 +11,16 @@ namespace ETCTool
         {
             Console.WriteLine();
         }
+
+        public void Ping(out bool ping)
+        {
+            Variables.MainForm.AutoSaveLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->:", $"ping" });
+            ping = true;
+        }
+
+        public void Info(string v)
+        {
+            Variables.MainForm.AutoSaveLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->:", $"{v}" });
+        }
     }
 }

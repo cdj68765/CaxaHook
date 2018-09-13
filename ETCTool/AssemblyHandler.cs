@@ -50,15 +50,21 @@ namespace ETCTool
 
             void SaveToDisk(string fullName, string v)
             {
-                var sm = Assembly.GetExecutingAssembly().GetManifestResourceStream($"ETCTool.{v}");
-                if (sm != null)
+                try
                 {
-                    using (var File = new FileStream($"{fullName}\\{v}", FileMode.Create))
+                    var sm = Assembly.GetExecutingAssembly().GetManifestResourceStream($"ETCTool.{v}");
+                    if (sm != null)
                     {
-                        sm.CopyTo(File);
-                    }
+                        using (var File = new FileStream($"{fullName}\\{v}", FileMode.Create))
+                        {
+                            sm.CopyTo(File);
+                        }
 
-                    sm.Dispose();
+                        sm.Dispose();
+                    }
+                }
+                catch (Exception)
+                {
                 }
             }
         }
