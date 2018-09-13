@@ -10,7 +10,7 @@ namespace ETCTool
         internal static void AssemblyFileSaveToCaxaAutoSave(string Path)
         {
             var Ass = new DirectoryInfo(
-                $"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\\EtcTool");
+                $"{Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)}\\EtcTool");
             if (!Ass.Exists) Ass.Create();
             using (var ReadFile = new FileStream(Process.GetCurrentProcess().MainModule.FileName,
                 FileMode.Open, FileAccess.Read,

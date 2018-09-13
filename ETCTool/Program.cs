@@ -24,7 +24,7 @@ namespace ETCTool
                 return;
             }
 
-            var path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            var path = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
             var Guid = ((GuidAttribute)Attribute.GetCustomAttribute(Assembly.GetExecutingAssembly(),
                 typeof(GuidAttribute))).Value;
             if (args.Length == 0 || args[0] == "Service") AssemblyHandler.AssemblyFileSaveToCaxaAutoSave(path);
@@ -34,8 +34,10 @@ namespace ETCTool
                 {
                     PrivateBinPath = $"{path}\\EtcTool",
                     ApplicationBase = $"{path}\\EtcTool"
+
                 });
-                var ret = newDomain.ExecuteAssemblyByName(Assembly.GetExecutingAssembly().FullName, Guid,
+               // createProcessAsUser.StartProcessAndBypassUAC(Application.ExecutablePath, " Service", out var info);
+               var ret = newDomain.ExecuteAssemblyByName(Assembly.GetExecutingAssembly().FullName, Guid,
                     Application.ExecutablePath, "RunByService");
                 AppDomain.Unload(newDomain);
                 Environment.ExitCode = ret;
@@ -43,12 +45,12 @@ namespace ETCTool
             }
             else
             {
-                if (args[1] != Settings.Default.OriPath)
-                {
-                    Settings.Default.OriPath = args[1];
-                    Settings.Default.Save();
-                }
 
+               /* if (args[1] != Variables. Settings.OriPath)
+                {
+                    Variables.Settings.OriPath = args[1];
+                    Variables.Settings.Save();
+                }*/
                 ShowForm();
             }
 
