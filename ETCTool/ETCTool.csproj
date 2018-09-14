@@ -111,6 +111,9 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WPFFolderBrowser">
+      <HintPath>.\WPFFolderBrowser.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyHandler.cs" />
@@ -210,6 +213,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="System_preferences_tool_tools_128px_581754_easyicon.net.ico" />
+    <EmbeddedResource Include="WPFFolderBrowser.dll" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">

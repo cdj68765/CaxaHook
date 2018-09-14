@@ -14,10 +14,13 @@ namespace ETCTool
             InitializeComponent();
         }
 
-
         public MessageBoxForm(string Message, MessageBoxButtons buttons, int Time)
         {
             InitializeComponent();
+            if (Variables.MainForm.TopMost)
+            {
+                this.TopMost = true;
+            }
             Text = Message;
             Countdown.Maximum = Time * 20;
             Countdown.Value = Time * 20;
@@ -31,7 +34,6 @@ namespace ETCTool
                         Thread.Sleep(50);
                         BeginInvoke(new Action(() =>
                         {
-                           
                             if (Countdown.Value != 0)
                                 Countdown.Value--;
                         }));
@@ -43,7 +45,6 @@ namespace ETCTool
                 catch (Exception e)
                 {
                 }
-               
             }, TaskCreationOptions.AttachedToParent);
         }
 

@@ -6,6 +6,9 @@ namespace ETCTool
 {
     public class NativeApi
     {
+        [DllImport("user32.dll")]
+        internal static extern IntPtr GetDesktopWindow(IntPtr hwnd);
+
         #region 剪切板用API
 
         [DllImport("user32.dll")]

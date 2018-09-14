@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.ServiceProcess;
+using System.Threading;
 using System.Windows.Forms;
 using ETCTool.Properties;
 
@@ -9,6 +10,7 @@ namespace ETCTool
 {
     internal class Program
     {
+        [STAThread]
         private static void Main(string[] args)
         {
             if (!Environment.UserInteractive)
@@ -16,9 +18,9 @@ namespace ETCTool
                 ServiceBase.Run(new ETCToolService(Application.ExecutablePath));
                 return;
             }
-
             if (args.Length != 0 && args[0] == "Service")
             {
+                Thread.Sleep(10000);
                 ShowForm();
                 AutoRunServer.ServiceStop();
                 return;
@@ -34,23 +36,21 @@ namespace ETCTool
                 {
                     PrivateBinPath = $"{path}\\EtcTool",
                     ApplicationBase = $"{path}\\EtcTool"
-
                 });
-               // createProcessAsUser.StartProcessAndBypassUAC(Application.ExecutablePath, " Service", out var info);
-               var ret = newDomain.ExecuteAssemblyByName(Assembly.GetExecutingAssembly().FullName, Guid,
-                    Application.ExecutablePath, "RunByService");
+                // createProcessAsUser.StartProcessAndBypassUAC(Application.ExecutablePath, " Service", out var info);
+                var ret = newDomain.ExecuteAssemblyByName(Assembly.GetExecutingAssembly().FullName, Guid,
+                     Application.ExecutablePath, "RunByService");
                 AppDomain.Unload(newDomain);
                 Environment.ExitCode = ret;
                 Environment.Exit(0);
             }
             else
             {
-
-               /* if (args[1] != Variables. Settings.OriPath)
-                {
-                    Variables.Settings.OriPath = args[1];
-                    Variables.Settings.Save();
-                }*/
+                /* if (args[1] != Variables. Settings.OriPath)
+                 {
+                     Variables.Settings.OriPath = args[1];
+                     Variables.Settings.Save();
+                 }*/
                 ShowForm();
             }
 
