@@ -36,7 +36,8 @@ namespace ETCTool
                 {
                     "EasyHook32.dll", "EasyHook32Svc.exe", "EasyLoad32.dll",
                     "EasyHook64Svc.exe", "EasyHook64.dll", "EasyLoad64.dll",
-                    "MaterialSkin.dll", "EasyHook.dll", "CaxaInject.dll", "PLMInject.dll","WPFFolderBrowser.dll"
+                    "MaterialSkin.dll", "EasyHook.dll", "CaxaInject.dll",
+                    "PLMInject.dll", "WPFFolderBrowser.dll"
                 })
                     try
                     {
@@ -45,9 +46,7 @@ namespace ETCTool
                     finally
                     {
                     }
-
             Directory.SetCurrentDirectory(Ass.FullName);
-
             void SaveToDisk(string fullName, string v)
             {
                 try

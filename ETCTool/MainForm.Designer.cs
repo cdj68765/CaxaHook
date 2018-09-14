@@ -50,6 +50,9 @@
             this.CheckClipbrdFuntion = new MaterialSkin.Controls.MaterialCheckBox();
             this.StartAllFuntion = new MaterialSkin.Controls.MaterialRaisedButton();
             this.TabCaxa = new System.Windows.Forms.TabPage();
+            this.materialLabel6 = new MaterialSkin.Controls.MaterialLabel();
+            this.SetAutoSaveTimeSpan = new MaterialSkin.Controls.MaterialSingleLineTextField();
+            this.OpenTheLastAutoSaveButton = new MaterialSkin.Controls.MaterialRaisedButton();
             this.CaxaList = new System.Windows.Forms.ListBox();
             this.ChangeAutoSavePath = new MaterialSkin.Controls.MaterialRaisedButton();
             this.AutoSaveRadio = new MaterialSkin.Controls.MaterialRadioButton();
@@ -75,9 +78,8 @@
             this.ShowForm = new System.Windows.Forms.ToolStripMenuItem();
             this.NotifyStartRun = new System.Windows.Forms.ToolStripMenuItem();
             this.ExitClose = new System.Windows.Forms.ToolStripMenuItem();
-            this.OpenTheLastAutoSaveButton = new MaterialSkin.Controls.MaterialRaisedButton();
-            this.SetAutoSaveTimeSpan = new MaterialSkin.Controls.MaterialSingleLineTextField();
-            this.materialLabel6 = new MaterialSkin.Controls.MaterialLabel();
+            this.OpenAutoSavePath = new MaterialSkin.Controls.MaterialRaisedButton();
+            this.DelAllFile = new MaterialSkin.Controls.MaterialRaisedButton();
             this.MainTab.SuspendLayout();
             this.TabMain.SuspendLayout();
             this.CliCopyMenuStrip.SuspendLayout();
@@ -410,6 +412,8 @@
             // TabCaxa
             // 
             this.TabCaxa.BackColor = System.Drawing.Color.White;
+            this.TabCaxa.Controls.Add(this.DelAllFile);
+            this.TabCaxa.Controls.Add(this.OpenAutoSavePath);
             this.TabCaxa.Controls.Add(this.materialLabel6);
             this.TabCaxa.Controls.Add(this.SetAutoSaveTimeSpan);
             this.TabCaxa.Controls.Add(this.OpenTheLastAutoSaveButton);
@@ -429,6 +433,55 @@
             this.TabCaxa.Size = new System.Drawing.Size(470, 157);
             this.TabCaxa.TabIndex = 0;
             this.TabCaxa.Text = "CAXA相关";
+            // 
+            // materialLabel6
+            // 
+            this.materialLabel6.AutoSize = true;
+            this.materialLabel6.BackColor = System.Drawing.Color.Transparent;
+            this.materialLabel6.Depth = 0;
+            this.materialLabel6.Font = new System.Drawing.Font("Roboto", 11F);
+            this.materialLabel6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.materialLabel6.Location = new System.Drawing.Point(87, 159);
+            this.materialLabel6.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialLabel6.Name = "materialLabel6";
+            this.materialLabel6.Size = new System.Drawing.Size(137, 19);
+            this.materialLabel6.TabIndex = 14;
+            this.materialLabel6.Text = "自动保存间隔分钟";
+            // 
+            // SetAutoSaveTimeSpan
+            // 
+            this.SetAutoSaveTimeSpan.Depth = 0;
+            this.SetAutoSaveTimeSpan.Hint = "";
+            this.SetAutoSaveTimeSpan.Location = new System.Drawing.Point(19, 156);
+            this.SetAutoSaveTimeSpan.MaxLength = 32767;
+            this.SetAutoSaveTimeSpan.MouseState = MaterialSkin.MouseState.HOVER;
+            this.SetAutoSaveTimeSpan.Name = "SetAutoSaveTimeSpan";
+            this.SetAutoSaveTimeSpan.PasswordChar = '\0';
+            this.SetAutoSaveTimeSpan.SelectedText = "";
+            this.SetAutoSaveTimeSpan.SelectionLength = 0;
+            this.SetAutoSaveTimeSpan.SelectionStart = 0;
+            this.SetAutoSaveTimeSpan.Size = new System.Drawing.Size(66, 23);
+            this.SetAutoSaveTimeSpan.TabIndex = 13;
+            this.SetAutoSaveTimeSpan.TabStop = false;
+            this.SetAutoSaveTimeSpan.Text = "1";
+            this.SetAutoSaveTimeSpan.UseSystemPasswordChar = false;
+            this.SetAutoSaveTimeSpan.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.SetAutoSaveTimeSpan_KeyPress);
+            // 
+            // OpenTheLastAutoSaveButton
+            // 
+            this.OpenTheLastAutoSaveButton.AutoSize = true;
+            this.OpenTheLastAutoSaveButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.OpenTheLastAutoSaveButton.Depth = 0;
+            this.OpenTheLastAutoSaveButton.Icon = null;
+            this.OpenTheLastAutoSaveButton.Location = new System.Drawing.Point(19, 118);
+            this.OpenTheLastAutoSaveButton.MouseState = MaterialSkin.MouseState.HOVER;
+            this.OpenTheLastAutoSaveButton.Name = "OpenTheLastAutoSaveButton";
+            this.OpenTheLastAutoSaveButton.Primary = true;
+            this.OpenTheLastAutoSaveButton.Size = new System.Drawing.Size(172, 36);
+            this.OpenTheLastAutoSaveButton.TabIndex = 12;
+            this.OpenTheLastAutoSaveButton.Text = "打开最后一次保存文件";
+            this.OpenTheLastAutoSaveButton.UseVisualStyleBackColor = true;
+            this.OpenTheLastAutoSaveButton.MouseClick += new System.Windows.Forms.MouseEventHandler(this.OpenTheLastAutoSaveButton_MouseClick);
             // 
             // CaxaList
             // 
@@ -824,53 +877,37 @@
             this.ExitClose.Text = "退出";
             this.ExitClose.Click += new System.EventHandler(this.ExitClose_Click);
             // 
-            // OpenTheLastAutoSaveButton
+            // OpenAutoSavePath
             // 
-            this.OpenTheLastAutoSaveButton.AutoSize = true;
-            this.OpenTheLastAutoSaveButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.OpenTheLastAutoSaveButton.Depth = 0;
-            this.OpenTheLastAutoSaveButton.Icon = null;
-            this.OpenTheLastAutoSaveButton.Location = new System.Drawing.Point(19, 118);
-            this.OpenTheLastAutoSaveButton.MouseState = MaterialSkin.MouseState.HOVER;
-            this.OpenTheLastAutoSaveButton.Name = "OpenTheLastAutoSaveButton";
-            this.OpenTheLastAutoSaveButton.Primary = true;
-            this.OpenTheLastAutoSaveButton.Size = new System.Drawing.Size(172, 36);
-            this.OpenTheLastAutoSaveButton.TabIndex = 12;
-            this.OpenTheLastAutoSaveButton.Text = "打开最后一次保存文件";
-            this.OpenTheLastAutoSaveButton.UseVisualStyleBackColor = true;
+            this.OpenAutoSavePath.AutoSize = true;
+            this.OpenAutoSavePath.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.OpenAutoSavePath.Depth = 0;
+            this.OpenAutoSavePath.Icon = null;
+            this.OpenAutoSavePath.Location = new System.Drawing.Point(19, 183);
+            this.OpenAutoSavePath.MouseState = MaterialSkin.MouseState.HOVER;
+            this.OpenAutoSavePath.Name = "OpenAutoSavePath";
+            this.OpenAutoSavePath.Primary = true;
+            this.OpenAutoSavePath.Size = new System.Drawing.Size(142, 36);
+            this.OpenAutoSavePath.TabIndex = 15;
+            this.OpenAutoSavePath.Text = "打开自动保存目录";
+            this.OpenAutoSavePath.UseVisualStyleBackColor = true;
+            this.OpenAutoSavePath.MouseClick += new System.Windows.Forms.MouseEventHandler(this.OpenAutoSavePath_MouseClick);
             // 
-            // SetAutoSaveTimeSpan
+            // DelAllFile
             // 
-            this.SetAutoSaveTimeSpan.Depth = 0;
-            this.SetAutoSaveTimeSpan.Hint = "";
-            this.SetAutoSaveTimeSpan.Location = new System.Drawing.Point(19, 156);
-            this.SetAutoSaveTimeSpan.MaxLength = 32767;
-            this.SetAutoSaveTimeSpan.MouseState = MaterialSkin.MouseState.HOVER;
-            this.SetAutoSaveTimeSpan.Name = "SetAutoSaveTimeSpan";
-            this.SetAutoSaveTimeSpan.PasswordChar = '\0';
-            this.SetAutoSaveTimeSpan.SelectedText = "";
-            this.SetAutoSaveTimeSpan.SelectionLength = 0;
-            this.SetAutoSaveTimeSpan.SelectionStart = 1;
-            this.SetAutoSaveTimeSpan.Size = new System.Drawing.Size(66, 23);
-            this.SetAutoSaveTimeSpan.TabIndex = 13;
-            this.SetAutoSaveTimeSpan.TabStop = false;
-            this.SetAutoSaveTimeSpan.Text = "1";
-            this.SetAutoSaveTimeSpan.UseSystemPasswordChar = false;
-            this.SetAutoSaveTimeSpan.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.SetAutoSaveTimeSpan_KeyPress);
-            // 
-            // materialLabel6
-            // 
-            this.materialLabel6.AutoSize = true;
-            this.materialLabel6.BackColor = System.Drawing.Color.Transparent;
-            this.materialLabel6.Depth = 0;
-            this.materialLabel6.Font = new System.Drawing.Font("Roboto", 11F);
-            this.materialLabel6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.materialLabel6.Location = new System.Drawing.Point(87, 159);
-            this.materialLabel6.MouseState = MaterialSkin.MouseState.HOVER;
-            this.materialLabel6.Name = "materialLabel6";
-            this.materialLabel6.Size = new System.Drawing.Size(137, 19);
-            this.materialLabel6.TabIndex = 14;
-            this.materialLabel6.Text = "自动保存间隔分钟";
+            this.DelAllFile.AutoSize = true;
+            this.DelAllFile.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.DelAllFile.Depth = 0;
+            this.DelAllFile.Icon = null;
+            this.DelAllFile.Location = new System.Drawing.Point(19, 222);
+            this.DelAllFile.MouseState = MaterialSkin.MouseState.HOVER;
+            this.DelAllFile.Name = "DelAllFile";
+            this.DelAllFile.Primary = true;
+            this.DelAllFile.Size = new System.Drawing.Size(142, 36);
+            this.DelAllFile.TabIndex = 16;
+            this.DelAllFile.Text = "清空所有保存文件";
+            this.DelAllFile.UseVisualStyleBackColor = true;
+            this.DelAllFile.MouseClick += new System.Windows.Forms.MouseEventHandler(this.DelAllFile_MouseClick);
             // 
             // MainForm
             // 
@@ -950,5 +987,7 @@
         private MaterialSkin.Controls.MaterialRaisedButton OpenTheLastAutoSaveButton;
         private MaterialSkin.Controls.MaterialSingleLineTextField SetAutoSaveTimeSpan;
         private MaterialSkin.Controls.MaterialLabel materialLabel6;
+        private MaterialSkin.Controls.MaterialRaisedButton OpenAutoSavePath;
+        private MaterialSkin.Controls.MaterialRaisedButton DelAllFile;
     }
 }

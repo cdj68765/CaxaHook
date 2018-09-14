@@ -22,7 +22,7 @@ namespace ETCTool
             int nMaxCount);
 
         [DllImport("user32.dll", SetLastError = true)]
-        public static extern IntPtr GetForegroundWindow(IntPtr hWnd);
+        public static extern IntPtr GetForegroundWindow();
 
         [DllImport("User32")]
         internal static extern bool OpenClipboard(IntPtr hWndNewOwner);

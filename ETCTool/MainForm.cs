@@ -20,6 +20,7 @@ using static ETCTool.NativeApi;
 using EasyHook;
 using System.Runtime.Remoting;
 using System.Collections.Generic;
+using System.Diagnostics;
 using static ETCTool.Variables;
 
 namespace ETCTool
@@ -75,8 +76,14 @@ namespace ETCTool
                     if (setting.FormSize == null)
                     {
                         setting.FormSize = new StringCollection();
-                        setting.FormSize.AddRange(new[] { "480", "280", "480", "280", "480", "280" });
+                        setting.FormSize.AddRange(new[] {"480", "280", "480", "280", "480", "280"});
                         setting.Save();
+                    }
+
+                    if (Directory.Exists(setting.AutoSavePath))
+                    {
+                        Variables.MainForm.AutoSaveLog.Add(new[]
+                            {$"{DateTime.Now:hh:mm:ss}->当前保存文件数量:", $"{new DirectoryInfo(setting.AutoSavePath).EnumerateFileSystemInfos().Count()}"});
                     }
                 }));
             });
@@ -158,7 +165,7 @@ namespace ETCTool
             {
                 if (d.ListChangedType == ListChangedType.ItemDeleted) return;
                 var Item = AutoSaveLog[d.NewIndex];
-                MainTabClipbrdStation.BeginInvoke(new Action(() =>
+                BeginInvoke(new Action(() =>
                 {
                     MainTabAutoSaveStation.Text = Item[0] + Item[1];
                     if (!CliRadio.Checked)
@@ -172,6 +179,7 @@ namespace ETCTool
                             CaxaList.Items.Clear();
                             foreach (var VARIABLE in AutoSaveLog) CaxaList.Items.Add(VARIABLE[0] + VARIABLE[1]);
                         }
+                        CaxaList.SelectedIndex = CaxaList.Items.Count - 1;
                     }
                 }));
             };
@@ -293,7 +301,6 @@ namespace ETCTool
         private bool CheckAutoRun()
         {
             if (AutoRunServer.IsServiceExisted()) return AutoRunServer.CheckStartMode();
-
             return false;
         }
 
@@ -430,21 +437,25 @@ namespace ETCTool
         private void AutoSavePathLine_Click(object sender, EventArgs e)
         {
             TabCaxa.Select();
-            using (var SeleSavePath = new WPFFolderBrowser.WPFFolderBrowserDialog())
+
+
+            try
             {
+                var SeleSavePath = new WPFFolderBrowser.WPFFolderBrowserDialog();
                 // SeleSavePath.SelectedPath = setting.AutoSavePath;
-                setting.AutoSavePath = setting.AutoSavePath;
                 SeleSavePath.ShowDialog();
-                AutoSavePathLine.Invoke(new Action(() =>
-                {
-                    {
-                        //  AutoSavePathLine.Text = SeleSavePath.SelectedPath;
-                        AutoSavePathLine.Text = SeleSavePath.FileName;
-                    }
-                }));
+                SeleSavePath.InitialDirectory = setting.AutoSavePath;
+                SeleSavePath.Title = "选择Caxa自动保存目录 ";
+                SeleSavePath.AddToMruList = true;
+                SeleSavePath.DereferenceLinks = true;
+                AutoSavePathLine.Text = SeleSavePath.FileName;
                 //  setting.AutoSavePath = SeleSavePath.SelectedPath;
                 setting.AutoSavePath = SeleSavePath.FileName;
                 setting.Save();
+            }
+            finally
+            {
+
             }
             /*  var Nt = new Thread(() =>
               {
@@ -498,35 +509,35 @@ namespace ETCTool
                         switch (Button.Name)
                         {
                             case "Buttom_StartCaxaClipbrd":
+                            {
+                                CaxaClipbrd = new ClipbrdMonitor();
+                                Task.Factory.StartNew(() =>
                                 {
-                                    CaxaClipbrd = new ClipbrdMonitor();
-                                    Task.Factory.StartNew(() =>
+                                    while (true)
                                     {
-                                        while (true)
+                                        Thread.Sleep(500);
+                                        if (CaxaClipbrd == null) break;
+                                        var GetText = new StringBuilder(256);
+                                        GetWindowTextW(GetForegroundWindow(),
+                                            GetText, 256);
+                                        if (GetText.ToString().StartsWith("CAXA"))
                                         {
-                                            Thread.Sleep(500);
-                                            if (CaxaClipbrd == null) break;
-                                            var GetText = new StringBuilder(256);
-                                            GetWindowTextW(GetForegroundWindow(IntPtr.Zero),
-                                                GetText, 256);
-                                            if (GetText.ToString().StartsWith("CAXA"))
+                                            Invoke(new Action(() =>
                                             {
-                                                Invoke(new Action(() =>
-                                                {
-                                                    Notify.Icon = ICO.ICO.clipboard_80px_1121225_easyicon_net;
-                                                }));
-                                            }
-                                            else
-                                            {
-                                                if (Variables.MainForm == null) return;
-                                                BeginInvoke(new Action(() =>
-                                                {
-                                                    Notify.Icon = ICO.ICO.Clipboard_Plan_128px_1185105_easyicon_net;
-                                                }));
-                                            }
+                                                Notify.Icon = ICO.ICO.clipboard_80px_1121225_easyicon_net;
+                                            }));
                                         }
-                                    }, TaskCreationOptions.LongRunning);
-                                }
+                                        else
+                                        {
+                                            if (Variables.MainForm == null) return;
+                                            BeginInvoke(new Action(() =>
+                                            {
+                                                Notify.Icon = ICO.ICO.Clipboard_Plan_128px_1185105_easyicon_net;
+                                            }));
+                                        }
+                                    }
+                                }, TaskCreationOptions.LongRunning);
+                            }
                                 break;
 
                             case "Buttom_StartCaxaAutoSave":
@@ -545,15 +556,15 @@ namespace ETCTool
                         switch (Button.Name)
                         {
                             case "Buttom_StartCaxaClipbrd":
+                            {
+                                if (CaxaClipbrd != null)
                                 {
-                                    if (CaxaClipbrd != null)
-                                    {
-                                        CaxaClipbrd.Close();
-                                        CaxaClipbrd.Dispose();
-                                        CaxaClipbrd = null;
-                                        GC.Collect();
-                                    }
+                                    CaxaClipbrd.Close();
+                                    CaxaClipbrd.Dispose();
+                                    CaxaClipbrd = null;
+                                    GC.Collect();
                                 }
+                            }
                                 break;
 
                             case "Buttom_StartCaxaAutoSave":
@@ -604,10 +615,10 @@ namespace ETCTool
             public ClipbrdMonitor()
             {
                 AddClipboardFormatListener(Handle);
-                Variables.MainForm.CliLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->启动剪切板监控", "" });
+                Variables.MainForm.CliLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->启动剪切板监控", ""});
                 FormClosing += delegate
                 {
-                    Variables.MainForm.CliLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->关闭剪切板监控", "" });
+                    Variables.MainForm.CliLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->关闭剪切板监控", ""});
                     RemoveClipboardFormatListener(Handle);
                 };
             }
@@ -620,7 +631,7 @@ namespace ETCTool
                     {
                         OpenClipboard(IntPtr.Zero);
                         var Get_Text = new StringBuilder(256);
-                        GetWindowTextW(GetForegroundWindow(IntPtr.Zero), Get_Text, 256);
+                        GetWindowTextW(GetForegroundWindow(), Get_Text, 256);
                         if (Get_Text.ToString().StartsWith("CAXA"))
                         {
                             var Temp = GetText(13);
@@ -628,7 +639,7 @@ namespace ETCTool
                             {
                                 ThreadPool.QueueUserWorkItem(obj =>
                                 {
-                                    Variables.MainForm.CliLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->获得字符:", Temp });
+                                    Variables.MainForm.CliLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->获得字符:", Temp});
                                 });
                                 SetText(Temp);
                                 Onice = false;
@@ -639,7 +650,8 @@ namespace ETCTool
                     {
                         ThreadPool.QueueUserWorkItem(obj =>
                         {
-                            Variables.MainForm.CliLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->发生错误:{e.ToString()}", "" });
+                            Variables.MainForm.CliLog.Add(new[]
+                                {$"{DateTime.Now:hh:mm:ss}->发生错误:{e.ToString()}", ""});
                         });
                     }
                     finally
@@ -724,7 +736,7 @@ namespace ETCTool
                     AutoSaveTimeSpan.Elapsed += delegate
                     {
                         var Get_Text = new StringBuilder(256);
-                        var ForegroundWindow = GetForegroundWindow(IntPtr.Zero);
+                        var ForegroundWindow = GetForegroundWindow();
                         GetWindowTextW(ForegroundWindow, Get_Text, 256);
                         if (Get_Text.ToString().StartsWith("CAXA"))
                         {
@@ -737,7 +749,9 @@ namespace ETCTool
                                     RemoteHooking.IpcCreateServer<CaxaHookInterface>(ref ChannelName,
                                         WellKnownObjectMode.SingleCall);
                                     var path = Environment.GetFolderPath(Environment.SpecialFolder
-                                        .MyDocuments);
+                                        .CommonApplicationData);
+                                    Config.DependencyPath = $"{path}\\EtcTool\\";
+                                    Config.HelperLibraryLocation = $"{path}\\EtcTool\\";
                                     RemoteHooking.Inject(
                                         Pid,
                                         InjectionOptions.Default,
@@ -772,6 +786,54 @@ namespace ETCTool
             }
         }
 
+        private void OpenTheLastAutoSaveButton_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (File.Exists(setting.TheLastSavePath))
+            {
+                Process.Start(setting.TheLastSavePath);
+            }
+            else
+            {
+                new MessageBoxForm("未找到最后一次保存的文件", MessageBoxButtons.OK, 5).ShowDialog();
+            }
+       
+        }
+        private void OpenAutoSavePath_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (Directory.Exists(setting.AutoSavePath))
+            {
+                Process.Start(setting.AutoSavePath);
+            }
+            else
+            {
+                new MessageBoxForm("未找到自动保存目录", MessageBoxButtons.OK, 5).ShowDialog();
+            }
+        }
+        private void DelAllFile_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (Directory.Exists(setting.AutoSavePath))
+            {
+                foreach (var VARIABLE in new DirectoryInfo(setting.AutoSavePath).EnumerateFiles())
+                {
+                    try
+                    {
+                        File.Delete(VARIABLE.FullName);
+                        Variables.MainForm.AutoSaveLog.Add(new[]
+                            {$"{DateTime.Now:hh:mm:ss}->删除成功:", $"{VARIABLE.Name}"});
+                    }
+                    catch (Exception exception)
+                    {
+                        Variables.MainForm.AutoSaveLog.Add(new[]
+                            {$"{DateTime.Now:hh:mm:ss}->删除失败:", $"{VARIABLE.Name}"});
+                    }
+                   
+                }
+            }
+            else
+            {
+                new MessageBoxForm("未找到自动保存目录", MessageBoxButtons.OK, 5).ShowDialog();
+            }
+        }
         #endregion Caxa自动保存代码段
 
         #endregion Caxa相关代码段

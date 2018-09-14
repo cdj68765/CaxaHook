@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -7,9 +8,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using EasyHook;
 using ETCTool;
-
 namespace CaxaInject
 {
+    struct STGOPTIONS
+    {
+        public ushort usVersion { get; set; }
+        public ushort reserved { get; set; }
+        public ulong ulSectorSize { get; set; }
+        public String pwcsTemplateFile { get; set; }
+    }
     public class Main : IEntryPoint
     {
         private CaxaHookInterface Interface;
@@ -21,8 +28,23 @@ namespace CaxaInject
             Interface = RemoteHooking.IpcConnectClient<CaxaHookInterface>(InChannelName);
         }
 
-        [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode, SetLastError = true)]
-        private delegate int StgCreateStorageEx(StringBuilder Wchar, int grfMode, int stgfmt, int grfAttrs, IntPtr pStgOptions, IntPtr pSecurityDescriptor, Guid riid, IntPtr ppObjectOpen);
+        [Flags]
+        enum MoveFileFlags
+        {
+            MOVEFILE_REPLACE_EXISTING = 0x00000001,
+            MOVEFILE_COPY_ALLOWED = 0x00000002,
+            MOVEFILE_DELAY_UNTIL_REBOOT = 0x00000004,
+            MOVEFILE_WRITE_THROUGH = 0x00000008,
+            MOVEFILE_CREATE_HARDLINK = 0x00000010,
+            MOVEFILE_FAIL_IF_NOT_TRACKABLE = 0x00000020
+        }
+        [UnmanagedFunctionPointer(CallingConvention.StdCall,
+            CharSet = CharSet.Unicode,
+            SetLastError = true)]
+        private delegate bool HookMoveFileEx(
+            String OldFile,
+            String NewFile,
+            MoveFileFlags dwFlags);
 
         public void Run(
             RemoteHooking.IContext InContext,
@@ -31,14 +53,14 @@ namespace CaxaInject
             LocalHook CreateHook = null;
             try
             {
-                CreateHook = LocalHook.Create(LocalHook.GetProcAddress("dftdb.dll", "StgCreateStorageEx"), new StgCreateStorageEx(StgCreateStorageEx_Hooked), this);
+                CreateHook = LocalHook.Create(LocalHook.GetProcAddress("kernel32.dll", "MoveFileExW"), new HookMoveFileEx(MoveFileEx_Hooked), this);
                 CreateHook.ThreadACL.SetExclusiveACL(new Int32[] { 0 });
                 Interface.Info("安装成功");
                 while (true)
                 {
                     Interface.Ping(out bool Ping);
                     if (Ping == false) break;
-                    Thread.Sleep(1000);
+                    Thread.Sleep(5000);
                 }
             }
             catch (Exception ex)
@@ -51,12 +73,20 @@ namespace CaxaInject
             }
         }
 
-        private int StgCreateStorageEx_Hooked(StringBuilder Wchar, int grfMode, int stgfmt, int grfAttrs, IntPtr pStgOptions, IntPtr pSecurityDescriptor, Guid riid, IntPtr ppObjectOpen)
+        private bool MoveFileEx_Hooked(string lpExistingFileName, string lpNewFileName, MoveFileFlags dwFlags)
         {
             Main This = (Main)HookRuntimeInfo.Callback;
-            This.Interface.HookInfo(Wchar, grfMode, stgfmt, grfAttrs, pStgOptions, pSecurityDescriptor, riid, ppObjectOpen);
-            var Ret = LocalHook.GetProcDelegate<StgCreateStorageEx>("dftdb.dll", "StgCreateStorageEx");
-            return Ret(Wchar, grfMode, stgfmt, grfAttrs, pStgOptions, pSecurityDescriptor, riid, ppObjectOpen);
+            if (Path.GetExtension(lpExistingFileName).ToLower() == ".exb")
+            {
+                return true;
+            }
+            if (Path.GetExtension(lpExistingFileName).ToLower() == ".es$")
+            {
+                lpNewFileName = This.Interface.GetNewPath(lpNewFileName);
+            }
+
+            var Ret = LocalHook.GetProcDelegate<HookMoveFileEx>("kernel32.dll", "MoveFileExW");
+            return Ret(lpExistingFileName, lpNewFileName, dwFlags);
         }
     }
 }
