@@ -8,15 +8,17 @@ using System.Threading;
 using System.Threading.Tasks;
 using EasyHook;
 using ETCTool;
+
 namespace CaxaInject
 {
-    struct STGOPTIONS
+    internal struct STGOPTIONS
     {
         public ushort usVersion { get; set; }
         public ushort reserved { get; set; }
         public ulong ulSectorSize { get; set; }
         public String pwcsTemplateFile { get; set; }
     }
+
     public class Main : IEntryPoint
     {
         private CaxaHookInterface Interface;
@@ -29,7 +31,7 @@ namespace CaxaInject
         }
 
         [Flags]
-        enum MoveFileFlags
+        private enum MoveFileFlags
         {
             MOVEFILE_REPLACE_EXISTING = 0x00000001,
             MOVEFILE_COPY_ALLOWED = 0x00000002,
@@ -38,6 +40,7 @@ namespace CaxaInject
             MOVEFILE_CREATE_HARDLINK = 0x00000010,
             MOVEFILE_FAIL_IF_NOT_TRACKABLE = 0x00000020
         }
+
         [UnmanagedFunctionPointer(CallingConvention.StdCall,
             CharSet = CharSet.Unicode,
             SetLastError = true)]
@@ -58,7 +61,7 @@ namespace CaxaInject
                 Interface.Info("安装成功");
                 while (true)
                 {
-                    Interface.Ping(out bool Ping);
+                    Interface.Ping(out bool Ping, InChannelName);
                     if (Ping == false) break;
                     Thread.Sleep(5000);
                 }

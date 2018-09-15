@@ -14,7 +14,9 @@ namespace ETCTool
     {
         internal static MainForm MainForm;
         internal static Setting setting;
+        internal static bool AutoSaveRun;
     }
+
     [Serializable]
     public class Setting
     {
@@ -27,6 +29,7 @@ namespace ETCTool
         public StringCollection FormSize { get; set; }
         public string AutoSavePath { get; set; }
         public string TheLastSavePath { get; set; }
+
         internal Setting Init()
         {
             var path =
@@ -35,12 +38,13 @@ namespace ETCTool
             {
                 using (var fileStream = new FileStream(path, FileMode.Open))
                 {
-                 return new BinaryFormatter().Deserialize(fileStream) as Setting;
+                    return new BinaryFormatter().Deserialize(fileStream) as Setting;
                 }
             }
 
             return new Setting();
         }
+
         internal void Save()
         {
             ThreadPool.QueueUserWorkItem(state =>
@@ -56,8 +60,6 @@ namespace ETCTool
                 {
                 }
             });
-          
-
         }
     }
 }

@@ -8,16 +8,19 @@ namespace ETCTool
 {
     public class CaxaHookInterface : MarshalByRefObject
     {
-
-
-        public void Ping(out bool ping)
+        public void Ping(out bool ping, string Channal)
         {
-            ping = true;
+            Variables.MainForm.AutoSaveLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->{Channal}:", $"" });
+            if (!Variables.AutoSaveRun)
+            {
+                // Variables.MainForm.
+            }
+            ping = Variables.AutoSaveRun;
         }
 
         public void Info(string v)
         {
-            Variables.MainForm.AutoSaveLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->{v}:", $""});
+            Variables.MainForm.AutoSaveLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->{v}:", $"" });
         }
 
         public string GetNewPath(string lpNewFileName)
