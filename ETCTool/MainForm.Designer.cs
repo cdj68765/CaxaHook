@@ -50,6 +50,9 @@
             this.CheckClipbrdFuntion = new MaterialSkin.Controls.MaterialCheckBox();
             this.StartAllFuntion = new MaterialSkin.Controls.MaterialRaisedButton();
             this.TabCaxa = new System.Windows.Forms.TabPage();
+            this.AutoSaveSpan = new MaterialSkin.Controls.MaterialProgressBar();
+            this.DelAllFile = new MaterialSkin.Controls.MaterialRaisedButton();
+            this.OpenAutoSavePath = new MaterialSkin.Controls.MaterialRaisedButton();
             this.materialLabel6 = new MaterialSkin.Controls.MaterialLabel();
             this.SetAutoSaveTimeSpan = new MaterialSkin.Controls.MaterialSingleLineTextField();
             this.OpenTheLastAutoSaveButton = new MaterialSkin.Controls.MaterialRaisedButton();
@@ -78,8 +81,6 @@
             this.ShowForm = new System.Windows.Forms.ToolStripMenuItem();
             this.NotifyStartRun = new System.Windows.Forms.ToolStripMenuItem();
             this.ExitClose = new System.Windows.Forms.ToolStripMenuItem();
-            this.OpenAutoSavePath = new MaterialSkin.Controls.MaterialRaisedButton();
-            this.DelAllFile = new MaterialSkin.Controls.MaterialRaisedButton();
             this.MainTab.SuspendLayout();
             this.TabMain.SuspendLayout();
             this.CliCopyMenuStrip.SuspendLayout();
@@ -412,6 +413,7 @@
             // TabCaxa
             // 
             this.TabCaxa.BackColor = System.Drawing.Color.White;
+            this.TabCaxa.Controls.Add(this.AutoSaveSpan);
             this.TabCaxa.Controls.Add(this.DelAllFile);
             this.TabCaxa.Controls.Add(this.OpenAutoSavePath);
             this.TabCaxa.Controls.Add(this.materialLabel6);
@@ -434,6 +436,48 @@
             this.TabCaxa.TabIndex = 0;
             this.TabCaxa.Text = "CAXA相关";
             // 
+            // AutoSaveSpan
+            // 
+            this.AutoSaveSpan.Depth = 0;
+            this.AutoSaveSpan.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.AutoSaveSpan.Location = new System.Drawing.Point(3, 149);
+            this.AutoSaveSpan.MouseState = MaterialSkin.MouseState.HOVER;
+            this.AutoSaveSpan.Name = "AutoSaveSpan";
+            this.AutoSaveSpan.Size = new System.Drawing.Size(464, 5);
+            this.AutoSaveSpan.TabIndex = 17;
+            // 
+            // DelAllFile
+            // 
+            this.DelAllFile.AutoSize = true;
+            this.DelAllFile.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.DelAllFile.Depth = 0;
+            this.DelAllFile.Icon = null;
+            this.DelAllFile.Location = new System.Drawing.Point(19, 222);
+            this.DelAllFile.MouseState = MaterialSkin.MouseState.HOVER;
+            this.DelAllFile.Name = "DelAllFile";
+            this.DelAllFile.Primary = true;
+            this.DelAllFile.Size = new System.Drawing.Size(142, 36);
+            this.DelAllFile.TabIndex = 16;
+            this.DelAllFile.Text = "清空所有保存文件";
+            this.DelAllFile.UseVisualStyleBackColor = true;
+            this.DelAllFile.MouseClick += new System.Windows.Forms.MouseEventHandler(this.DelAllFile_MouseClick);
+            // 
+            // OpenAutoSavePath
+            // 
+            this.OpenAutoSavePath.AutoSize = true;
+            this.OpenAutoSavePath.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.OpenAutoSavePath.Depth = 0;
+            this.OpenAutoSavePath.Icon = null;
+            this.OpenAutoSavePath.Location = new System.Drawing.Point(19, 183);
+            this.OpenAutoSavePath.MouseState = MaterialSkin.MouseState.HOVER;
+            this.OpenAutoSavePath.Name = "OpenAutoSavePath";
+            this.OpenAutoSavePath.Primary = true;
+            this.OpenAutoSavePath.Size = new System.Drawing.Size(142, 36);
+            this.OpenAutoSavePath.TabIndex = 15;
+            this.OpenAutoSavePath.Text = "打开自动保存目录";
+            this.OpenAutoSavePath.UseVisualStyleBackColor = true;
+            this.OpenAutoSavePath.MouseClick += new System.Windows.Forms.MouseEventHandler(this.OpenAutoSavePath_MouseClick);
+            // 
             // materialLabel6
             // 
             this.materialLabel6.AutoSize = true;
@@ -441,7 +485,7 @@
             this.materialLabel6.Depth = 0;
             this.materialLabel6.Font = new System.Drawing.Font("Roboto", 11F);
             this.materialLabel6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.materialLabel6.Location = new System.Drawing.Point(87, 159);
+            this.materialLabel6.Location = new System.Drawing.Point(87, 158);
             this.materialLabel6.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialLabel6.Name = "materialLabel6";
             this.materialLabel6.Size = new System.Drawing.Size(137, 19);
@@ -452,7 +496,7 @@
             // 
             this.SetAutoSaveTimeSpan.Depth = 0;
             this.SetAutoSaveTimeSpan.Hint = "";
-            this.SetAutoSaveTimeSpan.Location = new System.Drawing.Point(19, 156);
+            this.SetAutoSaveTimeSpan.Location = new System.Drawing.Point(19, 155);
             this.SetAutoSaveTimeSpan.MaxLength = 32767;
             this.SetAutoSaveTimeSpan.MouseState = MaterialSkin.MouseState.HOVER;
             this.SetAutoSaveTimeSpan.Name = "SetAutoSaveTimeSpan";
@@ -520,7 +564,7 @@
             this.AutoSaveRadio.AutoSize = true;
             this.AutoSaveRadio.Depth = 0;
             this.AutoSaveRadio.Font = new System.Drawing.Font("Roboto", 10F);
-            this.AutoSaveRadio.Location = new System.Drawing.Point(316, 124);
+            this.AutoSaveRadio.Location = new System.Drawing.Point(316, 121);
             this.AutoSaveRadio.Margin = new System.Windows.Forms.Padding(0);
             this.AutoSaveRadio.MouseLocation = new System.Drawing.Point(-1, -1);
             this.AutoSaveRadio.MouseState = MaterialSkin.MouseState.HOVER;
@@ -538,7 +582,7 @@
             this.CliRadio.Checked = true;
             this.CliRadio.Depth = 0;
             this.CliRadio.Font = new System.Drawing.Font("Roboto", 10F);
-            this.CliRadio.Location = new System.Drawing.Point(240, 124);
+            this.CliRadio.Location = new System.Drawing.Point(240, 121);
             this.CliRadio.Margin = new System.Windows.Forms.Padding(0);
             this.CliRadio.MouseLocation = new System.Drawing.Point(-1, -1);
             this.CliRadio.MouseState = MaterialSkin.MouseState.HOVER;
@@ -560,7 +604,7 @@
             this.MouseMoveSize.Depth = 0;
             this.MouseMoveSize.Icon = ((System.Drawing.Image)(resources.GetObject("MouseMoveSize.Icon")));
             this.MouseMoveSize.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.MouseMoveSize.Location = new System.Drawing.Point(437, 125);
+            this.MouseMoveSize.Location = new System.Drawing.Point(437, 118);
             this.MouseMoveSize.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.MouseMoveSize.MouseState = MaterialSkin.MouseState.HOVER;
             this.MouseMoveSize.Name = "MouseMoveSize";
@@ -722,7 +766,7 @@
             this.materialFlatButton1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.materialFlatButton1.Icon = ((System.Drawing.Image)(resources.GetObject("materialFlatButton1.Icon")));
             this.materialFlatButton1.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.materialFlatButton1.Location = new System.Drawing.Point(437, 125);
+            this.materialFlatButton1.Location = new System.Drawing.Point(437, 118);
             this.materialFlatButton1.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.materialFlatButton1.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialFlatButton1.Name = "materialFlatButton1";
@@ -767,6 +811,7 @@
             this.Buttom_StartFileDecrypt.BackColor = System.Drawing.Color.DimGray;
             this.Buttom_StartFileDecrypt.Depth = 0;
             this.Buttom_StartFileDecrypt.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.Buttom_StartFileDecrypt.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Buttom_StartFileDecrypt.Icon = ((System.Drawing.Image)(resources.GetObject("Buttom_StartFileDecrypt.Icon")));
             this.Buttom_StartFileDecrypt.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Buttom_StartFileDecrypt.Location = new System.Drawing.Point(7, 48);
@@ -778,7 +823,7 @@
             this.Buttom_StartFileDecrypt.TabIndex = 8;
             this.Buttom_StartFileDecrypt.Text = "启动文件解密功能";
             this.Buttom_StartFileDecrypt.UseCompatibleTextRendering = true;
-            this.Buttom_StartFileDecrypt.UseVisualStyleBackColor = false;
+            this.Buttom_StartFileDecrypt.UseVisualStyleBackColor = true;
             this.Buttom_StartFileDecrypt.TextChanged += new System.EventHandler(this.Buttom_TextChanged);
             this.Buttom_StartFileDecrypt.Click += new System.EventHandler(this.Button_Click);
             // 
@@ -792,7 +837,7 @@
             this.materialFlatButton2.Depth = 0;
             this.materialFlatButton2.Icon = ((System.Drawing.Image)(resources.GetObject("materialFlatButton2.Icon")));
             this.materialFlatButton2.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.materialFlatButton2.Location = new System.Drawing.Point(437, 125);
+            this.materialFlatButton2.Location = new System.Drawing.Point(437, 118);
             this.materialFlatButton2.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.materialFlatButton2.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialFlatButton2.Name = "materialFlatButton2";
@@ -877,38 +922,6 @@
             this.ExitClose.Text = "退出";
             this.ExitClose.Click += new System.EventHandler(this.ExitClose_Click);
             // 
-            // OpenAutoSavePath
-            // 
-            this.OpenAutoSavePath.AutoSize = true;
-            this.OpenAutoSavePath.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.OpenAutoSavePath.Depth = 0;
-            this.OpenAutoSavePath.Icon = null;
-            this.OpenAutoSavePath.Location = new System.Drawing.Point(19, 183);
-            this.OpenAutoSavePath.MouseState = MaterialSkin.MouseState.HOVER;
-            this.OpenAutoSavePath.Name = "OpenAutoSavePath";
-            this.OpenAutoSavePath.Primary = true;
-            this.OpenAutoSavePath.Size = new System.Drawing.Size(142, 36);
-            this.OpenAutoSavePath.TabIndex = 15;
-            this.OpenAutoSavePath.Text = "打开自动保存目录";
-            this.OpenAutoSavePath.UseVisualStyleBackColor = true;
-            this.OpenAutoSavePath.MouseClick += new System.Windows.Forms.MouseEventHandler(this.OpenAutoSavePath_MouseClick);
-            // 
-            // DelAllFile
-            // 
-            this.DelAllFile.AutoSize = true;
-            this.DelAllFile.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.DelAllFile.Depth = 0;
-            this.DelAllFile.Icon = null;
-            this.DelAllFile.Location = new System.Drawing.Point(19, 222);
-            this.DelAllFile.MouseState = MaterialSkin.MouseState.HOVER;
-            this.DelAllFile.Name = "DelAllFile";
-            this.DelAllFile.Primary = true;
-            this.DelAllFile.Size = new System.Drawing.Size(142, 36);
-            this.DelAllFile.TabIndex = 16;
-            this.DelAllFile.Text = "清空所有保存文件";
-            this.DelAllFile.UseVisualStyleBackColor = true;
-            this.DelAllFile.MouseClick += new System.Windows.Forms.MouseEventHandler(this.DelAllFile_MouseClick);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -989,5 +1002,6 @@
         private MaterialSkin.Controls.MaterialLabel materialLabel6;
         private MaterialSkin.Controls.MaterialRaisedButton OpenAutoSavePath;
         private MaterialSkin.Controls.MaterialRaisedButton DelAllFile;
+        private MaterialSkin.Controls.MaterialProgressBar AutoSaveSpan;
     }
 }

@@ -20,15 +20,105 @@ namespace ETCTool
     [Serializable]
     public class Setting
     {
-        public bool RunMode { get; set; }
-        public bool CheckClipbrdFuntion { get; set; }
-        public bool CheckPlmFuntion { get; set; }
-        public bool CheckCaxaFuntion { get; set; }
-        public string OriPath { get; set; }
-        public bool CheckFileDecrypt { get; set; }
-        public StringCollection FormSize { get; set; }
-        public string AutoSavePath { get; set; }
-        public string TheLastSavePath { get; set; }
+         bool _RunMode;
+
+        public bool RunMode
+        {
+            get => _RunMode;
+            set
+            {
+                _RunMode = value;
+                Save();
+            }
+        }
+
+         bool _CheckClipbrdFuntion;
+
+        public bool CheckClipbrdFuntion
+        {
+            get => _CheckClipbrdFuntion;
+            set
+            {
+                _CheckClipbrdFuntion = value;
+                Save();
+            }
+        }
+
+         bool _CheckPlmFuntion;
+
+        public bool CheckPlmFuntion
+        {
+            get => _CheckPlmFuntion;
+            set
+            {
+                _CheckPlmFuntion = value;
+                Save();
+            }
+        }
+
+         bool _CheckCaxaFuntion;
+
+        public bool CheckCaxaFuntion
+        {
+            get => _CheckCaxaFuntion;
+            set
+            {
+                _CheckCaxaFuntion = value;
+                Save();
+            }
+        }
+
+         bool _CheckFileDecrypt;
+
+        public bool CheckFileDecrypt
+        {
+            get => _CheckFileDecrypt;
+            set
+            {
+                _CheckFileDecrypt = value;
+                Save();
+            }
+        }
+
+
+        public StringCollection FormSize{ get; set; }
+
+         string _AutoSavePath;
+
+        public string AutoSavePath
+        {
+            get => _AutoSavePath;
+            set
+            {
+                _AutoSavePath = value;
+                Save();
+            }
+        }
+
+         string _TheLastSavePath;
+
+        public string TheLastSavePath
+        {
+            get => _TheLastSavePath;
+            set
+            {
+                _TheLastSavePath = value;
+                Save();
+            }
+        }
+
+         string _AutoSaveSpan;
+
+        public string AutoSaveSpan
+        {
+            get => _AutoSaveSpan;
+            set
+            {
+                if (!float.TryParse(value, out float ret)) return;
+                _AutoSaveSpan = value;
+                Save();
+            }
+        }
 
         internal Setting Init()
         {
@@ -45,13 +135,16 @@ namespace ETCTool
             return new Setting();
         }
 
-        internal void Save()
+        public void Save()
         {
             ThreadPool.QueueUserWorkItem(state =>
             {
                 try
                 {
-                    using (var fileStream = new FileStream($"{Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)}\\EtcTool\\Setting.dat", FileMode.OpenOrCreate))
+                    using (var fileStream =
+                        new FileStream(
+                            $"{Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)}\\EtcTool\\Setting.dat",
+                            FileMode.OpenOrCreate))
                     {
                         new BinaryFormatter().Serialize(fileStream, Variables.setting);
                     }

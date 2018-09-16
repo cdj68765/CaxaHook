@@ -74,7 +74,26 @@ namespace ETCTool
 
         [DllImport("user32.dll", SetLastError = true)]
         public static extern uint GetWindowThreadProcessId(IntPtr hWnd, out int lpdwProcessId);
+        public const byte vbKeyControl = 0x11; // CTRL 键
+        public const byte vbKeyS = 83;
 
+        /// <summary>
+        /// 导入模拟键盘的方法
+        /// </summary>
+        /// <param name="bVk" >按键的虚拟键值</param>
+        /// <param name= "bScan" >扫描码，一般不用设置，用0代替就行</param>
+        /// <param name= "dwFlags" >选项标志：0：表示按下，2：表示松开</param>
+        /// <param name= "dwExtraInfo">一般设置为0</param>
+        [DllImport("user32.dll")]
+        public static extern void keybd_event(byte bVk, byte bScan, int dwFlags, int dwExtraInfo);
+
+        public static void KeySaveBykeybd_event()
+        {
+            keybd_event(vbKeyControl, 0, 0, 0);
+            keybd_event(vbKeyS, 0, 0, 0);
+            keybd_event(vbKeyControl, 0, 2, 0);
+            keybd_event(vbKeyS, 0, 2, 0);
+        }
         #endregion 自动保存用API
     }
 }
