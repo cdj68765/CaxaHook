@@ -75,7 +75,7 @@ namespace ETCTool
                     if (setting.FormSize == null)
                     {
                         setting.FormSize = new StringCollection();
-                        setting.FormSize.AddRange(new[] {"480", "280", "480", "280", "480", "280"});
+                        setting.FormSize.AddRange(new[] { "480", "280", "480", "280", "480", "280" });
                         setting.Save();
                     }
 
@@ -506,35 +506,35 @@ namespace ETCTool
                         switch (Button.Name)
                         {
                             case "Buttom_StartCaxaClipbrd":
-                            {
-                                CaxaClipbrd = new ClipbrdMonitor();
-                                Task.Factory.StartNew(() =>
                                 {
-                                    while (true)
+                                    CaxaClipbrd = new ClipbrdMonitor();
+                                    Task.Factory.StartNew(() =>
                                     {
-                                        Thread.Sleep(500);
-                                        if (CaxaClipbrd == null) break;
-                                        var GetText = new StringBuilder(256);
-                                        GetWindowTextW(GetForegroundWindow(),
-                                            GetText, 256);
-                                        if (GetText.ToString().StartsWith("CAXA"))
+                                        while (true)
                                         {
-                                            Invoke(new Action(() =>
+                                            Thread.Sleep(500);
+                                            if (CaxaClipbrd == null) break;
+                                            var GetText = new StringBuilder(256);
+                                            GetWindowTextW(GetForegroundWindow(),
+                                                GetText, 256);
+                                            if (GetText.ToString().StartsWith("CAXA"))
                                             {
-                                                Notify.Icon = ICO.ICO.clipboard_80px_1121225_easyicon_net;
-                                            }));
-                                        }
-                                        else
-                                        {
-                                            if (Variables.MainForm == null) return;
-                                            BeginInvoke(new Action(() =>
+                                                Invoke(new Action(() =>
+                                                {
+                                                    Notify.Icon = ICO.ICO.clipboard_80px_1121225_easyicon_net;
+                                                }));
+                                            }
+                                            else
                                             {
-                                                Notify.Icon = ICO.ICO.Clipboard_Plan_128px_1185105_easyicon_net;
-                                            }));
+                                                if (Variables.MainForm == null) return;
+                                                BeginInvoke(new Action(() =>
+                                                {
+                                                    Notify.Icon = ICO.ICO.Clipboard_Plan_128px_1185105_easyicon_net;
+                                                }));
+                                            }
                                         }
-                                    }
-                                }, TaskCreationOptions.LongRunning);
-                            }
+                                    }, TaskCreationOptions.LongRunning);
+                                }
                                 break;
 
                             case "Buttom_StartCaxaAutoSave":
@@ -553,15 +553,15 @@ namespace ETCTool
                         switch (Button.Name)
                         {
                             case "Buttom_StartCaxaClipbrd":
-                            {
-                                if (CaxaClipbrd != null)
                                 {
-                                    CaxaClipbrd.Close();
-                                    CaxaClipbrd.Dispose();
-                                    CaxaClipbrd = null;
-                                    GC.Collect();
+                                    if (CaxaClipbrd != null)
+                                    {
+                                        CaxaClipbrd.Close();
+                                        CaxaClipbrd.Dispose();
+                                        CaxaClipbrd = null;
+                                        GC.Collect();
+                                    }
                                 }
-                            }
                                 break;
 
                             case "Buttom_StartCaxaAutoSave":
@@ -611,10 +611,10 @@ namespace ETCTool
             public ClipbrdMonitor()
             {
                 AddClipboardFormatListener(Handle);
-                Variables.MainForm.CliLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->启动剪切板监控", ""});
+                Variables.MainForm.CliLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->启动剪切板监控", "" });
                 FormClosing += delegate
                 {
-                    Variables.MainForm.CliLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->关闭剪切板监控", ""});
+                    Variables.MainForm.CliLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->关闭剪切板监控", "" });
                     RemoveClipboardFormatListener(Handle);
                 };
             }
@@ -635,7 +635,7 @@ namespace ETCTool
                             {
                                 ThreadPool.QueueUserWorkItem(obj =>
                                 {
-                                    Variables.MainForm.CliLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->获得字符:", Temp});
+                                    Variables.MainForm.CliLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->获得字符:", Temp });
                                 });
                                 SetText(Temp);
                                 Onice = false;
@@ -720,15 +720,18 @@ namespace ETCTool
             }
         }
 
-         System.Timers.Timer AutoSaveTimeSpan = new System.Timers.Timer(1000);
+        private System.Timers.Timer AutoSaveTimeSpan = new System.Timers.Timer(1000);
 
-        string TimeSplit(int Time)
+        private string TimeSplit(int Time)
         {
             var TempDate = new DateTime().AddSeconds(Double.Parse(Time.ToString()));
             if (Time < 60) return $"{TempDate:s秒}";
             else if (Time < 3600) return $"{TempDate:m分s秒}";
             else return $"{TempDate:h:m:s}";
         }
+
+        public bool StartCaxaAutoSaveHook;
+
         private void StartCaxaAutoSaveFun(bool Run, MaterialFlatButton button = null)
         {
             var SpanTime = GetAndSetTime();
@@ -738,7 +741,7 @@ namespace ETCTool
             }
 
             var TextOfNow = SetAutoSaveTimeSpan.Text;
-           
+
             if (Run)
             {
                 if (Directory.Exists(setting.AutoSavePath))
@@ -769,7 +772,7 @@ namespace ETCTool
                     AutoSaveSpan.Value = 0;
                 }));
                 AutoSaveRun = false;
-                Variables.MainForm.AutoSaveLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->自动保存功能关闭", $""});
+                Variables.MainForm.AutoSaveLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->自动保存功能关闭", $"" });
                 // AutoSaveTimeSpan.Dispose();
             }
 
@@ -818,7 +821,6 @@ namespace ETCTool
                             {
                             }
                         }
-
                     }));
                 }
                 else
@@ -827,19 +829,17 @@ namespace ETCTool
                     {
                         try
                         {
-                             AutoSaveSpan.Value=SpanTime;
+                            AutoSaveSpan.Value = SpanTime;
                         }
-                        catch (Exception )
+                        catch (Exception)
                         {
                         }
-
                     }));
-
                 }
-                var Get_Text = new StringBuilder(256);
+                var WindowsName = new StringBuilder(256);
                 var ForegroundWindow = GetForegroundWindow();
-                GetWindowTextW(ForegroundWindow, Get_Text, 256);
-                if (Get_Text.ToString().StartsWith("CAXA"))
+                GetWindowTextW(ForegroundWindow, WindowsName, 256);
+                if (WindowsName.ToString().StartsWith("CAXA"))
                 {
                     GetWindowThreadProcessId(ForegroundWindow, out int Pid);
                     if (!CaxaPid.ContainsKey(Pid))
@@ -861,7 +861,7 @@ namespace ETCTool
                                 ChannelName);
                             CaxaPid.Add(Pid, ChannelName);
                             Variables.MainForm.AutoSaveLog.Add(new[]
-                                {$"{DateTime.Now:hh:mm:ss}->捕获成功:", $"{Get_Text}"});
+                                {$"{DateTime.Now:hh:mm:ss}->捕获成功:", $"{WindowsName}"});
                         }
                         catch (Exception exception)
                         {
@@ -871,65 +871,47 @@ namespace ETCTool
                     }
                     if (SpanTime == 0)
                     {
-                        if (TimeSpanBar.Value >= TimeSpanBar.Maximum)
+                        var SPF = WindowsName.ToString().Split('[');
+                        if (SPF.Length < 2)
                         {
-                            TimeSpanBar.Value = 0;
-                            NativeApi.WindowsLoopFindHwnd(out string WindowsName);
-                            if (string.IsNullOrEmpty(WindowsName))
+                            Variables.MainForm.AutoSaveLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->错误，未找到文档：{WindowsName}", $"" });
+                        }
+                        else if (WindowsName.ToString().StartsWith("CAXA电子图板2013"))
+                        {
+                            var _FileName = Path.GetFileName(SPF[1].Split(']')[0]);
+                            if (!_FileName.StartsWith("工程图文档") && _FileName.IndexOf("只读", StringComparison.Ordinal) == -1)
                             {
-                                AddLog("错误，窗口为空");
-                                return;
+                                StartCaxaAutoSaveHook = true;
+                                Thread.Sleep(1000);
+                                KeySaveBykeybd_event();
                             }
-
-                            var SPF = WindowsName.Split('[');
-                            if (SPF.Length < 2)
+                            else
                             {
-                                AddLog($"错误，未找到文档：{WindowsName}");
-                                return;
-                            }
-                            else if (WindowsName.StartsWith("CAXA电子图板2013"))
-                            {
-                                var _FileName = Path.GetFileName(SPF[1].Split(']')[0]);
-                                if (!_FileName.StartsWith("工程图文档") && _FileName.IndexOf("只读", StringComparison.Ordinal) == -1)
-                                {
-                                    SetHook = true;
-                                    Thread.Sleep(1000);
-                                    var exb = Path.GetExtension(_FileName);
-                                    Class1.savefile = $@"#{DateTime.Now:MM月dd日 HH时mm分}{exb}";
-                                    if (NativeApi.CheckForegroundWindow())
-                                    {
-                                        NativeApi.KeySaveBykeybd_event();
-                                    }
-                                }
-                                else
-                                {
-                                    AddLog("错误，当前文档为只读或者新建文档");
-                                }
-                            }
-                            var FileName = Path.GetFileName(SPF[1].Split(']')[0]);
-                            if (FileName.EndsWith("*"))
-                            {
-                                if (!FileName.StartsWith("工程图文档") && FileName.IndexOf("只读", StringComparison.Ordinal) == -1)
-                                {
-                                    SetHook = true;
-                                    Thread.Sleep(1000);
-                                    var exb = Path.GetExtension(FileName).Replace("*", "");
-                                    Class1.savefile = $@"#{DateTime.Now:MM月dd日 HH时mm分}{exb}";
-                                    if (NativeApi.CheckForegroundWindow())
-                                    {
-                                        NativeApi.KeySaveBykeybd_event();
-                                    }
-                                }
-                                else
-                                {
-                                    AddLog("错误，当前文档为只读或者新建文档");
-                                }
+                                Variables.MainForm.AutoSaveLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->错误，当前文档为只读或者新建文档", $"" });
                             }
                         }
-                        Variables.MainForm.AutoSaveLog.Add(new[]
-                            {$"{DateTime.Now:hh:mm:ss}->激活保存{Get_Text}", $""});
-                        KeySaveBykeybd_event()
+                        var FileName = Path.GetFileName(SPF[1].Split(']')[0]);
+                        if (FileName.EndsWith("*"))
+                        {
+                            if (!FileName.StartsWith("工程图文档") && FileName.IndexOf("只读", StringComparison.Ordinal) == -1)
+                            {
+                                StartCaxaAutoSaveHook = true;
+                                Thread.Sleep(1000);
+                                KeySaveBykeybd_event();
+                            }
+                            else
+                            {
+                                Variables.MainForm.AutoSaveLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->错误，当前文档为只读或者新建文档", $"" });
+                            }
+                        }
                     }
+                    Variables.MainForm.AutoSaveLog.Add(new[]
+                        {$"{DateTime.Now:hh:mm:ss}->激活保存{WindowsName}", $""});
+                }
+                else if (SpanTime == 0)
+                {
+                    Variables.MainForm.AutoSaveLog.Add(new[]
+                       {$"{DateTime.Now:hh:mm:ss}->激活保存，但未找到Caxa窗口", $""});
                 }
             }
         }
@@ -982,7 +964,7 @@ namespace ETCTool
                 new MessageBoxForm("未找到自动保存目录", MessageBoxButtons.OK, 5).ShowDialog();
             }
         }
-        
+
         #endregion Caxa自动保存代码段
 
         #endregion Caxa相关代码段

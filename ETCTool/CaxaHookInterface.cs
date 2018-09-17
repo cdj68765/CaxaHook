@@ -8,8 +8,9 @@ namespace ETCTool
 {
     public class CaxaHookInterface : MarshalByRefObject
     {
-        public void Ping(out bool ping, string Channal)
+        public bool Ping(out bool ping, string Channal)
         {
+            ping = Variables.AutoSaveRun;
             if (!Variables.AutoSaveRun)
             {
                 try
@@ -25,8 +26,11 @@ namespace ETCTool
                         {$"{DateTime.Now:hh:mm:ss}->删除错误，错误信息{e}", $""});
                 }
             }
-
-            ping = Variables.AutoSaveRun;
+            else
+            {
+                return Variables.MainForm.StartCaxaAutoSaveHook;
+            }
+            return false;
         }
 
         public void Info(string v)

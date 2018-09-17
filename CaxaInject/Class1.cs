@@ -22,6 +22,7 @@ namespace CaxaInject
     public class Main : IEntryPoint
     {
         private CaxaHookInterface Interface;
+        private LocalHook CreateHook;
 
         public Main(
             RemoteHooking.IContext InContext,
@@ -53,17 +54,18 @@ namespace CaxaInject
             RemoteHooking.IContext InContext,
             String InChannelName)
         {
-            LocalHook CreateHook = null;
             try
             {
                 CreateHook = LocalHook.Create(LocalHook.GetProcAddress("kernel32.dll", "MoveFileExW"), new HookMoveFileEx(MoveFileEx_Hooked), this);
-                CreateHook.ThreadACL.SetExclusiveACL(new Int32[] { 0 });
                 Interface.Info("安装成功");
                 while (true)
                 {
-                    Interface.Ping(out bool Ping, InChannelName);
+                    if (Interface.Ping(out bool Ping, InChannelName))
+                    {
+                        CreateHook.ThreadACL.SetExclusiveACL(new Int32[] { 0 });
+                    }
                     if (Ping == false) break;
-                    Thread.Sleep(5000);
+                    Thread.Sleep(500);
                 }
             }
             catch (Exception ex)
@@ -86,6 +88,7 @@ namespace CaxaInject
             if (Path.GetExtension(lpExistingFileName).ToLower() == ".es$")
             {
                 lpNewFileName = This.Interface.GetNewPath(lpNewFileName);
+                CreateHook.ThreadACL.SetExclusiveACL(new Int32[] { 0 });
             }
 
             var Ret = LocalHook.GetProcDelegate<HookMoveFileEx>("kernel32.dll", "MoveFileExW");
