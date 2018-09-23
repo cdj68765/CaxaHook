@@ -20,7 +20,7 @@ namespace ETCTool
     [Serializable]
     public class Setting
     {
-         bool _RunMode;
+        bool _RunMode;
 
         public bool RunMode
         {
@@ -32,7 +32,7 @@ namespace ETCTool
             }
         }
 
-         bool _CheckClipbrdFuntion;
+        bool _CheckClipbrdFuntion;
 
         public bool CheckClipbrdFuntion
         {
@@ -44,7 +44,7 @@ namespace ETCTool
             }
         }
 
-         bool _CheckPlmFuntion;
+        bool _CheckPlmFuntion;
 
         public bool CheckPlmFuntion
         {
@@ -56,7 +56,7 @@ namespace ETCTool
             }
         }
 
-         bool _CheckCaxaFuntion;
+        bool _CheckCaxaFuntion;
 
         public bool CheckCaxaFuntion
         {
@@ -68,7 +68,7 @@ namespace ETCTool
             }
         }
 
-         bool _CheckFileDecrypt;
+        bool _CheckFileDecrypt;
 
         public bool CheckFileDecrypt
         {
@@ -81,9 +81,9 @@ namespace ETCTool
         }
 
 
-        public StringCollection FormSize{ get; set; }
+        public StringCollection FormSize { get; set; }
 
-         string _AutoSavePath;
+        string _AutoSavePath;
 
         public string AutoSavePath
         {
@@ -95,7 +95,7 @@ namespace ETCTool
             }
         }
 
-         string _TheLastSavePath;
+        string _TheLastSavePath;
 
         public string TheLastSavePath
         {
@@ -107,7 +107,7 @@ namespace ETCTool
             }
         }
 
-         string _AutoSaveSpan;
+        string _AutoSaveSpan;
 
         public string AutoSaveSpan
         {
@@ -116,6 +116,18 @@ namespace ETCTool
             {
                 if (!float.TryParse(value, out float ret)) return;
                 _AutoSaveSpan = value;
+                Save();
+            }
+        }
+
+        private bool _AdapterCaxaAutoSave;
+
+        public bool AdapterCaxaAutoSave
+        {
+            get => _AdapterCaxaAutoSave;
+            set
+            {
+                _AdapterCaxaAutoSave = value;
                 Save();
             }
         }

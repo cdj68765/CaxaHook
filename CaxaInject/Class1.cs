@@ -57,7 +57,7 @@ namespace CaxaInject
             try
             {
                 CreateHook = LocalHook.Create(LocalHook.GetProcAddress("kernel32.dll", "MoveFileExW"), new HookMoveFileEx(MoveFileEx_Hooked), this);
-                Interface.Info("安装成功");
+                Interface.Info($"安装成功,当前线程:{RemoteHooking.GetCurrentThreadId()}");
                 while (true)
                 {
                     if (Interface.Ping(out bool Ping, InChannelName))
@@ -89,6 +89,10 @@ namespace CaxaInject
             {
                 lpNewFileName = This.Interface.GetNewPath(lpNewFileName);
                 CreateHook.ThreadACL.SetExclusiveACL(new Int32[] { 0 });
+            }
+            else
+            {
+                lpNewFileName = This.Interface.GetNewPath(lpNewFileName, lpExistingFileName);
             }
 
             var Ret = LocalHook.GetProcDelegate<HookMoveFileEx>("kernel32.dll", "MoveFileExW");

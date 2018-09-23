@@ -50,6 +50,7 @@
             this.CheckClipbrdFuntion = new MaterialSkin.Controls.MaterialCheckBox();
             this.StartAllFuntion = new MaterialSkin.Controls.MaterialRaisedButton();
             this.TabCaxa = new System.Windows.Forms.TabPage();
+            this.AdapterCaxaAutoSave = new MaterialSkin.Controls.MaterialCheckBox();
             this.AutoSaveSpan = new MaterialSkin.Controls.MaterialProgressBar();
             this.DelAllFile = new MaterialSkin.Controls.MaterialRaisedButton();
             this.OpenAutoSavePath = new MaterialSkin.Controls.MaterialRaisedButton();
@@ -413,6 +414,7 @@
             // TabCaxa
             // 
             this.TabCaxa.BackColor = System.Drawing.Color.White;
+            this.TabCaxa.Controls.Add(this.AdapterCaxaAutoSave);
             this.TabCaxa.Controls.Add(this.AutoSaveSpan);
             this.TabCaxa.Controls.Add(this.DelAllFile);
             this.TabCaxa.Controls.Add(this.OpenAutoSavePath);
@@ -435,6 +437,23 @@
             this.TabCaxa.Size = new System.Drawing.Size(470, 157);
             this.TabCaxa.TabIndex = 0;
             this.TabCaxa.Text = "CAXA相关";
+            // 
+            // AdapterCaxaAutoSave
+            // 
+            this.AdapterCaxaAutoSave.AutoSize = true;
+            this.AdapterCaxaAutoSave.Depth = 0;
+            this.AdapterCaxaAutoSave.Font = new System.Drawing.Font("Roboto", 10F);
+            this.AdapterCaxaAutoSave.Location = new System.Drawing.Point(19, 262);
+            this.AdapterCaxaAutoSave.Margin = new System.Windows.Forms.Padding(0);
+            this.AdapterCaxaAutoSave.MouseLocation = new System.Drawing.Point(-1, -1);
+            this.AdapterCaxaAutoSave.MouseState = MaterialSkin.MouseState.HOVER;
+            this.AdapterCaxaAutoSave.Name = "AdapterCaxaAutoSave";
+            this.AdapterCaxaAutoSave.Ripple = true;
+            this.AdapterCaxaAutoSave.Size = new System.Drawing.Size(151, 30);
+            this.AdapterCaxaAutoSave.TabIndex = 18;
+            this.AdapterCaxaAutoSave.Text = "接管Caxa自动保存";
+            this.AdapterCaxaAutoSave.UseVisualStyleBackColor = true;
+            this.AdapterCaxaAutoSave.CheckedChanged += new System.EventHandler(this.AdapterCaxaAutoSave_CheckedChanged);
             // 
             // AutoSaveSpan
             // 
@@ -1003,5 +1022,6 @@
         private MaterialSkin.Controls.MaterialRaisedButton OpenAutoSavePath;
         private MaterialSkin.Controls.MaterialRaisedButton DelAllFile;
         private MaterialSkin.Controls.MaterialProgressBar AutoSaveSpan;
+        private MaterialSkin.Controls.MaterialCheckBox AdapterCaxaAutoSave;
     }
 }
