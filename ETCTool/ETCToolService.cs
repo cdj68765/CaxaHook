@@ -16,8 +16,6 @@ namespace ETCTool
         protected override void OnStart(string[] args)
         {
             createProcessAsUser.StartProcessAndBypassUAC(RunPath, " Service", out var info);
-
-            //  Process.Start(RunPath);
         }
     }
 }

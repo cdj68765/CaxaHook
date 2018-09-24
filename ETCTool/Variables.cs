@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
-using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Runtime.Serialization.Json;
-using System.Text;
 using System.Threading;
 
 namespace ETCTool
@@ -15,12 +11,35 @@ namespace ETCTool
         internal static MainForm MainForm;
         internal static Setting setting;
         internal static bool AutoSaveRun;
+        internal static bool PlmMonitorRun;
+        internal static bool CheckAutoPerformClick;
+        internal static int AutoPerformClickCount;
+        internal static NativeApi.Point TheLastMouseCursor;
+        internal static bool FileDecryptStart;
     }
 
     [Serializable]
     public class Setting
     {
-        bool _RunMode;
+        private bool _AdapterCaxaAutoSave;
+        private int _AutoPerformClickCount;
+
+        private string _AutoSavePath;
+
+        private string _AutoSaveSpan;
+
+        private bool _CheckAutoPerformClick;
+
+        private bool _CheckCaxaFuntion;
+
+        private bool _CheckClipbrdFuntion;
+
+        private bool _CheckFileDecrypt;
+
+        private bool _CheckPlmFuntion;
+        private bool _RunMode;
+
+        private string _TheLastSavePath;
 
         public bool RunMode
         {
@@ -32,8 +51,6 @@ namespace ETCTool
             }
         }
 
-        bool _CheckClipbrdFuntion;
-
         public bool CheckClipbrdFuntion
         {
             get => _CheckClipbrdFuntion;
@@ -43,8 +60,6 @@ namespace ETCTool
                 Save();
             }
         }
-
-        bool _CheckPlmFuntion;
 
         public bool CheckPlmFuntion
         {
@@ -56,8 +71,6 @@ namespace ETCTool
             }
         }
 
-        bool _CheckCaxaFuntion;
-
         public bool CheckCaxaFuntion
         {
             get => _CheckCaxaFuntion;
@@ -67,8 +80,6 @@ namespace ETCTool
                 Save();
             }
         }
-
-        bool _CheckFileDecrypt;
 
         public bool CheckFileDecrypt
         {
@@ -80,10 +91,7 @@ namespace ETCTool
             }
         }
 
-
         public StringCollection FormSize { get; set; }
-
-        string _AutoSavePath;
 
         public string AutoSavePath
         {
@@ -95,8 +103,6 @@ namespace ETCTool
             }
         }
 
-        string _TheLastSavePath;
-
         public string TheLastSavePath
         {
             get => _TheLastSavePath;
@@ -107,20 +113,16 @@ namespace ETCTool
             }
         }
 
-        string _AutoSaveSpan;
-
         public string AutoSaveSpan
         {
             get => _AutoSaveSpan;
             set
             {
-                if (!float.TryParse(value, out float ret)) return;
+                if (!float.TryParse(value, out var ret)) return;
                 _AutoSaveSpan = value;
                 Save();
             }
         }
-
-        private bool _AdapterCaxaAutoSave;
 
         public bool AdapterCaxaAutoSave
         {
@@ -132,17 +134,42 @@ namespace ETCTool
             }
         }
 
+        public bool CheckAutoPerformClick
+        {
+            get => _CheckAutoPerformClick;
+            set
+            {
+                _CheckAutoPerformClick = value;
+                Variables.CheckAutoPerformClick = value;
+                Save();
+            }
+        }
+
+        public int AutoPerformClickCount
+        {
+            get
+            {
+                if (_AutoPerformClickCount == 0) return 1;
+
+                return _AutoPerformClickCount;
+            }
+            set
+            {
+                _AutoPerformClickCount = value;
+                Variables.AutoPerformClickCount = value;
+                Save();
+            }
+        }
+
         internal Setting Init()
         {
             var path =
                 $"{Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)}\\EtcTool\\Setting.dat";
             if (File.Exists(path))
-            {
                 using (var fileStream = new FileStream(path, FileMode.Open))
                 {
                     return new BinaryFormatter().Deserialize(fileStream) as Setting;
                 }
-            }
 
             return new Setting();
         }
@@ -167,4 +194,5 @@ namespace ETCTool
             });
         }
     }
+
 }

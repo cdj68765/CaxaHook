@@ -96,9 +96,11 @@
   <ItemGroup>
     <Reference Include="EasyHook, Version=2.7.6789.0, Culture=neutral, PublicKeyToken=4b580fca19d0b0c5, processorArchitecture=MSIL">
       <HintPath>..\packages\EasyHook.2.7.6789\lib\net40\EasyHook.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="MaterialSkin">
       <HintPath>.\MaterialSkin.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
@@ -118,12 +120,14 @@
     <Reference Include="System.Xml" />
     <Reference Include="WPFFolderBrowser">
       <HintPath>.\WPFFolderBrowser.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyHandler.cs" />
     <Compile Include="AutoRunServer.cs" />
     <Compile Include="CaxaHookInterface.cs" />
+    <Compile Include="ContextMenu.cs" />
     <Compile Include="CreateProcessAsUser.cs" />
     <Compile Include="ETCToolService.cs">
       <SubType>Component</SubType>
@@ -142,6 +146,7 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="MainFun.cs" />
     <Compile Include="MessageBoxForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -149,6 +154,7 @@
       <DependentUpon>MessageBoxForm.cs</DependentUpon>
     </Compile>
     <Compile Include="NativeApi.cs" />
+    <Compile Include="PlmHookInterface.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProjectInstaller.cs">
       <SubType>Component</SubType>
@@ -216,6 +222,8 @@
     <EmbeddedResource Include="EasyHook.dll" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="PlmInject.dll" />
+    <EmbeddedResource Include="CDRAFT_M.exe" />
     <Content Include="System_preferences_tool_tools_128px_581754_easyicon.net.ico" />
     <EmbeddedResource Include="WPFFolderBrowser.dll" />
   </ItemGroup>

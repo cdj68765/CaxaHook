@@ -4,7 +4,6 @@ using System.Runtime.InteropServices;
 using System.ServiceProcess;
 using System.Threading;
 using System.Windows.Forms;
-using ETCTool.Properties;
 
 namespace ETCTool
 {
@@ -18,6 +17,13 @@ namespace ETCTool
                 ServiceBase.Run(new ETCToolService(Application.ExecutablePath));
                 return;
             }
+
+            if (args.Length != 0 && args[0] == "Paste")
+            {
+                MessageBox.Show("Paste");
+                return;
+            }
+
             if (args.Length != 0 && args[0] == "Service")
             {
                 Thread.Sleep(10000);
@@ -27,7 +33,7 @@ namespace ETCTool
             }
 
             var path = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
-            var Guid = ((GuidAttribute)Attribute.GetCustomAttribute(Assembly.GetExecutingAssembly(),
+            var Guid = ((GuidAttribute) Attribute.GetCustomAttribute(Assembly.GetExecutingAssembly(),
                 typeof(GuidAttribute))).Value;
             if (args.Length == 0 || args[0] == "Service") AssemblyHandler.AssemblyFileSaveToCaxaAutoSave(path);
             if (AppDomain.CurrentDomain.IsDefaultAppDomain() && args.Length == 0 || args[0] == "Service")
@@ -39,7 +45,7 @@ namespace ETCTool
                 });
                 // createProcessAsUser.StartProcessAndBypassUAC(Application.ExecutablePath, " Service", out var info);
                 var ret = newDomain.ExecuteAssemblyByName(Assembly.GetExecutingAssembly().FullName, Guid,
-                     Application.ExecutablePath, "RunByService");
+                    Application.ExecutablePath, "RunByService");
                 AppDomain.Unload(newDomain);
                 Environment.ExitCode = ret;
                 Environment.Exit(0);

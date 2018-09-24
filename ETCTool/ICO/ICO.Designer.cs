@@ -91,6 +91,16 @@ namespace ETCTool.ICO {
         }
         
         /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
+        internal static System.Drawing.Bitmap button_purple1 {
+            get {
+                object obj = ResourceManager.GetObject("button_purple1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   查找类似于 (图标) 的 System.Drawing.Icon 类型的本地化资源。
         /// </summary>
         internal static System.Drawing.Icon button_red {
@@ -201,6 +211,16 @@ namespace ETCTool.ICO {
         }
         
         /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
+        internal static System.Drawing.Bitmap circle_yellow1 {
+            get {
+                object obj = ResourceManager.GetObject("circle_yellow1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   查找类似于 (图标) 的 System.Drawing.Icon 类型的本地化资源。
         /// </summary>
         internal static System.Drawing.Icon clipboard_80px_1121225_easyicon_net {
@@ -241,6 +261,16 @@ namespace ETCTool.ICO {
         }
         
         /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
+        internal static System.Drawing.Bitmap Start1 {
+            get {
+                object obj = ResourceManager.GetObject("Start1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   查找类似于 (图标) 的 System.Drawing.Icon 类型的本地化资源。
         /// </summary>
         internal static System.Drawing.Icon Stop {
@@ -257,6 +287,16 @@ namespace ETCTool.ICO {
             get {
                 object obj = ResourceManager.GetObject("System_preferences_tool_tools_128px_581754_easyicon_net", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Drawing.Bitmap 类型的本地化资源。
+        /// </summary>
+        internal static System.Drawing.Bitmap System_preferences_tool_tools_128px_581754_easyicon_net1 {
+            get {
+                object obj = ResourceManager.GetObject("System_preferences_tool_tools_128px_581754_easyicon_net1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
     }

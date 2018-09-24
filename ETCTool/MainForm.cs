@@ -1,40 +1,36 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.IO.MemoryMappedFiles;
 using System.IO.Pipes;
+using System.Linq;
+using System.Management;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Runtime.Remoting;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows.Forms;
+using EasyHook;
 using MaterialSkin;
 using MaterialSkin.Controls;
-using static ETCTool.NativeApi;
-using EasyHook;
-using System.Runtime.Remoting;
-using System.Collections.Generic;
-using System.Diagnostics;
-using static ETCTool.Variables;
-using System.Timers;
-using Timer = System.Timers.Timer;
 using Microsoft.VisualBasic.FileIO;
-
+using Microsoft.Win32;
+using WPFFolderBrowser;
+using static ETCTool.NativeApi;
+using static ETCTool.Variables;
+using Timer = System.Timers.Timer;
+using static ETCTool.MainFun;
 namespace ETCTool
 {
     public partial class MainForm : MaterialForm
     {
-        #region 日志管理
-
-        public readonly BindingList<string[]> CliLog;
-        public readonly BindingList<string[]> AutoSaveLog;
-
-        #endregion 日志管理
-
         public MainForm()
         {
             InitializeComponent();
@@ -46,22 +42,7 @@ namespace ETCTool
                 | ControlStyles.AllPaintingInWmPaint
                 | ControlStyles.UserPaint
                 | ControlStyles.SupportsTransparentBackColor, true);
-            /*  Task.Factory.StartNew(() =>
-              {
-                  do
-                  {
-                      Thread.Sleep(1000);
-                      GetCursorPos(out var lpPoint);
-                      try
-                      {
-                          Invoke(new Action(() => { MainTabPlmStation.Text = lpPoint.ToString(); }));
-                      }
-                      catch (Exception)
-                      {
-                      }
-                  } while (true);
-              });*/
-            TOPMOST.CheckedChanged += delegate { this.TopMost = TOPMOST.Checked; };
+            TOPMOST.CheckedChanged += delegate { TopMost = TOPMOST.Checked; };
 
             #region 状态初始化
 
@@ -82,27 +63,20 @@ namespace ETCTool
                     }
 
                     if (Directory.Exists(setting.AutoSavePath))
-                    {
                         Variables.MainForm.AutoSaveLog.Add(new[]
                         {
                             $"{DateTime.Now:hh:mm:ss}->当前保存文件数量:",
                             $"{new DirectoryInfo(setting.AutoSavePath).EnumerateFileSystemInfos("*.exb").Count()}"
                         });
-                    }
 
-                    if (setting.AdapterCaxaAutoSave)
-                    {
-                        AdapterCaxaAutoSave.Checked = true;
-                    }
+                    if (setting.AdapterCaxaAutoSave) AdapterCaxaAutoSave.Checked = true;
 
+                    if (setting.CheckAutoPerformClick) CheckAutoPerformClick.Checked = setting.CheckAutoPerformClick;
                     SetAutoSaveTimeSpan.Text = setting.AutoSaveSpan;
+                    AutoPerformClickCount.Text = setting.AutoPerformClickCount.ToString();
                 }));
             });
-
-            if (!string.IsNullOrEmpty(setting.AutoSavePath))
-            {
-                AutoSavePathLine.Text = setting.AutoSavePath;
-            }
+            if (!string.IsNullOrEmpty(setting.AutoSavePath)) AutoSavePathLine.Text = setting.AutoSavePath;
 
             #endregion 状态初始化
 
@@ -115,8 +89,7 @@ namespace ETCTool
                 var Item = CliLog[d.NewIndex];
                 var FindCount = CliLog.Count(x => x[1] == Item[1] && x[1] != "");
                 if (FindCount > 1)
-                {
-                    for (int i = 0; i < FindCount - 1; i++)
+                    for (var i = 0; i < FindCount - 1; i++)
                     {
                         var Find = CliLog.FirstOrDefault(x => x[1] == Item[1] && x[1] != "");
                         if (Find != null)
@@ -128,7 +101,6 @@ namespace ETCTool
                             }));
                         }
                     }
-                }
 
                 MainTabClipbrdStation.BeginInvoke(new Action(() =>
                 {
@@ -166,7 +138,7 @@ namespace ETCTool
                     CaxaList.SelectedIndex = CaxaList.Items.Count - 1;
                 }
             };
-            CLICurrentText.MouseDown += delegate
+            CLICurrentText.MouseDown += delegate //复制历史剪切板文本
             {
                 ClipbrdMonitor.Onice = false;
                 ClipbrdMonitor.SetText(CliLog[CaxaList.SelectedIndex][1]);
@@ -178,12 +150,13 @@ namespace ETCTool
                 var Item = AutoSaveLog[d.NewIndex];
                 BeginInvoke(new Action(() =>
                 {
-                    MainTabAutoSaveStation.Text = Item[0] + Item[1];
+                    var TempText = Item[0] + Item[1];
+                    MainTabAutoSaveStation.Text = TempText;
                     if (!CliRadio.Checked)
                     {
                         if (CaxaList.Items.Count == AutoSaveLog.Count)
                         {
-                            CaxaList.Items.Add(MainTabAutoSaveStation.Text);
+                            CaxaList.Items.Add(TempText);
                         }
                         else
                         {
@@ -193,6 +166,32 @@ namespace ETCTool
 
                         CaxaList.SelectedIndex = CaxaList.Items.Count - 1;
                     }
+                }));
+            };
+            PlmMonitorLog = new BindingList<string[]>();
+            PlmMonitorLog.ListChanged += (s, d) =>
+            {
+                if (d.ListChangedType == ListChangedType.ItemDeleted) return;
+                var Item = PlmMonitorLog[d.NewIndex];
+                BeginInvoke(new Action(() =>
+                {
+                    var TempText = Item[0] + Item[1];
+                    MainTabPlmStation.Text = TempText;
+                    PlmList.Items.Add(TempText);
+                    PlmList.SelectedIndex = PlmList.Items.Count - 1;
+                }));
+            };
+            OntherLog = new BindingList<string[]>();
+            OntherLog.ListChanged += (s, d) =>
+            {
+                if (d.ListChangedType == ListChangedType.ItemDeleted) return;
+                var Item = OntherLog[d.NewIndex];
+                BeginInvoke(new Action(() =>
+                {
+                    var TempText = Item[0] + Item[1];
+                    MainTabFileDecryptStation.Text = TempText;
+                    OntherList.Items.Add(TempText);
+                    OntherList.SelectedIndex = OntherList.Items.Count - 1;
                 }));
             };
 
@@ -235,6 +234,7 @@ namespace ETCTool
                     if (setting.RunMode)
                         ShowInTaskbar = false;
             };
+            this.FormClosing += delegate { FileDecryptFun(false); };
         }
 
         private void 管道通讯()
@@ -315,6 +315,15 @@ namespace ETCTool
             return false;
         }
 
+        #region 日志管理
+
+        public readonly BindingList<string[]> CliLog;
+        public readonly BindingList<string[]> AutoSaveLog;
+        public readonly BindingList<string[]> PlmMonitorLog;
+        public readonly BindingList<string[]> OntherLog;
+
+        #endregion 日志管理
+
         #region 主界面代码段
 
         private void StartAllFuntion_Click(object sender, EventArgs e)
@@ -393,10 +402,18 @@ namespace ETCTool
 
         private void DeleteAutoRunService_Click(object sender, EventArgs e)
         {
-            if (AutoRunServer.IsServiceExisted()) AutoRunServer.UnInstallService();
-
-            AutoRunMode.Checked = false;
-            AutoRunMode.Enabled = false;
+            if (AutoRunServer.IsServiceExisted())
+            {
+                AutoRunServer.UnInstallService();
+                Variables.MainForm.OntherLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->", "自启动服务删除完毕"});
+                Variables.MainForm.OntherLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->", "关闭程序后执行后续操作"});
+                AutoRunMode.Checked = false;
+                AutoRunMode.Enabled = false;
+            }
+            else
+            {
+                Variables.MainForm.OntherLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->", "自启动服务不存在，删除失败"});
+            }
         }
 
         #region 功能勾选段
@@ -446,7 +463,7 @@ namespace ETCTool
 
             try
             {
-                var SeleSavePath = new WPFFolderBrowser.WPFFolderBrowserDialog();
+                var SeleSavePath = new WPFFolderBrowserDialog();
                 // SeleSavePath.SelectedPath = setting.AutoSavePath;
                 SeleSavePath.ShowDialog();
                 SeleSavePath.InitialDirectory = setting.AutoSavePath;
@@ -549,7 +566,10 @@ namespace ETCTool
                                 break;
 
                             case "Buttom_StartPlmMonitor":
-
+                                PlmMonitorFun(true);
+                                break;
+                            case "Buttom_StartFileDecrypt":
+                                FileDecryptFun(true);
                                 break;
                         }
                     }
@@ -573,6 +593,12 @@ namespace ETCTool
 
                             case "Buttom_StartCaxaAutoSave":
                                 StartCaxaAutoSaveFun(false);
+                                break;
+                            case "Buttom_StartPlmMonitor":
+                                PlmMonitorFun(false);
+                                break;
+                            case "Buttom_StartFileDecrypt":
+                                FileDecryptFun(false);
                                 break;
                         }
                     }
@@ -636,7 +662,7 @@ namespace ETCTool
                         {
                             var TimeCount = 1;
                             Variables.MainForm.CliLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->打开剪切板错误", ""});
-                            Timer CliTime = new Timer(100);
+                            var CliTime = new Timer(100);
                             CliTime.AutoReset = true;
                             CliTime.Elapsed += delegate
                             {
@@ -731,7 +757,6 @@ namespace ETCTool
 
         #region Caxa自动保存代码段
 
-        // private System.Timers.Timer AutoSaveTimeSpan = new System.Timers.Timer(1000);
         public readonly Dictionary<int, string> CaxaPid = new Dictionary<int, string>();
 
         private void SetAutoSaveTimeSpan_KeyPress(object sender, KeyPressEventArgs e)
@@ -739,15 +764,10 @@ namespace ETCTool
             if (e.KeyChar != '\b' && e.KeyChar != '.' && e.KeyChar != '\u0016' && e.KeyChar != '\u0003')
             {
                 if (e.KeyChar < '0' || e.KeyChar > '9') //这是允许输入0-9数字
-                {
                     e.Handled = true;
-                }
-                else if (SetAutoSaveTimeSpan.Text.Length >= 3 && e.KeyChar != '\b')
-                {
-                    e.Handled = true;
-                }
+                else if (SetAutoSaveTimeSpan.Text.Length >= 3 && e.KeyChar != '\b') e.Handled = true;
             }
-            else if (e.KeyChar != '\b' && !float.TryParse($"{SetAutoSaveTimeSpan.Text}{e.KeyChar}", out float res))
+            else if (e.KeyChar != '\b' && !float.TryParse($"{SetAutoSaveTimeSpan.Text}{e.KeyChar}", out var res))
             {
                 e.Handled = true;
             }
@@ -757,10 +777,10 @@ namespace ETCTool
 
         private string TimeSplit(int Time)
         {
-            var TempDate = new DateTime().AddSeconds(Double.Parse(Time.ToString()));
+            var TempDate = new DateTime().AddSeconds(double.Parse(Time.ToString()));
             if (Time < 60) return $"{TempDate:s秒}";
-            else if (Time < 3600) return $"{TempDate:m分s秒}";
-            else return $"{TempDate:h:m:s}";
+            if (Time < 3600) return $"{TempDate:m分s秒}";
+            return $"{TempDate:h:m:s}";
         }
 
         public bool StartCaxaAutoSaveHook;
@@ -768,10 +788,8 @@ namespace ETCTool
         private void StartCaxaAutoSaveFun(bool Run, MaterialFlatButton button = null)
         {
             var SpanTime = GetAndSetTime();
-            if (string.IsNullOrEmpty(SetAutoSaveTimeSpan.Text))
-            {
-                SetAutoSaveTimeSpan.Text = @"1";
-            }
+            if (string.IsNullOrEmpty(SetAutoSaveTimeSpan.Text)) SetAutoSaveTimeSpan.Text = @"1";
+
             var TextOfNow = SetAutoSaveTimeSpan.Text;
             if (Run)
             {
@@ -803,7 +821,6 @@ namespace ETCTool
                         };
                         AutoSaveTimeSpan.Elapsed += SpanRunWithModeAdapter;
                     }
-                  
                 }
                 else
                 {
@@ -818,13 +835,12 @@ namespace ETCTool
                 AutoSaveSpan.BeginInvoke(new Action(() => { AutoSaveSpan.Value = 0; }));
                 AutoSaveRun = false;
                 Variables.MainForm.AutoSaveLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->自动保存功能关闭", $""});
-                // AutoSaveTimeSpan.Dispose();
             }
 
             int GetAndSetTime()
             {
                 if (float.TryParse(SetAutoSaveTimeSpan.Text,
-                    out float ret))
+                    out var ret))
                 {
                     var _SpanTime = Convert.ToInt32(ret * 60);
                     if (_SpanTime == 0)
@@ -836,26 +852,21 @@ namespace ETCTool
 
                     return AutoSaveSpan.Value = AutoSaveSpan.Maximum = _SpanTime;
                 }
-                else
-                {
-                    Variables.MainForm.AutoSaveLog.Add(new[]
-                        {$"{DateTime.Now:hh:mm:ss}->设定错误，时间恢复为1分钟", $""});
-                    return AutoSaveSpan.Value = AutoSaveSpan.Maximum = 60;
-                }
+
+                Variables.MainForm.AutoSaveLog.Add(new[]
+                    {$"{DateTime.Now:hh:mm:ss}->设定错误，时间恢复为1分钟", $""});
+                return AutoSaveSpan.Value = AutoSaveSpan.Maximum = 60;
             }
+
             void SpanRun(object sender, ElapsedEventArgs e)
             {
                 Interlocked.Decrement(ref SpanTime);
                 if (SpanTime == 0)
-                {
                     AutoSaveSpan.BeginInvoke(new Action(() =>
                     {
                         if (TextOfNow == SetAutoSaveTimeSpan.Text)
-                        {
                             SpanTime = AutoSaveSpan.Value = AutoSaveSpan.Maximum;
-                        }
                         else
-                        {
                             try
                             {
                                 SpanTime = GetAndSetTime();
@@ -865,11 +876,8 @@ namespace ETCTool
                             catch (Exception)
                             {
                             }
-                        }
                     }));
-                }
                 else
-                {
                     AutoSaveSpan.BeginInvoke(new Action(() =>
                     {
                         try
@@ -880,7 +888,7 @@ namespace ETCTool
                         {
                         }
                     }));
-                }
+
                 var WindowsName = new StringBuilder(256);
                 var ForegroundWindow = GetForegroundWindow();
                 GetWindowTextW(ForegroundWindow, WindowsName, 256);
@@ -889,10 +897,8 @@ namespace ETCTool
                     HookCaxa(ForegroundWindow, WindowsName.ToString());
                     if (SpanTime == 0)
                     {
-                        if (WindowsName.ToString().IndexOf('[') == -1)
-                        {
-                            return;
-                        }
+                        if (WindowsName.ToString().IndexOf('[') == -1) return;
+
                         var SPF = WindowsName.ToString().Split('[');
                         if (SPF.Length < 2)
                         {
@@ -917,6 +923,7 @@ namespace ETCTool
                                     {$"{DateTime.Now:hh:mm:ss}->错误，当前文档为只读或者新建文档", $""});
                             }
                         }
+
                         var FileName = Path.GetFileName(SPF[1].Split(']')[0]);
                         if (FileName.EndsWith("*"))
                         {
@@ -946,16 +953,13 @@ namespace ETCTool
                 var WindowsName = new StringBuilder(256);
                 var ForegroundWindow = GetForegroundWindow();
                 GetWindowTextW(ForegroundWindow, WindowsName, 256);
-                if (WindowsName.ToString().StartsWith("CAXA"))
-                {
-                    HookCaxa(ForegroundWindow, WindowsName.ToString());
-                }
+                if (WindowsName.ToString().StartsWith("CAXA")) HookCaxa(ForegroundWindow, WindowsName.ToString());
             }
-            void HookCaxa(IntPtr ForegroundWindow,string WindowsName)
+
+            void HookCaxa(IntPtr ForegroundWindow, string WindowsName)
             {
-                GetWindowThreadProcessId(ForegroundWindow, out int Pid);
+                GetWindowThreadProcessId(ForegroundWindow, out var Pid);
                 if (!CaxaPid.ContainsKey(Pid))
-                {
                     try
                     {
                         string ChannelName = null;
@@ -980,40 +984,29 @@ namespace ETCTool
                         Variables.MainForm.AutoSaveLog.Add(new[]
                             {$"{DateTime.Now:hh:mm:ss}->错误信息:", $"{exception}"});
                     }
-                }
             }
         }
 
         private void OpenTheLastAutoSaveButton_MouseClick(object sender, MouseEventArgs e)
         {
             if (File.Exists(setting.TheLastSavePath))
-            {
                 Process.Start(setting.TheLastSavePath);
-            }
             else
-            {
                 new MessageBoxForm("未找到最后一次保存的文件", MessageBoxButtons.OK, 5).ShowDialog();
-            }
         }
 
         private void OpenAutoSavePath_MouseClick(object sender, MouseEventArgs e)
         {
             if (Directory.Exists(setting.AutoSavePath))
-            {
                 Process.Start(setting.AutoSavePath);
-            }
             else
-            {
                 new MessageBoxForm("未找到自动保存目录", MessageBoxButtons.OK, 5).ShowDialog();
-            }
         }
 
         private void DelAllFile_MouseClick(object sender, MouseEventArgs e)
         {
             if (Directory.Exists(setting.AutoSavePath))
-            {
                 foreach (var VARIABLE in new DirectoryInfo(setting.AutoSavePath).EnumerateFiles("*.exb"))
-                {
                     try
                     {
                         FileSystem.DeleteFile(VARIABLE.FullName, UIOption.AllDialogs, RecycleOption.SendToRecycleBin);
@@ -1025,12 +1018,8 @@ namespace ETCTool
                         Variables.MainForm.AutoSaveLog.Add(new[]
                             {$"{DateTime.Now:hh:mm:ss}->删除失败:", $"{VARIABLE.Name}"});
                     }
-                }
-            }
             else
-            {
                 new MessageBoxForm("未找到自动保存目录", MessageBoxButtons.OK, 5).ShowDialog();
-            }
         }
 
         private void AdapterCaxaAutoSave_CheckedChanged(object sender, EventArgs e)
@@ -1051,6 +1040,84 @@ namespace ETCTool
         #endregion Caxa自动保存代码段
 
         #endregion Caxa相关代码段
+
+        #region Plm自动延时代码段
+
+        private Timer PlmMonitorTimeSpan = new Timer(10000);
+        public readonly Dictionary<int, string> PlmPid = new Dictionary<int, string>();
+
+        private void PlmMonitorFun(bool start)
+        {
+            if (start)
+            {
+                PlmMonitorTimeSpan = new Timer(10000)
+                {
+                    AutoReset = true,
+                    Enabled = true
+                };
+                Variables.MainForm.PlmMonitorLog.Add(new[]
+                    {$"{DateTime.Now:hh:mm:ss}->", $"PLM监控功能启动"});
+                PlmMonitorRun = true;
+                PlmMonitorTimeSpan.Elapsed += delegate
+                {
+                    foreach (var PID in new ManagementObjectSearcher(
+                        new SelectQuery(
+                            $"Select Name,ProcessId from Win32_Process Where (Name = 'DigiWin PLM.exe')")).Get())
+                    {
+                        var Pid = int.Parse(PID["ProcessId"].ToString());
+                        if (!PlmPid.ContainsKey(Pid))
+                            try
+                            {
+                                string ChannelName = null;
+                                RemoteHooking.IpcCreateServer<PlmHookInterface>(ref ChannelName,
+                                    WellKnownObjectMode.SingleCall);
+                                RemoteHooking.Inject(
+                                    Pid,
+                                    InjectionOptions.Default,
+                                    $"PlmInject.dll",
+                                    $"PlmInject.dll",
+                                    ChannelName);
+                                PlmPid.Add(Pid, ChannelName);
+                            }
+                            catch (Exception exception)
+                            {
+                                Variables.MainForm.PlmMonitorLog.Add(new[]
+                                    {$"{DateTime.Now:hh:mm:ss}->发生错误，错误信息:", exception.Message});
+                            }
+                    }
+                };
+            }
+            else
+            {
+                PlmMonitorRun = false;
+                Variables.MainForm.PlmMonitorLog.Add(new[]
+                    {$"{DateTime.Now:hh:mm:ss}->", $"PLM监控功能关闭"});
+                PlmMonitorTimeSpan.Dispose();
+            }
+        }
+
+        private void CheckAutoPerformClick_CheckedChanged(object sender, EventArgs e)
+        {
+            setting.CheckAutoPerformClick = CheckAutoPerformClick.Checked;
+        }
+
+        private void AutoPerformClickCount_KeyUp(object sender, KeyEventArgs e)
+        {
+            int.TryParse((sender as TextBox).Text, out var Ret);
+            setting.AutoPerformClickCount = Ret;
+        }
+
+        private void AutoPerformClickCount_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            var Temp = sender as TextBox;
+            if (e.KeyChar != '\b' && e.KeyChar != '\u0016' && e.KeyChar != '\u0003') //这是允许输入退格键
+                if (e.KeyChar < '0' || e.KeyChar > '9') //这是允许输入0-9数字
+                    e.Handled = true;
+
+            if (Temp.Text.Length > 2 && e.KeyChar != '\b') e.Handled = true;
+        }
+
+        #endregion
 
         #region 任务栏图标
 
@@ -1150,7 +1217,6 @@ namespace ETCTool
                     Width = int.Parse(setting.FormSize[0]);
                     Height = int.Parse(setting.FormSize[1]);
                     if (AutoSavePathLine.Text == string.Empty)
-                    {
                         ThreadPool.QueueUserWorkItem(state =>
                         {
                             Thread.Sleep(500);
@@ -1163,7 +1229,6 @@ namespace ETCTool
                             Invoke(new Action(() => { ChangeAutoSavePath.Focus(); }));
                             Thread.Sleep(500);
                         });
-                    }
 
                     break;
 

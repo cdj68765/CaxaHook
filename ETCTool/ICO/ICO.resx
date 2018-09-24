@@ -178,4 +178,16 @@
   <data name="System_preferences_tool_tools_128px_581754_easyicon_net" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>System_preferences_tool_tools_128px_581754_easyicon.net.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="button_purple1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>button-purple.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="circle_yellow1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>circle_yellow.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Start1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Start.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="System_preferences_tool_tools_128px_581754_easyicon_net1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>System_preferences_tool_tools_128px_581754_easyicon.net.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

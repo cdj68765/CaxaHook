@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace ETCTool
 {
@@ -28,10 +26,7 @@ namespace ETCTool
             }
             else
             {
-                if (Variables.setting.AdapterCaxaAutoSave)
-                {
-                    return true;
-                }
+                if (Variables.setting.AdapterCaxaAutoSave) return true;
 
                 return Variables.MainForm.StartCaxaAutoSaveHook;
             }
@@ -44,16 +39,16 @@ namespace ETCTool
             Variables.MainForm.AutoSaveLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->{v}", $""});
         }
 
-        public string GetNewPath(string lpNewFileName,string lpExistingFileName="")
+        public string GetNewPath(string lpNewFileName, string lpExistingFileName = "")
         {
-          
             if (Variables.MainForm.StartCaxaAutoSaveHook)
             {
                 if (Path.GetExtension(lpNewFileName).ToLower() == ".exb")
                 {
                     Variables.MainForm.AutoSaveLog.Add(new[]
                         {$"{DateTime.Now:hh:mm:ss}->当前保存文件:", $"{Path.GetFileNameWithoutExtension(lpNewFileName)}"});
-                    Variables.setting.TheLastSavePath = $"{Variables.setting.AutoSavePath}\\{Path.GetFileNameWithoutExtension(lpNewFileName)}.exb";
+                    Variables.setting.TheLastSavePath =
+                        $"{Variables.setting.AutoSavePath}\\{Path.GetFileNameWithoutExtension(lpNewFileName)}.exb";
                     Variables.MainForm.StartCaxaAutoSaveHook = false;
                     return Variables.setting.TheLastSavePath;
                 }
@@ -63,11 +58,15 @@ namespace ETCTool
                 if (Path.GetExtension(lpNewFileName).ToLower() == ".eb$")
                 {
                     Variables.MainForm.AutoSaveLog.Add(new[]
-                        {$"{DateTime.Now:hh:mm:ss}->当前保存文件:", $"{Path.GetFileNameWithoutExtension(lpExistingFileName)}"});
-                    Variables.setting.TheLastSavePath = $"{Variables.setting.AutoSavePath}\\{Path.GetFileNameWithoutExtension(lpExistingFileName)}.exb";
+                    {
+                        $"{DateTime.Now:hh:mm:ss}->当前保存文件:", $"{Path.GetFileNameWithoutExtension(lpExistingFileName)}"
+                    });
+                    Variables.setting.TheLastSavePath =
+                        $"{Variables.setting.AutoSavePath}\\{Path.GetFileNameWithoutExtension(lpExistingFileName)}.exb";
                     return Variables.setting.TheLastSavePath;
                 }
             }
+
             return lpNewFileName;
         }
     }

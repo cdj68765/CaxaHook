@@ -2,7 +2,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using MaterialSkin;
 using MaterialSkin.Controls;
 
 namespace ETCTool
@@ -17,10 +16,7 @@ namespace ETCTool
         public MessageBoxForm(string Message, MessageBoxButtons buttons, int Time)
         {
             InitializeComponent();
-            if (Variables.MainForm.TopMost)
-            {
-                this.TopMost = true;
-            }
+            if (Variables.MainForm.TopMost) TopMost = true;
             Text = Message;
             Countdown.Maximum = Time * 20;
             Countdown.Value = Time * 20;

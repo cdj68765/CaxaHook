@@ -68,10 +68,15 @@
             this.Buttom_StartCaxaAutoSave = new MaterialSkin.Controls.MaterialFlatButton();
             this.Buttom_StartCaxaClipbrd = new MaterialSkin.Controls.MaterialFlatButton();
             this.TabPlm = new System.Windows.Forms.TabPage();
+            this.AutoPerformClickCount = new MaterialSkin.Controls.MaterialSingleLineTextField();
+            this.materialLabel7 = new MaterialSkin.Controls.MaterialLabel();
+            this.CheckAutoPerformClick = new MaterialSkin.Controls.MaterialCheckBox();
             this.Buttom_StartPlmMonitor = new MaterialSkin.Controls.MaterialFlatButton();
             this.materialDivider2 = new MaterialSkin.Controls.MaterialDivider();
             this.materialFlatButton1 = new MaterialSkin.Controls.MaterialFlatButton();
+            this.PlmList = new System.Windows.Forms.ListBox();
             this.TabAnother = new System.Windows.Forms.TabPage();
+            this.OntherList = new System.Windows.Forms.ListBox();
             this.materialDivider3 = new MaterialSkin.Controls.MaterialDivider();
             this.Buttom_StartFileDecrypt = new MaterialSkin.Controls.MaterialFlatButton();
             this.materialFlatButton2 = new MaterialSkin.Controls.MaterialFlatButton();
@@ -728,16 +733,71 @@
             // 
             // TabPlm
             // 
+            this.TabPlm.BackColor = System.Drawing.Color.White;
+            this.TabPlm.Controls.Add(this.AutoPerformClickCount);
+            this.TabPlm.Controls.Add(this.materialLabel7);
+            this.TabPlm.Controls.Add(this.CheckAutoPerformClick);
             this.TabPlm.Controls.Add(this.Buttom_StartPlmMonitor);
             this.TabPlm.Controls.Add(this.materialDivider2);
             this.TabPlm.Controls.Add(this.materialFlatButton1);
+            this.TabPlm.Controls.Add(this.PlmList);
             this.TabPlm.Location = new System.Drawing.Point(4, 22);
             this.TabPlm.Name = "TabPlm";
             this.TabPlm.Padding = new System.Windows.Forms.Padding(3);
             this.TabPlm.Size = new System.Drawing.Size(470, 157);
             this.TabPlm.TabIndex = 1;
             this.TabPlm.Text = "PLM相关";
-            this.TabPlm.UseVisualStyleBackColor = true;
+            // 
+            // AutoPerformClickCount
+            // 
+            this.AutoPerformClickCount.Depth = 0;
+            this.AutoPerformClickCount.Hint = "";
+            this.AutoPerformClickCount.Location = new System.Drawing.Point(156, 72);
+            this.AutoPerformClickCount.MaxLength = 32767;
+            this.AutoPerformClickCount.MouseState = MaterialSkin.MouseState.HOVER;
+            this.AutoPerformClickCount.Name = "AutoPerformClickCount";
+            this.AutoPerformClickCount.PasswordChar = '\0';
+            this.AutoPerformClickCount.SelectedText = "";
+            this.AutoPerformClickCount.SelectionLength = 0;
+            this.AutoPerformClickCount.SelectionStart = 0;
+            this.AutoPerformClickCount.Size = new System.Drawing.Size(47, 23);
+            this.AutoPerformClickCount.TabIndex = 14;
+            this.AutoPerformClickCount.TabStop = false;
+            this.AutoPerformClickCount.Text = "1";
+            this.AutoPerformClickCount.UseSystemPasswordChar = false;
+            this.AutoPerformClickCount.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.AutoPerformClickCount_KeyPress);
+            this.AutoPerformClickCount.KeyUp += new System.Windows.Forms.KeyEventHandler(this.AutoPerformClickCount_KeyUp);
+            // 
+            // materialLabel7
+            // 
+            this.materialLabel7.AutoSize = true;
+            this.materialLabel7.BackColor = System.Drawing.Color.Transparent;
+            this.materialLabel7.Depth = 0;
+            this.materialLabel7.Font = new System.Drawing.Font("Roboto", 11F);
+            this.materialLabel7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.materialLabel7.Location = new System.Drawing.Point(10, 75);
+            this.materialLabel7.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialLabel7.Name = "materialLabel7";
+            this.materialLabel7.Size = new System.Drawing.Size(153, 19);
+            this.materialLabel7.TabIndex = 15;
+            this.materialLabel7.Text = "设置自动确认次数：";
+            // 
+            // CheckAutoPerformClick
+            // 
+            this.CheckAutoPerformClick.AutoSize = true;
+            this.CheckAutoPerformClick.Depth = 0;
+            this.CheckAutoPerformClick.Font = new System.Drawing.Font("Roboto", 10F);
+            this.CheckAutoPerformClick.Location = new System.Drawing.Point(12, 45);
+            this.CheckAutoPerformClick.Margin = new System.Windows.Forms.Padding(0);
+            this.CheckAutoPerformClick.MouseLocation = new System.Drawing.Point(-1, -1);
+            this.CheckAutoPerformClick.MouseState = MaterialSkin.MouseState.HOVER;
+            this.CheckAutoPerformClick.Name = "CheckAutoPerformClick";
+            this.CheckAutoPerformClick.Ripple = true;
+            this.CheckAutoPerformClick.Size = new System.Drawing.Size(151, 30);
+            this.CheckAutoPerformClick.TabIndex = 13;
+            this.CheckAutoPerformClick.Text = "是否自动点击确认";
+            this.CheckAutoPerformClick.UseVisualStyleBackColor = true;
+            this.CheckAutoPerformClick.CheckedChanged += new System.EventHandler(this.CheckAutoPerformClick_CheckedChanged);
             // 
             // Buttom_StartPlmMonitor
             // 
@@ -797,18 +857,45 @@
             this.materialFlatButton1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.MouseMoveSize_MouseMove);
             this.materialFlatButton1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MouseMoveSize_MouseUp);
             // 
+            // PlmList
+            // 
+            this.PlmList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.PlmList.FormattingEnabled = true;
+            this.PlmList.HorizontalScrollbar = true;
+            this.PlmList.ItemHeight = 12;
+            this.PlmList.Location = new System.Drawing.Point(243, 7);
+            this.PlmList.Name = "PlmList";
+            this.PlmList.Size = new System.Drawing.Size(224, 148);
+            this.PlmList.TabIndex = 12;
+            // 
             // TabAnother
             // 
+            this.TabAnother.BackColor = System.Drawing.Color.White;
             this.TabAnother.Controls.Add(this.materialDivider3);
             this.TabAnother.Controls.Add(this.Buttom_StartFileDecrypt);
             this.TabAnother.Controls.Add(this.materialFlatButton2);
             this.TabAnother.Controls.Add(this.materialRaisedButton1);
+            this.TabAnother.Controls.Add(this.OntherList);
             this.TabAnother.Location = new System.Drawing.Point(4, 22);
             this.TabAnother.Name = "TabAnother";
             this.TabAnother.Size = new System.Drawing.Size(470, 157);
             this.TabAnother.TabIndex = 2;
             this.TabAnother.Text = "其他相关";
-            this.TabAnother.UseVisualStyleBackColor = true;
+            // 
+            // OntherList
+            // 
+            this.OntherList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.OntherList.FormattingEnabled = true;
+            this.OntherList.HorizontalScrollbar = true;
+            this.OntherList.ItemHeight = 12;
+            this.OntherList.Location = new System.Drawing.Point(243, 7);
+            this.OntherList.Name = "OntherList";
+            this.OntherList.Size = new System.Drawing.Size(224, 148);
+            this.OntherList.TabIndex = 13;
             // 
             // materialDivider3
             // 
@@ -1023,5 +1110,10 @@
         private MaterialSkin.Controls.MaterialRaisedButton DelAllFile;
         private MaterialSkin.Controls.MaterialProgressBar AutoSaveSpan;
         private MaterialSkin.Controls.MaterialCheckBox AdapterCaxaAutoSave;
+        private System.Windows.Forms.ListBox PlmList;
+        private MaterialSkin.Controls.MaterialCheckBox CheckAutoPerformClick;
+        private MaterialSkin.Controls.MaterialLabel materialLabel7;
+        private MaterialSkin.Controls.MaterialSingleLineTextField AutoPerformClickCount;
+        private System.Windows.Forms.ListBox OntherList;
     }
 }
