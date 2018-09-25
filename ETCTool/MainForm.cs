@@ -27,6 +27,7 @@ using static ETCTool.NativeApi;
 using static ETCTool.Variables;
 using Timer = System.Timers.Timer;
 using static ETCTool.MainFun;
+
 namespace ETCTool
 {
     public partial class MainForm : MaterialForm
@@ -58,7 +59,7 @@ namespace ETCTool
                     if (setting.FormSize == null)
                     {
                         setting.FormSize = new StringCollection();
-                        setting.FormSize.AddRange(new[] {"480", "280", "480", "280", "480", "280"});
+                        setting.FormSize.AddRange(new[] { "480", "280", "480", "280", "480", "280" });
                         setting.Save();
                     }
 
@@ -405,14 +406,14 @@ namespace ETCTool
             if (AutoRunServer.IsServiceExisted())
             {
                 AutoRunServer.UnInstallService();
-                Variables.MainForm.OntherLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->", "自启动服务删除完毕"});
-                Variables.MainForm.OntherLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->", "关闭程序后执行后续操作"});
+                Variables.MainForm.OntherLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->", "自启动服务删除完毕" });
+                Variables.MainForm.OntherLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->", "关闭程序后执行后续操作" });
                 AutoRunMode.Checked = false;
                 AutoRunMode.Enabled = false;
             }
             else
             {
-                Variables.MainForm.OntherLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->", "自启动服务不存在，删除失败"});
+                Variables.MainForm.OntherLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->", "自启动服务不存在，删除失败" });
             }
         }
 
@@ -530,35 +531,35 @@ namespace ETCTool
                         switch (Button.Name)
                         {
                             case "Buttom_StartCaxaClipbrd":
-                            {
-                                CaxaClipbrd = new ClipbrdMonitor();
-                                Task.Factory.StartNew(() =>
                                 {
-                                    while (true)
+                                    CaxaClipbrd = new ClipbrdMonitor();
+                                    Task.Factory.StartNew(() =>
                                     {
-                                        Thread.Sleep(500);
-                                        if (CaxaClipbrd == null) break;
-                                        var GetText = new StringBuilder(256);
-                                        GetWindowTextW(GetForegroundWindow(),
-                                            GetText, 256);
-                                        if (GetText.ToString().StartsWith("CAXA"))
+                                        while (true)
                                         {
-                                            Invoke(new Action(() =>
+                                            Thread.Sleep(500);
+                                            if (CaxaClipbrd == null) break;
+                                            var GetText = new StringBuilder(256);
+                                            GetWindowTextW(GetForegroundWindow(),
+                                                GetText, 256);
+                                            if (GetText.ToString().StartsWith("CAXA"))
                                             {
-                                                Notify.Icon = ICO.ICO.clipboard_80px_1121225_easyicon_net;
-                                            }));
-                                        }
-                                        else
-                                        {
-                                            if (Variables.MainForm == null) return;
-                                            BeginInvoke(new Action(() =>
+                                                Invoke(new Action(() =>
+                                                {
+                                                    Notify.Icon = ICO.ICO.clipboard_80px_1121225_easyicon_net;
+                                                }));
+                                            }
+                                            else
                                             {
-                                                Notify.Icon = ICO.ICO.Clipboard_Plan_128px_1185105_easyicon_net;
-                                            }));
+                                                if (Variables.MainForm == null) return;
+                                                BeginInvoke(new Action(() =>
+                                                {
+                                                    Notify.Icon = ICO.ICO.Clipboard_Plan_128px_1185105_easyicon_net;
+                                                }));
+                                            }
                                         }
-                                    }
-                                }, TaskCreationOptions.LongRunning);
-                            }
+                                    }, TaskCreationOptions.LongRunning);
+                                }
                                 break;
 
                             case "Buttom_StartCaxaAutoSave":
@@ -568,6 +569,7 @@ namespace ETCTool
                             case "Buttom_StartPlmMonitor":
                                 PlmMonitorFun(true);
                                 break;
+
                             case "Buttom_StartFileDecrypt":
                                 FileDecryptFun(true);
                                 break;
@@ -580,23 +582,25 @@ namespace ETCTool
                         switch (Button.Name)
                         {
                             case "Buttom_StartCaxaClipbrd":
-                            {
-                                if (CaxaClipbrd != null)
                                 {
-                                    CaxaClipbrd.Close();
-                                    CaxaClipbrd.Dispose();
-                                    CaxaClipbrd = null;
-                                    GC.Collect();
+                                    if (CaxaClipbrd != null)
+                                    {
+                                        CaxaClipbrd.Close();
+                                        CaxaClipbrd.Dispose();
+                                        CaxaClipbrd = null;
+                                        GC.Collect();
+                                    }
                                 }
-                            }
                                 break;
 
                             case "Buttom_StartCaxaAutoSave":
                                 StartCaxaAutoSaveFun(false);
                                 break;
+
                             case "Buttom_StartPlmMonitor":
                                 PlmMonitorFun(false);
                                 break;
+
                             case "Buttom_StartFileDecrypt":
                                 FileDecryptFun(false);
                                 break;
@@ -644,10 +648,10 @@ namespace ETCTool
             public ClipbrdMonitor()
             {
                 AddClipboardFormatListener(Handle);
-                Variables.MainForm.CliLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->启动剪切板监控", ""});
+                Variables.MainForm.CliLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->启动剪切板监控", "" });
                 FormClosing += delegate
                 {
-                    Variables.MainForm.CliLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->关闭剪切板监控", ""});
+                    Variables.MainForm.CliLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->关闭剪切板监控", "" });
                     RemoveClipboardFormatListener(Handle);
                 };
             }
@@ -661,7 +665,7 @@ namespace ETCTool
                         if (!OpenClipboard(IntPtr.Zero))
                         {
                             var TimeCount = 1;
-                            Variables.MainForm.CliLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->打开剪切板错误", ""});
+                            Variables.MainForm.CliLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->打开剪切板错误", "" });
                             var CliTime = new Timer(100);
                             CliTime.AutoReset = true;
                             CliTime.Elapsed += delegate
@@ -716,7 +720,7 @@ namespace ETCTool
                             {
                                 ThreadPool.QueueUserWorkItem(obj =>
                                 {
-                                    Variables.MainForm.CliLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->获得字符:", Temp});
+                                    Variables.MainForm.CliLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->获得字符:", Temp });
                                 });
                                 SetText(Temp);
                                 Onice = false;
@@ -834,7 +838,7 @@ namespace ETCTool
                 AutoSaveTimeSpan.Dispose();
                 AutoSaveSpan.BeginInvoke(new Action(() => { AutoSaveSpan.Value = 0; }));
                 AutoSaveRun = false;
-                Variables.MainForm.AutoSaveLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->自动保存功能关闭", $""});
+                Variables.MainForm.AutoSaveLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->自动保存功能关闭", $"" });
             }
 
             int GetAndSetTime()
@@ -1050,6 +1054,7 @@ namespace ETCTool
         {
             if (start)
             {
+                Variables.AutoPerformClickCount = Variables.setting.AutoPerformClickCount;
                 PlmMonitorTimeSpan = new Timer(10000)
                 {
                     AutoReset = true,
@@ -1069,13 +1074,17 @@ namespace ETCTool
                             try
                             {
                                 string ChannelName = null;
+                                var path = Environment.GetFolderPath(Environment.SpecialFolder
+                            .CommonApplicationData);
                                 RemoteHooking.IpcCreateServer<PlmHookInterface>(ref ChannelName,
                                     WellKnownObjectMode.SingleCall);
+                                Config.DependencyPath = $"{path}\\EtcTool\\";
+                                Config.HelperLibraryLocation = $"{path}\\EtcTool\\";
                                 RemoteHooking.Inject(
                                     Pid,
                                     InjectionOptions.Default,
-                                    $"PlmInject.dll",
-                                    $"PlmInject.dll",
+                                    $"{path}\\EtcTool\\PlmInject.dll",
+                                   $"{path}\\EtcTool\\PlmInject.dll",
                                     ChannelName);
                                 PlmPid.Add(Pid, ChannelName);
                             }
@@ -1117,7 +1126,7 @@ namespace ETCTool
             if (Temp.Text.Length > 2 && e.KeyChar != '\b') e.Handled = true;
         }
 
-        #endregion
+        #endregion Plm自动延时代码段
 
         #region 任务栏图标
 

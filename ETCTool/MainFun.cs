@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Win32;
+
 namespace ETCTool
 {
     public static class MainFun
@@ -25,8 +26,8 @@ namespace ETCTool
                 var rs = new RegistrationServices();
                 if (Start)
                 {
-                    Task.Factory.StartNew(CreatePipeServer);
-             
+                    //Task.Factory.StartNew(CreatePipeServer);
+
                     rs.RegisterAssembly(Assembly.GetAssembly(typeof(FileContextMenuExt)),
                         AssemblyRegistrationFlags.SetCodeBase);
                     using (var key = Registry.CurrentUser.CreateSubKey($@"Software\Classes\*\shellex\ContextMenuHandlers\{clsid}"))
@@ -35,21 +36,21 @@ namespace ETCTool
                     }
                     using (var key = Registry.ClassesRoot.CreateSubKey(@"DesktopBackground\Shell\解密粘贴\Command"))
                     {
-                        key?.SetValue(null, Application.ExecutablePath+" Paste");
+                        key?.SetValue(null, Application.ExecutablePath + " Paste");
                     }
-                    Variables.MainForm.OntherLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->", "文件右键菜单安装成功"});
+                    Variables.MainForm.OntherLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->", "文件右键菜单安装成功" });
                 }
                 else
                 {
                     Registry.CurrentUser?.DeleteSubKeyTree($@"Software\Classes\*\shellex\ContextMenuHandlers\{clsid}");
-                    Registry.ClassesRoot?.DeleteSubKeyTree(@"DesktopBackground\Shell\解密粘贴",false);
+                    Registry.ClassesRoot?.DeleteSubKeyTree(@"DesktopBackground\Shell\解密粘贴", false);
                     rs.UnregisterAssembly(Assembly.GetAssembly(typeof(FileContextMenuExt)));
-                    Variables.MainForm.OntherLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->", "文件右键菜单删除成功"});
+                    Variables.MainForm.OntherLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->", "文件右键菜单删除成功" });
                 }
             }
             catch (Exception e)
             {
-                Variables.MainForm.OntherLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->", $"操作失败，失败原因{e.Message}"});
+                Variables.MainForm.OntherLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->", $"操作失败，失败原因{e.Message}" });
             }
             void CreatePipeServer()
             {
@@ -65,7 +66,7 @@ namespace ETCTool
                         } while (!pipeServer.IsMessageComplete);
                         using (var MemoryStream = new MemoryStream(Read.ToArray()))
                         {
-                            var Ret= new BinaryFormatter().Deserialize(MemoryStream) as string[];
+                            var Ret = new BinaryFormatter().Deserialize(MemoryStream) as string[];
                         }
                     }
                     catch (IOException e)
@@ -76,7 +77,6 @@ namespace ETCTool
             }
         }
 
-    
-        #endregion
+        #endregion 文件加解密功能
     }
 }
