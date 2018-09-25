@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Pipes;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
+using System.Runtime.Remoting.Channels;
+using System.Runtime.Remoting.Channels.Ipc;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading;
@@ -40,14 +43,14 @@ namespace ETCTool
         //注册项目
         public int QueryContextMenu(IntPtr hMenu, uint iMenu, uint idCmdFirst, uint idCmdLast, uint uFlags)
         {
-            new Mutex(true, "ETCTool", out var Close);
+           /* new Mutex(true, "ETCTool", out var Close);
             if (!Close)
             {
-                MainFun.FileDecryptFun(false);
+                FileDecryptMainFun.FileDecryptFun(false);
                 UpdateWindow(GetWindowDC(GetDesktopWindow(IntPtr.Zero)));
                 SHChangeNotify(HChangeNotifyEventID.SHCNE_ALLEVENTS, HChangeNotifyFlags.SHCNF_FLUSH, IntPtr.Zero, IntPtr.Zero);
                 return 0;
-            }
+            }*/
             // If uFlags include CMF_DEFAULTONLY then we should not do anything.
             if (((uint) CMF.CMF_DEFAULTONLY & uFlags) != 0) return 0;
 
@@ -132,46 +135,41 @@ namespace ETCTool
                     LowWord(((CMINVOKECOMMANDINFO) Marshal.PtrToStructure(pici, typeof(CMINVOKECOMMANDINFO))).verb
                         .ToInt32())];
                 if (FilePath.Count == 0) return;
-                switch (Index.Commands)
+                IpcClientChannel channel = new IpcClientChannel();
+                try
                 {
-                    case "Open":
+                    ChannelServices.RegisterChannel(channel, false);
+                    var remoteDataHandle = (RemoteDataHandle)Activator.GetObject(typeof(RemoteDataHandle),
+                        "ipc://EtcToolChannel/RemoteDataHandle");
+                    switch (Index.Commands)
                     {
-
-                        if (FilePath.Count != 1)
+                        case "Open":
                         {
-
-                        }
-                    }
-                        break;
-                    case "Copy":
-                    {
-
-                    }
-                        break;
-                    case "Decrypt":
-                    {
-                        using (var pipeClient = new NamedPipeClientStream("EtcTool")) //创建管道
-                        {
-                            try
+                            if (FilePath.Count != 1)
                             {
-                                    pipeClient.Connect();
-                                if (pipeClient.IsConnected)
-                                {
-                                    using (var MemoryStream = new MemoryStream())
-                                    {
-                                        FilePath.Add("Decrypt");
-                                        new BinaryFormatter().Serialize(MemoryStream, FilePath.ToArray());
-                                        pipeClient.WaitForPipeDrain();
-                                    }
-                                }
+                                remoteDataHandle.Info("只支持打开一个文件");
                             }
-                            catch (IOException e)
+                            else
                             {
-                                Variables.MainForm.OntherLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->", $"管道错误，失败原因{e.Message}" });
+                                remoteDataHandle.Open(FilePath.First());
                             }
                         }
+                            break;
+                        case "Copy":
+                        {
+                            remoteDataHandle.Copy(FilePath.ToArray());
                         }
-                        break;
+                            break;
+                        case "Decrypt":
+                        {
+                            remoteDataHandle.Decrypt(FilePath.First());
+                        }
+                            break;
+                    }
+                }
+                finally
+                {
+                    ChannelServices.UnregisterChannel(channel);
                 }
             }
             catch (Exception e)

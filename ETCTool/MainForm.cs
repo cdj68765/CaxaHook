@@ -26,7 +26,7 @@ using WPFFolderBrowser;
 using static ETCTool.NativeApi;
 using static ETCTool.Variables;
 using Timer = System.Timers.Timer;
-using static ETCTool.MainFun;
+using static ETCTool.FileDecryptMainFun;
 
 namespace ETCTool
 {
@@ -255,58 +255,6 @@ namespace ETCTool
                     if (b == -1) break;
                     Cfile.WriteByte(Convert.ToByte(b));
                 } while (b != -1);
-            }
-
-            using (var pipeServer = new NamedPipeServerStream("mynamedpipe", PipeDirection.InOut)) //创建管道
-            {
-                try
-                {
-                    pipeServer.WaitForConnection(); //等待客户端连接
-                    pipeServer.ReadMode = PipeTransmissionMode.Byte;
-                    Console.WriteLine("sucess connected?" + pipeServer.IsConnected);
-                    var sr = new StreamReader(pipeServer); //获取管道输入流
-                    var sw = new StreamWriter(pipeServer); //获取管道输出流
-                    string result;
-                    while (true) //循环接收客户端消息
-                    {
-                        result = sr.ReadLine();
-                        if (result == null || result == "bye")
-                            break;
-                        Console.WriteLine(result);
-                        sw.WriteLine("I'm Sever!"); //返回客户端信息
-                        sw.Flush(); //清除缓存流，注意必须有这一步，否则会造成管道堵塞
-                    }
-
-                    Console.ReadKey();
-                }
-                catch (IOException e)
-                {
-                    throw e;
-                }
-            }
-
-            using (var pipeStream = new NamedPipeClientStream("localhost", "mynamedpipe")
-            ) //与服务端管道名一致，如果连接C++服务端，名称一致即可，“localhost”可以更换为IP地址，也可以进行网络通信
-            {
-                pipeStream.Connect(); //连接服务端
-                if (!pipeStream.IsConnected)
-                {
-                    Console.WriteLine("Failed to connect ....");
-                    return;
-                }
-
-                var sw = new StreamWriter(pipeStream);
-                var sr = new StreamReader(pipeStream);
-                while (true) //循环输入
-                {
-                    /* input = Console.ReadLine();
-                     Console.WriteLine("SendMessage:" + input);
-                     sw.WriteLine(input);//传递消息到服务端
-                     sw.Flush();//注意一定要有，同服务端一样
-                     string temp = "";
-                     temp = sr.ReadLine();//获取服务端返回信息
-                     Console.WriteLine("replyContent:" + temp);*/
-                }
             }
         }
 
