@@ -240,9 +240,6 @@ namespace ETCTool
 
         private void 管道通讯()
         {
-            var memoryFile = MemoryMappedFile.CreateFromFile(@"C:\Users\Administrator\Desktop\FA7-10B-A10-N003.pdf",
-                FileMode.Open, "MyFile");
-            var stream = memoryFile.CreateViewStream();
             using (var Cfile = new FileStream(@"C:\Users\Administrator\Desktop\FA7-10B-A10-N003-2.pdf",
                 FileMode.OpenOrCreate))
             {
