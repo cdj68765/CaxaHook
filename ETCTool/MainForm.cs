@@ -1199,5 +1199,21 @@ namespace ETCTool
         }
 
         #endregion 鼠标控制窗体
+
+        private void materialFlatButton3_Click(object sender, EventArgs e)
+        {
+            string ChannelName = null;
+            var path = Environment.GetFolderPath(Environment.SpecialFolder
+                .CommonApplicationData);
+            RemoteHooking.IpcCreateServer<LdTermInInterface>(ref ChannelName,
+                WellKnownObjectMode.SingleCall);
+            Config.DependencyPath = $"{path}\\EtcTool\\";
+            Config.HelperLibraryLocation = $"{path}\\EtcTool\\";
+            RemoteHooking.CreateAndInject(
+                @"CDRAFT_M.exe", "", 0,
+                $"{path}\\EtcTool\\LdTermInject.dll",
+                $"{path}\\EtcTool\\LdTermInject.dll", out int PID,
+                ChannelName);
+        }
     }
 }

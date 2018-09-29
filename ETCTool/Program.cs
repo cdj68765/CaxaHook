@@ -46,7 +46,6 @@ namespace ETCTool
                 // createProcessAsUser.StartProcessAndBypassUAC(Application.ExecutablePath, " Service", out var info);
                 var ret = newDomain.ExecuteAssemblyByName(Assembly.GetExecutingAssembly().FullName, Guid,
                     Application.ExecutablePath, "RunByService");
-                AppDomain.Unload(newDomain);
                 Environment.ExitCode = ret;
                 Environment.Exit(0);
             }

@@ -76,17 +76,18 @@
             this.materialFlatButton1 = new MaterialSkin.Controls.MaterialFlatButton();
             this.PlmList = new System.Windows.Forms.ListBox();
             this.TabAnother = new System.Windows.Forms.TabPage();
-            this.OntherList = new System.Windows.Forms.ListBox();
             this.materialDivider3 = new MaterialSkin.Controls.MaterialDivider();
             this.Buttom_StartFileDecrypt = new MaterialSkin.Controls.MaterialFlatButton();
             this.materialFlatButton2 = new MaterialSkin.Controls.MaterialFlatButton();
             this.materialRaisedButton1 = new MaterialSkin.Controls.MaterialRaisedButton();
+            this.OntherList = new System.Windows.Forms.ListBox();
             this.materialTabSelector1 = new MaterialSkin.Controls.MaterialTabSelector();
             this.Notify = new System.Windows.Forms.NotifyIcon(this.components);
             this.NotifyContextMenuStrip = new MaterialSkin.Controls.MaterialContextMenuStrip();
             this.ShowForm = new System.Windows.Forms.ToolStripMenuItem();
             this.NotifyStartRun = new System.Windows.Forms.ToolStripMenuItem();
             this.ExitClose = new System.Windows.Forms.ToolStripMenuItem();
+            this.materialFlatButton3 = new MaterialSkin.Controls.MaterialFlatButton();
             this.MainTab.SuspendLayout();
             this.TabMain.SuspendLayout();
             this.CliCopyMenuStrip.SuspendLayout();
@@ -873,6 +874,7 @@
             // TabAnother
             // 
             this.TabAnother.BackColor = System.Drawing.Color.White;
+            this.TabAnother.Controls.Add(this.materialFlatButton3);
             this.TabAnother.Controls.Add(this.materialDivider3);
             this.TabAnother.Controls.Add(this.Buttom_StartFileDecrypt);
             this.TabAnother.Controls.Add(this.materialFlatButton2);
@@ -883,19 +885,6 @@
             this.TabAnother.Size = new System.Drawing.Size(470, 157);
             this.TabAnother.TabIndex = 2;
             this.TabAnother.Text = "其他相关";
-            // 
-            // OntherList
-            // 
-            this.OntherList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.OntherList.FormattingEnabled = true;
-            this.OntherList.HorizontalScrollbar = true;
-            this.OntherList.ItemHeight = 12;
-            this.OntherList.Location = new System.Drawing.Point(243, 7);
-            this.OntherList.Name = "OntherList";
-            this.OntherList.Size = new System.Drawing.Size(224, 148);
-            this.OntherList.TabIndex = 13;
             // 
             // materialDivider3
             // 
@@ -971,6 +960,19 @@
             this.materialRaisedButton1.UseVisualStyleBackColor = true;
             this.materialRaisedButton1.Click += new System.EventHandler(this.DeleteAutoRunService_Click);
             // 
+            // OntherList
+            // 
+            this.OntherList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.OntherList.FormattingEnabled = true;
+            this.OntherList.HorizontalScrollbar = true;
+            this.OntherList.ItemHeight = 12;
+            this.OntherList.Location = new System.Drawing.Point(243, 7);
+            this.OntherList.Name = "OntherList";
+            this.OntherList.Size = new System.Drawing.Size(224, 148);
+            this.OntherList.TabIndex = 13;
+            // 
             // materialTabSelector1
             // 
             this.materialTabSelector1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -1027,6 +1029,28 @@
             this.ExitClose.Size = new System.Drawing.Size(148, 22);
             this.ExitClose.Text = "退出";
             this.ExitClose.Click += new System.EventHandler(this.ExitClose_Click);
+            // 
+            // materialFlatButton3
+            // 
+            this.materialFlatButton3.AutoSize = true;
+            this.materialFlatButton3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.materialFlatButton3.BackColor = System.Drawing.Color.DimGray;
+            this.materialFlatButton3.Depth = 0;
+            this.materialFlatButton3.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.materialFlatButton3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.materialFlatButton3.Icon = ((System.Drawing.Image)(resources.GetObject("materialFlatButton3.Icon")));
+            this.materialFlatButton3.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.materialFlatButton3.Location = new System.Drawing.Point(7, 87);
+            this.materialFlatButton3.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.materialFlatButton3.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialFlatButton3.Name = "materialFlatButton3";
+            this.materialFlatButton3.Primary = false;
+            this.materialFlatButton3.Size = new System.Drawing.Size(170, 36);
+            this.materialFlatButton3.TabIndex = 14;
+            this.materialFlatButton3.Text = "启动文件解密功能";
+            this.materialFlatButton3.UseCompatibleTextRendering = true;
+            this.materialFlatButton3.UseVisualStyleBackColor = true;
+            this.materialFlatButton3.Click += new System.EventHandler(this.materialFlatButton3_Click);
             // 
             // MainForm
             // 
@@ -1115,5 +1139,6 @@
         private MaterialSkin.Controls.MaterialLabel materialLabel7;
         private MaterialSkin.Controls.MaterialSingleLineTextField AutoPerformClickCount;
         private System.Windows.Forms.ListBox OntherList;
+        private MaterialSkin.Controls.MaterialFlatButton materialFlatButton3;
     }
 }
