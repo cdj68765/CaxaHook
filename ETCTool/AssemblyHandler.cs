@@ -45,11 +45,11 @@ namespace ETCTool
                     finally
                     {
                     }
-            if (!File.Exists($"{Ass.FullName}\\CDRAFT_M.exe"))
+            if (!File.Exists($"{Ass.FullName}\\Crx.dll"))
             {
                 DeCompressMulti(Ass.FullName);
             }
-          
+
             Directory.SetCurrentDirectory(Ass.FullName);
             void SaveToDisk(string fullName, string v)
             {
