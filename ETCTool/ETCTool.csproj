@@ -225,7 +225,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="PlmInject.dll" />
-    <EmbeddedResource Include="CDRAFT_M.exe" />
     <EmbeddedResource Include="LdTermInject.dll" />
     <Content Include="System_preferences_tool_tools_128px_581754_easyicon.net.ico" />
     <EmbeddedResource Include="WPFFolderBrowser.dll" />

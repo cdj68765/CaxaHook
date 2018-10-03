@@ -142,7 +142,11 @@ namespace ETCTool
             CLICurrentText.MouseDown += delegate //复制历史剪切板文本
             {
                 ClipbrdMonitor.Onice = false;
-                ClipbrdMonitor.SetText(CliLog[CaxaList.SelectedIndex][1]);
+                if (!OpenClipboard(IntPtr.Zero))
+                {
+                    ClipbrdMonitor.SetText(CliLog[CaxaList.SelectedIndex][1]);
+                }
+                CloseClipboard();
             };
             AutoSaveLog = new BindingList<string[]>();
             AutoSaveLog.ListChanged += (s, d) =>
@@ -236,23 +240,6 @@ namespace ETCTool
                         ShowInTaskbar = false;
             };
             this.FormClosing += delegate { FileDecryptFun(false); };
-        }
-
-        private void 管道通讯()
-        {
-            using (var Cfile = new FileStream(@"C:\Users\Administrator\Desktop\FA7-10B-A10-N003-2.pdf",
-                FileMode.OpenOrCreate))
-            {
-                var file = MemoryMappedFile.OpenExisting("MyFile");
-                var accessor = file.CreateViewStream();
-                var b = -1;
-                do
-                {
-                    b = accessor.ReadByte();
-                    if (b == -1) break;
-                    Cfile.WriteByte(Convert.ToByte(b));
-                } while (b != -1);
-            }
         }
 
         private bool CheckAutoRun()
@@ -1200,20 +1187,5 @@ namespace ETCTool
 
         #endregion 鼠标控制窗体
 
-        private void materialFlatButton3_Click(object sender, EventArgs e)
-        {
-            string ChannelName = null;
-            var path = Environment.GetFolderPath(Environment.SpecialFolder
-                .CommonApplicationData);
-            RemoteHooking.IpcCreateServer<LdTermInInterface>(ref ChannelName,
-                WellKnownObjectMode.SingleCall);
-            Config.DependencyPath = $"{path}\\EtcTool\\";
-            Config.HelperLibraryLocation = $"{path}\\EtcTool\\";
-            RemoteHooking.CreateAndInject(
-                @"CDRAFT_M.exe", "", 0,
-                $"{path}\\EtcTool\\LdTermInject.dll",
-                $"{path}\\EtcTool\\LdTermInject.dll", out int PID,
-                ChannelName);
-        }
     }
 }

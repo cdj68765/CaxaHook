@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Specialized;
 using System.IO;
+using System.Runtime.Remoting.Channels.Ipc;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
 
@@ -16,6 +17,7 @@ namespace ETCTool
         internal static int AutoPerformClickCount;
         internal static NativeApi.Point TheLastMouseCursor;
         internal static bool FileDecryptStart;
+        internal static IpcClientChannel ChannelServices;
     }
 
     [Serializable]

@@ -4,8 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
+using System.Runtime.Remoting.Channels;
+using System.Runtime.Remoting.Channels.Ipc;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using EasyHook;
 using ETCTool;
 using FILETIME = System.Runtime.InteropServices.ComTypes.FILETIME;
@@ -23,7 +26,7 @@ namespace LdTermInject
         {
             Interface = RemoteHooking.IpcConnectClient<LdTermInInterface>(InChannelName);
         }
-
+          readonly TaskCompletionSource<uint> ShutdownResetEvent = new TaskCompletionSource<uint>();
         public void Run(
             RemoteHooking.IContext InContext,
             string InChannelName)
@@ -32,19 +35,9 @@ namespace LdTermInject
             {
                 CreateHook = LocalHook.Create(LocalHook.GetProcAddress("kernel32.dll", "LoadLibraryW"),
                     new GetSystemTimeAsFileTimeEx(GetSystemTimeAsFileTimeEx_Hooked), this);
-
                 CreateHook.ThreadACL.SetExclusiveACL(new[] { 0 });
-                Interface.Info($"安装成功,当前线程:{RemoteHooking.GetCurrentThreadId()}");
                 RemoteHooking.WakeUpProcess();
-                Thread.Sleep(100);
-                /* while (true)
-                 {
-                     Thread.Sleep(10000);
-                 }*/
-
-                ExitProcess(0);
-
-                Interface.Info($"进程关闭");
+                ExitProcess(ShutdownResetEvent.Task.Result);
             }
             catch (Exception ex)
             {
@@ -52,9 +45,10 @@ namespace LdTermInject
             }
             finally
             {
+                LocalHook.Release();
                 CreateHook.Dispose();
             }
-            LocalHook.Release();
+     
         }
 
         [DllImport("kernel32.dll")]
@@ -63,18 +57,34 @@ namespace LdTermInject
         private IntPtr GetSystemTimeAsFileTimeEx_Hooked(string LoadLibraryW)
         {
             var This = (Main)HookRuntimeInfo.Callback;
-            var Coun = 0;
-            while (Coun <= 10)
+            try
             {
-                Interface.Info($"当前Count:{Coun}");
-                var retd = File.ReadAllBytes(@"C:\Users\Administrator\Desktop\TEST\0.FA2-6D开关老结构设计总图23.exb");
-                Interface.Info($"{DateTime.Now:hh:mm:ss}->2+{retd[0]}-{retd[1]}-{retd[2]}");
-                Thread.Sleep(1000);
-                Coun++;
+                var remoteDataHandle = (RemoteDataHandle) Activator.GetObject(typeof(RemoteDataHandle),
+                    "ipc://EtcToolChannel/RemoteDataHandle");
+                if (remoteDataHandle.OperaMode == "Open")
+                {
+                    var path = remoteDataHandle.FilePath;
+                    This.Interface.RetOpenDate(remoteDataHandle.FilePath, File.ReadAllBytes(path), remoteDataHandle.OperaMode);
+                }
+                else
+                {
+                    This.Interface.BatchFileOpera(remoteDataHandle.OperaMode);
+                    foreach (var VARIABLE in remoteDataHandle.FileList)
+                    {
+                        This.Interface.RetOpenDate(VARIABLE,File.ReadAllBytes(VARIABLE), remoteDataHandle.OperaMode);
+                    }
+                }
             }
-            Interface.Info($"退出Get");
-            ExitProcess(0);
-            var Ret = LocalHook.GetProcDelegate<GetSystemTimeAsFileTimeEx>("kernel32.dll", "LoadLibraryW");
+            catch (Exception E)
+            {
+                This.Interface.Info($"发生错误{E}");
+            }
+            finally
+            {
+                ShutdownResetEvent.TrySetResult(0);
+            }
+           
+        
             return IntPtr.Zero;
         }
 

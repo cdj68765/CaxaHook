@@ -22,90 +22,70 @@ using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.FileIO;
 using FileSystem = Microsoft.VisualBasic.FileIO.FileSystem;
 using System.IO.MemoryMappedFiles;
+using EasyHook;
 
 namespace ETCTool
 {
     public class RemoteDataHandle : MarshalByRefObject
     {
-        public RemoteDataHandle()
-        {
-        }
 
-        public void RetDate(string Path, byte[] Date)
+        void StartHook()
         {
             try
             {
-                Variables.MainForm.OntherLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->", $"返回数据{Path}" });
-                Variables.MainForm.OntherLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->", $"返回数据{Date.Length}" });
-                /* FileSystem.DeleteFile(Path, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
-                 File.WriteAllBytes(Path, Date);*/
-                using (var FileStream = new FileStream(Path, FileMode.Truncate, FileAccess.ReadWrite))
-                {
-                    Variables.MainForm.OntherLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->", $"返回数据{Convert.ToByte(Date[0])}-{Convert.ToByte(Date[1])}-{Convert.ToByte(Date[2])}" });
-                    FileStream.Write(Date, 0, Date.Length);
-                }
-                /* using (var FileStream = new FileStream(Path, FileMode.Open))
-                 {
-                     Variables.MainForm.OntherLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->", $"返回数据2{Convert.ToByte(FileStream.ReadByte())}-{Convert.ToByte(FileStream.ReadByte())}-{Convert.ToByte(FileStream.ReadByte())}" });
-                 }*/
+                string ChannelName = null;
+                var path = Environment.GetFolderPath(Environment.SpecialFolder
+                    .CommonApplicationData);
+                RemoteHooking.IpcCreateServer<LdTermInInterface>(ref ChannelName,
+                    WellKnownObjectMode.SingleCall);
+                Config.DependencyPath = $"{path}\\EtcTool\\";
+                Config.HelperLibraryLocation = $"{path}\\EtcTool\\";
+                RemoteHooking.CreateAndInject(
+                    @"CDRAFT_M.exe", "", 0,
+                    $"{path}\\EtcTool\\LdTermInject.dll",
+                    $"{path}\\EtcTool\\LdTermInject.dll", out int PID,
+                    ChannelName);
             }
             catch (Exception e)
             {
-                Variables.MainForm.OntherLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->", $"错误{e.Message}" });
+                Variables.MainForm.OntherLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->发生错误", $"{e}" });
             }
         }
-
-        public void Save(string p)
-        {
-            using (var Cfile = new FileStream(p + "b", FileMode.CreateNew))
-            {
-                var file = MemoryMappedFile.OpenExisting(Path.GetFileName(p));
-                Variables.MainForm.OntherLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->", $"激活" });
-                var accessor = file.CreateViewStream();
-                var b = -1;
-                do
-                {
-                    b = accessor.ReadByte();
-                    if (b == -1) break;
-                    Cfile.WriteByte(Convert.ToByte(b));
-                } while (b != -1);
-                Variables.MainForm.OntherLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->", $"传送完毕" });
-            }
-        }
-
         public void Info(string info)
         {
-            Variables.MainForm.OntherLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->", $"{info}" });
+            Variables.MainForm.OntherLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->", $"{info}"});
         }
 
-        public string FIlePath;
-
-        public void Open(string path)
+        public  string FilePath;
+        public string OperaMode;
+        public void Open(string Path)
         {
-            FIlePath = path;
-            Variables.MainForm.OntherLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->", $"打开文件{Path.GetFileName(path)}" });
-            Process process = new Process();
-            ProcessStartInfo startInfo = new ProcessStartInfo
-            {
-                FileName = "CDRAFT_M.exe",
-                // Arguments = path, //设定参数，其中的“/C”表示执行完命令后马上退出
-                UseShellExecute = false, //不使用系统外壳程序启动
-                RedirectStandardInput = true, //不重定向输入
-                RedirectStandardOutput = true, //重定向输出
-                CreateNoWindow = true //不创建窗口
-            };
-            process.StartInfo = startInfo;
-            process.Start();
+            FilePath = Path;
+            OperaMode = "Open";
+            StartHook();
         }
 
         public void Copy(string[] paths)
         {
-            Variables.MainForm.OntherLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->", $"启动复制文件模式" });
+            StartHook();
+            OperaMode = "Copy";
+            FileList = new List<string>();
+            foreach (var VARIABLE in paths)
+            {
+                if (File.Exists(VARIABLE)) FileList.Add(VARIABLE);
+            }
         }
 
-        public void Decrypt(string paths)
+        public List<string> FileList = new List<string>();
+        public void Decrypt(string[] paths)
         {
-            Variables.MainForm.OntherLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->", $"启动解密文件模式" });
+            OperaMode = "Decrypt";
+            FileList = new List<string>();
+            foreach (var VARIABLE in paths)
+            {
+                if (File.Exists(VARIABLE)) FileList.Add(VARIABLE);
+            }
+            StartHook();
         }
     }
 
@@ -141,7 +121,7 @@ namespace ETCTool
                         key?.SetValue(null, Application.ExecutablePath + " Paste");
                     }
 
-                    Variables.MainForm.OntherLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->", "文件右键菜单安装成功" });
+                    Variables.MainForm.OntherLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->", "文件右键菜单安装成功"});
                 }
                 else
                 {
@@ -150,12 +130,12 @@ namespace ETCTool
                     Registry.CurrentUser?.DeleteSubKeyTree($@"Software\Classes\*\shellex\ContextMenuHandlers\{clsid}");
                     Registry.ClassesRoot?.DeleteSubKeyTree(@"DesktopBackground\Shell\解密粘贴", false);
                     rs.UnregisterAssembly(Assembly.GetAssembly(typeof(FileContextMenuExt)));
-                    Variables.MainForm.OntherLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->", "文件右键菜单删除成功" });
+                    Variables.MainForm.OntherLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->", "文件右键菜单删除成功"});
                 }
             }
             catch (Exception e)
             {
-                Variables.MainForm.OntherLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->", $"操作失败，失败原因{e.Message}" });
+                Variables.MainForm.OntherLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->", $"操作失败，失败原因{e.Message}"});
             }
 
             void CreateIpcServer()
@@ -165,11 +145,11 @@ namespace ETCTool
                     ChannelServices.RegisterChannel(channel, false);
                     RemotingConfiguration.RegisterWellKnownServiceType(typeof(RemoteDataHandle), "RemoteDataHandle",
                         WellKnownObjectMode.Singleton);
-                    Variables.MainForm.OntherLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->", $"管道监听启动完毕" });
+                    Variables.MainForm.OntherLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->", $"管道监听启动完毕"});
                 }
                 catch (IOException e)
                 {
-                    Variables.MainForm.OntherLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->", $"管道错误，失败原因{e.Message}" });
+                    Variables.MainForm.OntherLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->", $"管道错误，失败原因{e.Message}"});
                 }
             }
 

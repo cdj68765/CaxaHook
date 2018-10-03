@@ -135,10 +135,9 @@ namespace ETCTool
                     LowWord(((CMINVOKECOMMANDINFO) Marshal.PtrToStructure(pici, typeof(CMINVOKECOMMANDINFO))).verb
                         .ToInt32())];
                 if (FilePath.Count == 0) return;
-                IpcClientChannel channel = new IpcClientChannel();
+      
                 try
                 {
-                    ChannelServices.RegisterChannel(channel, false);
                     var remoteDataHandle = (RemoteDataHandle)Activator.GetObject(typeof(RemoteDataHandle),
                         "ipc://EtcToolChannel/RemoteDataHandle");
                     switch (Index.Commands)
@@ -162,14 +161,13 @@ namespace ETCTool
                             break;
                         case "Decrypt":
                         {
-                            remoteDataHandle.Decrypt(FilePath.First());
+                            remoteDataHandle.Decrypt(FilePath.ToArray());
                         }
                             break;
                     }
                 }
                 finally
                 {
-                    ChannelServices.UnregisterChannel(channel);
                 }
             }
             catch (Exception e)

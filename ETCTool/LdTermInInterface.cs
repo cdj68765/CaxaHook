@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -11,13 +13,39 @@ namespace ETCTool
     {
         public void Info(string v)
         {
-            Variables.MainForm.OntherLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->{v}", "" });
+            Variables.MainForm.OntherLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->{v}", ""});
         }
 
-        public void ReadFile()
+        public void RetOpenDate(string filePath, byte[] v, string operaMode)
         {
-            var retd = File.ReadAllBytes(@"C:\Users\Administrator\Desktop\TEST\1.pdf");
-            Variables.MainForm.OntherLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->2+{retd[0]}-{retd[1]}-{retd[2]}", "" });
+            try
+            {
+                File.WriteAllBytes(filePath, v);
+            }
+            catch (Exception e)
+            {
+
+                Variables.MainForm.OntherLog.Add(
+                    new[] {$"{DateTime.Now:hh:mm:ss}->{e.Message}", $""});
+                return;
+            }
+
+            if (operaMode == "Open")
+            {
+                Variables.MainForm.OntherLog.Add(
+                    new[] {$"{DateTime.Now:hh:mm:ss}->打开文件{filePath}", $"{v[0]}-{v[1]}-{v[2]}"});
+                Process.Start(filePath);
+            }
+            else
+            {
+                Variables.MainForm.OntherLog.Add(
+                    new[] { $"{DateTime.Now:hh:mm:ss}->解密文件{filePath}", $"{v[0]}-{v[1]}-{v[2]}" });
+            }
+
+        }
+
+        public void BatchFileOpera(string operaMode)
+        {
         }
     }
 }
