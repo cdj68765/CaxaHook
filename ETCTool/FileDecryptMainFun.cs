@@ -1,35 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.IO.Pipes;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Ipc;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Win32;
-
-using System.IO;
-
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.FileIO;
-using FileSystem = Microsoft.VisualBasic.FileIO.FileSystem;
-using System.IO.MemoryMappedFiles;
 using EasyHook;
 
 namespace ETCTool
 {
     public class RemoteDataHandle : MarshalByRefObject
     {
+        public string FilePath;
+        public string OperaMode;
+        public List<string> FileList = new List<string>();
+        public Dictionary<string, byte[]> CopyData = new Dictionary<string, byte[]>();
 
-        void StartHook()
+        private void StartHook()
         {
             try
             {
@@ -51,13 +41,12 @@ namespace ETCTool
                 Variables.MainForm.OntherLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->发生错误", $"{e}" });
             }
         }
+
         public void Info(string info)
         {
-            Variables.MainForm.OntherLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->", $"{info}"});
+            Variables.MainForm.OntherLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->", $"{info}" });
         }
 
-        public  string FilePath;
-        public string OperaMode;
         public void Open(string Path)
         {
             FilePath = Path;
@@ -67,16 +56,16 @@ namespace ETCTool
 
         public void Copy(string[] paths)
         {
-            StartHook();
             OperaMode = "Copy";
             FileList = new List<string>();
             foreach (var VARIABLE in paths)
             {
                 if (File.Exists(VARIABLE)) FileList.Add(VARIABLE);
             }
+            Info($"复制文件数量{paths.Length}");
+            StartHook();
         }
 
-        public List<string> FileList = new List<string>();
         public void Decrypt(string[] paths)
         {
             OperaMode = "Decrypt";
@@ -87,14 +76,19 @@ namespace ETCTool
             }
             StartHook();
         }
+
+        public void AddToCopyData(string v1, byte[] v2)
+        {
+            CopyData.Add(v1, v2);
+        }
     }
 
     public static class FileDecryptMainFun
     {
         #region 文件加解密功能
 
-        private static CancellationTokenSource cancel = new CancellationTokenSource();
-        private static IpcServerChannel channel = new IpcServerChannel("EtcToolChannel");
+        // private static CancellationTokenSource cancel = new CancellationTokenSource();
+        public static IpcServerChannel channel = new IpcServerChannel("EtcTool", "EtcToolChannel");
 
         public static void FileDecryptFun(bool Start)
         {
@@ -105,9 +99,7 @@ namespace ETCTool
                 var rs = new RegistrationServices();
                 if (Start)
                 {
-                    cancel = new CancellationTokenSource();
-                    Task.Factory.StartNew(CreateIpcServer, cancel.Token, TaskCreationOptions.LongRunning,
-                        TaskScheduler.Default);
+                    CreateIpcServer();
                     rs.RegisterAssembly(Assembly.GetAssembly(typeof(FileContextMenuExt)),
                         AssemblyRegistrationFlags.SetCodeBase);
                     using (var key =
@@ -115,41 +107,40 @@ namespace ETCTool
                     {
                         key?.SetValue(null, clsid);
                     }
-
-                    using (var key = Registry.ClassesRoot.CreateSubKey(@"DesktopBackground\Shell\解密粘贴\Command"))
+                    using (var key = Registry.ClassesRoot.CreateSubKey(@"Directory\Background\shell\解密粘贴\Command"))
                     {
-                        key?.SetValue(null, Application.ExecutablePath + " Paste");
+                        key?.SetValue(null, $"\"{Application.ExecutablePath}\" Copy \"%V\"");
                     }
-
-                    Variables.MainForm.OntherLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->", "文件右键菜单安装成功"});
+                    Variables.MainForm.OntherLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->", "文件右键菜单安装成功" });
                 }
                 else
                 {
-                    cancel.Cancel();
-                    ChannelServices.UnregisterChannel(channel);
                     Registry.CurrentUser?.DeleteSubKeyTree($@"Software\Classes\*\shellex\ContextMenuHandlers\{clsid}");
-                    Registry.ClassesRoot?.DeleteSubKeyTree(@"DesktopBackground\Shell\解密粘贴", false);
+                    Registry.ClassesRoot?.DeleteSubKeyTree(@"Directory\Background\shell\解密粘贴", false);
                     rs.UnregisterAssembly(Assembly.GetAssembly(typeof(FileContextMenuExt)));
-                    Variables.MainForm.OntherLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->", "文件右键菜单删除成功"});
+                    Variables.MainForm.OntherLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->", "文件右键菜单删除成功" });
                 }
             }
             catch (Exception e)
             {
-                Variables.MainForm.OntherLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->", $"操作失败，失败原因{e.Message}"});
+                Variables.MainForm.OntherLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->", $"操作失败，失败原因{e.Message}" });
             }
 
             void CreateIpcServer()
             {
                 try
                 {
-                    ChannelServices.RegisterChannel(channel, false);
-                    RemotingConfiguration.RegisterWellKnownServiceType(typeof(RemoteDataHandle), "RemoteDataHandle",
-                        WellKnownObjectMode.Singleton);
-                    Variables.MainForm.OntherLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->", $"管道监听启动完毕"});
+                    if (ChannelServices.GetChannel(channel.ChannelName) == null)
+                    {
+                        ChannelServices.RegisterChannel(channel, false);
+                        RemotingConfiguration.RegisterWellKnownServiceType(typeof(RemoteDataHandle), "RemoteDataHandle",
+                            WellKnownObjectMode.Singleton);
+                        Variables.MainForm.OntherLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->", $"管道监听启动完毕" });
+                    }
                 }
                 catch (IOException e)
                 {
-                    Variables.MainForm.OntherLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->", $"管道错误，失败原因{e.Message}"});
+                    Variables.MainForm.OntherLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->", $"管道错误，失败原因{e.Message}" });
                 }
             }
 

@@ -26,7 +26,9 @@ namespace LdTermInject
         {
             Interface = RemoteHooking.IpcConnectClient<LdTermInInterface>(InChannelName);
         }
-          readonly TaskCompletionSource<uint> ShutdownResetEvent = new TaskCompletionSource<uint>();
+
+        private readonly TaskCompletionSource<uint> ShutdownResetEvent = new TaskCompletionSource<uint>();
+
         public void Run(
             RemoteHooking.IContext InContext,
             string InChannelName)
@@ -48,7 +50,6 @@ namespace LdTermInject
                 LocalHook.Release();
                 CreateHook.Dispose();
             }
-     
         }
 
         [DllImport("kernel32.dll")]
@@ -59,19 +60,26 @@ namespace LdTermInject
             var This = (Main)HookRuntimeInfo.Callback;
             try
             {
-                var remoteDataHandle = (RemoteDataHandle) Activator.GetObject(typeof(RemoteDataHandle),
+                var remoteDataHandle = (RemoteDataHandle)Activator.GetObject(typeof(RemoteDataHandle),
                     "ipc://EtcToolChannel/RemoteDataHandle");
                 if (remoteDataHandle.OperaMode == "Open")
                 {
                     var path = remoteDataHandle.FilePath;
                     This.Interface.RetOpenDate(remoteDataHandle.FilePath, File.ReadAllBytes(path), remoteDataHandle.OperaMode);
                 }
-                else
+                else if (remoteDataHandle.OperaMode == "Decrypt")
                 {
-                    This.Interface.BatchFileOpera(remoteDataHandle.OperaMode);
                     foreach (var VARIABLE in remoteDataHandle.FileList)
                     {
-                        This.Interface.RetOpenDate(VARIABLE,File.ReadAllBytes(VARIABLE), remoteDataHandle.OperaMode);
+                        This.Interface.RetOpenDate(VARIABLE, File.ReadAllBytes(VARIABLE), remoteDataHandle.OperaMode);
+                    }
+                }
+                else if (remoteDataHandle.OperaMode == "Copy")
+                {
+                    remoteDataHandle.CopyData = new Dictionary<string, byte[]>();
+                    foreach (var VARIABLE in remoteDataHandle.FileList)
+                    {
+                        remoteDataHandle.AddToCopyData($@"\{Path.GetFileName(VARIABLE)}", File.ReadAllBytes(VARIABLE));
                     }
                 }
             }
@@ -83,8 +91,7 @@ namespace LdTermInject
             {
                 ShutdownResetEvent.TrySetResult(0);
             }
-           
-        
+
             return IntPtr.Zero;
         }
 

@@ -30,13 +30,13 @@ namespace ETCTool
                 catch (Exception) { }
             }
 
-            if (!File.Exists($"{Ass}\\EasyLoad64.dll") || true)
+            if (!File.Exists($"{Ass}\\EasyLoad64.dll"))
                 foreach (var VARIABLE in new[]
                 {
                     "EasyHook32.dll", "EasyHook32Svc.exe", "EasyLoad32.dll",
                     "EasyHook64Svc.exe", "EasyHook64.dll", "EasyLoad64.dll",
                     "MaterialSkin.dll", "EasyHook.dll", "CaxaInject.dll",
-                    "PlmInject.dll", "WPFFolderBrowser.dll", /*"CDRAFT_M.exe"*/"LdTermInject.dll"
+                    "PlmInject.dll", "WPFFolderBrowser.dll", "LdTermInject.dll"
                 })
                     try
                     {
@@ -70,7 +70,6 @@ namespace ETCTool
                 {
                 }
             }
-
             void DeCompressMulti(string DirPath)
             {
                 byte[] fileSize = new byte[4];

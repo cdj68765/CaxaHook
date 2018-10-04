@@ -13,7 +13,7 @@ namespace ETCTool
     {
         public void Info(string v)
         {
-            Variables.MainForm.OntherLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->{v}", ""});
+            Variables.MainForm.OntherLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->{v}", "" });
         }
 
         public void RetOpenDate(string filePath, byte[] v, string operaMode)
@@ -24,28 +24,22 @@ namespace ETCTool
             }
             catch (Exception e)
             {
-
                 Variables.MainForm.OntherLog.Add(
-                    new[] {$"{DateTime.Now:hh:mm:ss}->{e.Message}", $""});
+                    new[] { $"{DateTime.Now:hh:mm:ss}->{e.Message}", $"" });
                 return;
             }
 
             if (operaMode == "Open")
             {
                 Variables.MainForm.OntherLog.Add(
-                    new[] {$"{DateTime.Now:hh:mm:ss}->打开文件{filePath}", $"{v[0]}-{v[1]}-{v[2]}"});
+                    new[] { $"{DateTime.Now:hh:mm:ss}->打开文件{filePath}", $"" });
                 Process.Start(filePath);
             }
             else
             {
                 Variables.MainForm.OntherLog.Add(
-                    new[] { $"{DateTime.Now:hh:mm:ss}->解密文件{filePath}", $"{v[0]}-{v[1]}-{v[2]}" });
+                    new[] { $"{DateTime.Now:hh:mm:ss}->解密文件{filePath}", $"" });
             }
-
-        }
-
-        public void BatchFileOpera(string operaMode)
-        {
         }
     }
 }

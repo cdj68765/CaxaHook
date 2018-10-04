@@ -1,9 +1,11 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.ServiceProcess;
 using System.Threading;
 using System.Windows.Forms;
+using static ETCTool.NativeApi;
 
 namespace ETCTool
 {
@@ -18,9 +20,26 @@ namespace ETCTool
                 return;
             }
 
-            if (args.Length != 0 && args[0] == "Paste")
+            if (args.Length != 0 && args[0] == "Copy")
             {
-                MessageBox.Show("Paste");
+                try
+                {
+                    var remoteDataHandle = (RemoteDataHandle)Activator.GetObject(typeof(RemoteDataHandle), "ipc://EtcToolChannel/RemoteDataHandle");
+                    foreach (var item in remoteDataHandle.CopyData)
+                    {
+                        var TempFile = $"{args[1]}{item.Key}".Replace("\"", "");
+                        File.WriteAllBytes(TempFile, item.Value);
+                        remoteDataHandle.Info($"{TempFile}粘贴完成");
+                    }
+                    UpdateWindow(GetWindowDC(GetDesktopWindow()));
+                    SHChangeNotify(HChangeNotifyEventID.SHCNE_ALLEVENTS, HChangeNotifyFlags.SHCNF_FLUSH, IntPtr.Zero, IntPtr.Zero);
+                    remoteDataHandle.CopyData.Clear();
+                    GC.Collect();
+                }
+                catch (Exception E)
+                {
+                    MessageBox.Show(E.Message);
+                }
                 return;
             }
 
@@ -33,7 +52,7 @@ namespace ETCTool
             }
 
             var path = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
-            var Guid = ((GuidAttribute) Attribute.GetCustomAttribute(Assembly.GetExecutingAssembly(),
+            var Guid = ((GuidAttribute)Attribute.GetCustomAttribute(Assembly.GetExecutingAssembly(),
                 typeof(GuidAttribute))).Value;
             if (args.Length == 0 || args[0] == "Service") AssemblyHandler.AssemblyFileSaveToCaxaAutoSave(path);
             if (AppDomain.CurrentDomain.IsDefaultAppDomain() && args.Length == 0 || args[0] == "Service")

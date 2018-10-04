@@ -108,7 +108,7 @@ namespace ETCTool
         [DllImport("user32.dll")]
         public static extern IntPtr GetWindow(IntPtr hwnd, uint wMsg);
 
-        #endregion
+        #endregion PLM接管用相关API
 
         #region 文件右键管理用API
 
@@ -300,8 +300,7 @@ namespace ETCTool
             SHCNE_UPDATEIMAGE = 0x00008000,
         }
 
-        #endregion
-
+        #endregion 各种结构体
 
         [DllImport("user32", CharSet = CharSet.Unicode, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -335,6 +334,9 @@ namespace ETCTool
         public static extern void SHChangeNotify(HChangeNotifyEventID wEventId, HChangeNotifyFlags uFlags,
             IntPtr dwItem1, IntPtr dwItem2);
 
-        #endregion
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern IntPtr GetDesktopWindow();
+
+        #endregion 文件右键管理用API
     }
 }

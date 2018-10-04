@@ -1,24 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.IO.Pipes;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
-using System.Runtime.Remoting.Channels;
-using System.Runtime.Remoting.Channels.Ipc;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Microsoft.Win32;
 using static ETCTool.NativeApi;
 using IDataObject = System.Runtime.InteropServices.ComTypes.IDataObject;
 
 namespace ETCTool
 {
-
     [ClassInterface(ClassInterfaceType.None)]
     [Guid("B3F0615C-D04E-41DC-A1EB-4E8B8DCC14A1")]
     [ComVisible(true)]
@@ -43,16 +34,16 @@ namespace ETCTool
         //注册项目
         public int QueryContextMenu(IntPtr hMenu, uint iMenu, uint idCmdFirst, uint idCmdLast, uint uFlags)
         {
-           /* new Mutex(true, "ETCTool", out var Close);
-            if (!Close)
-            {
-                FileDecryptMainFun.FileDecryptFun(false);
-                UpdateWindow(GetWindowDC(GetDesktopWindow(IntPtr.Zero)));
-                SHChangeNotify(HChangeNotifyEventID.SHCNE_ALLEVENTS, HChangeNotifyFlags.SHCNF_FLUSH, IntPtr.Zero, IntPtr.Zero);
-                return 0;
-            }*/
+            /* new Mutex(true, "ETCTool", out var Close);
+             if (!Close)
+             {
+                 FileDecryptMainFun.FileDecryptFun(false);
+                 UpdateWindow(GetWindowDC(GetDesktopWindow(IntPtr.Zero)));
+                 SHChangeNotify(HChangeNotifyEventID.SHCNE_ALLEVENTS, HChangeNotifyFlags.SHCNF_FLUSH, IntPtr.Zero, IntPtr.Zero);
+                 return 0;
+             }*/
             // If uFlags include CMF_DEFAULTONLY then we should not do anything.
-            if (((uint) CMF.CMF_DEFAULTONLY & uFlags) != 0) return 0;
+            if (((uint)CMF.CMF_DEFAULTONLY & uFlags) != 0) return 0;
 
             // Add a separator.
             /*  var sep = new MENUITEMINFO();
@@ -87,11 +78,11 @@ namespace ETCTool
               sep.cbSize = (uint)Marshal.SizeOf(sep);
               sep.fMask = MIIM.MIIM_TYPE;
               sep.fType = MFT.MFT_SEPARATOR;*/
-            return MAKE_HRESULT(0, 0, (uint) ContextItems.Count); //3个划线+4个项目
+            return MAKE_HRESULT(0, 0, (uint)ContextItems.Count); //3个划线+4个项目
 
             int MAKE_HRESULT(uint sev, uint fac, uint code)
             {
-                return (int) ((sev << 31) | (fac << 16) | code);
+                return (int)((sev << 31) | (fac << 16) | code);
             }
 
             int RegisterMenuItem(uint id,
@@ -104,7 +95,7 @@ namespace ETCTool
                 IntPtr registerTo)
             {
                 var sub = new MENUITEMINFO();
-                sub.cbSize = (uint) Marshal.SizeOf(sub);
+                sub.cbSize = (uint)Marshal.SizeOf(sub);
 
                 var m = MIIM.MIIM_STRING | MIIM.MIIM_FTYPE | MIIM.MIIM_ID |
                         MIIM.MIIM_STATE;
@@ -132,10 +123,10 @@ namespace ETCTool
             try
             {
                 var Index = ContextItems[
-                    LowWord(((CMINVOKECOMMANDINFO) Marshal.PtrToStructure(pici, typeof(CMINVOKECOMMANDINFO))).verb
+                    LowWord(((CMINVOKECOMMANDINFO)Marshal.PtrToStructure(pici, typeof(CMINVOKECOMMANDINFO))).verb
                         .ToInt32())];
                 if (FilePath.Count == 0) return;
-      
+
                 try
                 {
                     var remoteDataHandle = (RemoteDataHandle)Activator.GetObject(typeof(RemoteDataHandle),
@@ -143,26 +134,28 @@ namespace ETCTool
                     switch (Index.Commands)
                     {
                         case "Open":
-                        {
-                            if (FilePath.Count != 1)
                             {
-                                remoteDataHandle.Info("只支持打开一个文件");
+                                if (FilePath.Count != 1)
+                                {
+                                    remoteDataHandle.Info("只支持打开一个文件");
+                                }
+                                else
+                                {
+                                    remoteDataHandle.Open(FilePath.First());
+                                }
                             }
-                            else
-                            {
-                                remoteDataHandle.Open(FilePath.First());
-                            }
-                        }
                             break;
+
                         case "Copy":
-                        {
-                            remoteDataHandle.Copy(FilePath.ToArray());
-                        }
+                            {
+                                remoteDataHandle.Copy(FilePath.ToArray());
+                            }
                             break;
+
                         case "Decrypt":
-                        {
-                            remoteDataHandle.Decrypt(FilePath.ToArray());
-                        }
+                            {
+                                remoteDataHandle.Decrypt(FilePath.ToArray());
+                            }
                             break;
                     }
                 }
@@ -172,6 +165,7 @@ namespace ETCTool
             }
             catch (Exception e)
             {
+                MessageBox.Show(e.Message);
             }
 
             GC.Collect();
@@ -186,12 +180,13 @@ namespace ETCTool
             uint cchMax)
         {
         }
+
         //在注册菜单之前发生，用于获得各种数据
         public void Initialize(IntPtr pidlFolder, IntPtr pDataObj, IntPtr hKeyProgId)
         {
             if (pDataObj == IntPtr.Zero)
             {
-                Variables.MainForm.OntherLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->发生未知错误在获得数据时", ""});
+                Variables.MainForm.OntherLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->发生未知错误在获得数据时", "" });
                 return;
             }
             var fe = new FORMATETC
@@ -203,7 +198,7 @@ namespace ETCTool
                 tymed = TYMED.TYMED_HGLOBAL
             };
             STGMEDIUM stm;
-            var dataObject = (IDataObject) Marshal.GetObjectForIUnknown(pDataObj);
+            var dataObject = (IDataObject)Marshal.GetObjectForIUnknown(pDataObj);
             dataObject.GetData(ref fe, out stm);
             try
             {
@@ -267,6 +262,5 @@ namespace ETCTool
             uint cchMax);
     }
 
-    #endregion
-
+    #endregion 右键菜单的接口
 }
