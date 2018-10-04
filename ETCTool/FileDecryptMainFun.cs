@@ -100,10 +100,11 @@ namespace ETCTool
                 if (Start)
                 {
                     CreateIpcServer();
-                    rs.RegisterAssembly(Assembly.GetAssembly(typeof(FileContextMenuExt)),
-                        AssemblyRegistrationFlags.SetCodeBase);
+                    /* rs.RegisterAssembly(Assembly.LoadFile($"{Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)}\\EtcTool\\ETCTool.exe"),
+                         AssemblyRegistrationFlags.SetCodeBase);*/
+                    rs.RegisterAssembly(Assembly.GetAssembly(typeof(FileContextMenuExt)), AssemblyRegistrationFlags.SetCodeBase);
                     using (var key =
-                        Registry.CurrentUser.CreateSubKey($@"Software\Classes\*\shellex\ContextMenuHandlers\{clsid}"))
+                        Registry.ClassesRoot.CreateSubKey($@"*\shellex\ContextMenuHandlers\{clsid}"))
                     {
                         key?.SetValue(null, clsid);
                     }
@@ -115,7 +116,7 @@ namespace ETCTool
                 }
                 else
                 {
-                    Registry.CurrentUser?.DeleteSubKeyTree($@"Software\Classes\*\shellex\ContextMenuHandlers\{clsid}");
+                    Registry.ClassesRoot?.DeleteSubKeyTree($@"*\shellex\ContextMenuHandlers\{clsid}");
                     Registry.ClassesRoot?.DeleteSubKeyTree(@"Directory\Background\shell\解密粘贴", false);
                     rs.UnregisterAssembly(Assembly.GetAssembly(typeof(FileContextMenuExt)));
                     Variables.MainForm.OntherLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->", "文件右键菜单删除成功" });
