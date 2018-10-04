@@ -1,8 +1,8 @@
-﻿using System;
+﻿using EasyHook;
+using ETCTool;
+using System;
 using System.Runtime.InteropServices;
 using System.Threading;
-using EasyHook;
-using ETCTool;
 
 namespace PlmInject
 {
@@ -37,7 +37,7 @@ namespace PlmInject
                     this);
                 SetWindowTextW = LocalHook.Create(LocalHook.GetProcAddress("user32.dll", "SetWindowTextW"),
                     new SetWindowTextW_delegate(SetWindowTextW_Hooked), this);
-                SetForegroundWindow.ThreadACL.SetExclusiveACL(new[] {0});
+                SetForegroundWindow.ThreadACL.SetExclusiveACL(new[] { 0 });
                 Interface.Info($"安装成功,当前线程:{RemoteHooking.GetCurrentThreadId()}");
                 RemoteHooking.WakeUpProcess();
             }
@@ -68,17 +68,17 @@ namespace PlmInject
 
         private bool SetWindowTextW_Hooked(IntPtr hwnd, IntPtr Cmd)
         {
-            var This = (Main) HookRuntimeInfo.Callback;
+            var This = (Main)HookRuntimeInfo.Callback;
             if (Marshal.PtrToStringAuto(Cmd) == "请确认") Interface.AutoPerformClick(hwnd);
-            Show_Window.ThreadACL.SetExclusiveACL(new[] {0});
-            IsZoomed.ThreadACL.SetExclusiveACL(new[] {0});
-            SetWindowTextW.ThreadACL.SetExclusiveACL(new[] {0});
+            Show_Window.ThreadACL.SetExclusiveACL(new[] { 0 });
+            IsZoomed.ThreadACL.SetExclusiveACL(new[] { 0 });
+            SetWindowTextW.ThreadACL.SetExclusiveACL(new[] { 0 });
             return LocalHook.GetProcDelegate<SetWindowTextW_delegate>("user32.dll", "SetWindowTextW")(hwnd, Cmd);
         }
 
         private bool IsZoomed_Hooked(IntPtr hwnd)
         {
-            var This = (Main) HookRuntimeInfo.Callback;
+            var This = (Main)HookRuntimeInfo.Callback;
             if (This.HWND == hwnd && HWND != IntPtr.Zero) return false;
 
             var Ret = LocalHook.GetProcDelegate<IsZoomed_delegate>("swt-win32-3721.dll",
@@ -97,11 +97,11 @@ namespace PlmInject
 
         private bool SetForegroundWindow_Hooked(IntPtr hwnd)
         {
-            var This = (Main) HookRuntimeInfo.Callback;
+            var This = (Main)HookRuntimeInfo.Callback;
             HWND = hwnd;
-            Show_Window.ThreadACL.SetInclusiveACL(new[] {0});
-            IsZoomed.ThreadACL.SetInclusiveACL(new[] {0});
-            SetWindowTextW.ThreadACL.SetInclusiveACL(new[] {0});
+            Show_Window.ThreadACL.SetInclusiveACL(new[] { 0 });
+            IsZoomed.ThreadACL.SetInclusiveACL(new[] { 0 });
+            SetWindowTextW.ThreadACL.SetInclusiveACL(new[] { 0 });
             return true;
         }
 

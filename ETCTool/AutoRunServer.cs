@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections;
 using System.Configuration.Install;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.ServiceProcess;
-using Microsoft.Win32;
 
 namespace ETCTool
 {
@@ -27,7 +27,7 @@ namespace ETCTool
                 installer.UseNewContext = true;
                 installer.Path = serviceFilePath;
                 IDictionary savedState = new Hashtable();
-                installer.CommandLine = new[] {"StartService"};
+                installer.CommandLine = new[] { "StartService" };
                 installer.Install(savedState);
                 installer.Commit(savedState);
             }

@@ -36,7 +36,7 @@ namespace ETCTool
 
         public void Info(string v)
         {
-            Variables.MainForm.AutoSaveLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->{v}", $""});
+            Variables.MainForm.AutoSaveLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->{v}", $"" });
         }
 
         public string GetNewPath(string lpNewFileName, string lpExistingFileName = "")

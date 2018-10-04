@@ -1,9 +1,9 @@
-﻿using System;
+﻿using EasyHook;
+using ETCTool;
+using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
-using EasyHook;
-using ETCTool;
 
 namespace CaxaInject
 {
@@ -39,7 +39,7 @@ namespace CaxaInject
                 RemoteHooking.WakeUpProcess();
                 while (true)
                 {
-                    if (Interface.Ping(out var Ping, InChannelName)) CreateHook.ThreadACL.SetExclusiveACL(new[] {0});
+                    if (Interface.Ping(out var Ping, InChannelName)) CreateHook.ThreadACL.SetExclusiveACL(new[] { 0 });
                     if (!Ping) break;
                     Thread.Sleep(500);
                 }
@@ -57,12 +57,12 @@ namespace CaxaInject
 
         private bool MoveFileEx_Hooked(string lpExistingFileName, string lpNewFileName, MoveFileFlags dwFlags)
         {
-            var This = (Main) HookRuntimeInfo.Callback;
+            var This = (Main)HookRuntimeInfo.Callback;
             if (Path.GetExtension(lpExistingFileName).ToLower() == ".exb") return true;
             if (Path.GetExtension(lpExistingFileName).ToLower() == ".es$")
             {
                 lpNewFileName = This.Interface.GetNewPath(lpNewFileName);
-                CreateHook.ThreadACL.SetExclusiveACL(new[] {0});
+                CreateHook.ThreadACL.SetExclusiveACL(new[] { 0 });
             }
             else
             {

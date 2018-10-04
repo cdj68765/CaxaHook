@@ -297,7 +297,7 @@ namespace ETCTool
 
             SHCNE_UPDATEDIR = 0x00001000,
 
-            SHCNE_UPDATEIMAGE = 0x00008000,
+            SHCNE_UPDATEIMAGE = 0x00008000
         }
 
         #endregion 各种结构体

@@ -1,12 +1,14 @@
-﻿using System;
+﻿using EasyHook;
+using MaterialSkin;
+using MaterialSkin.Controls;
+using Microsoft.VisualBasic.FileIO;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.IO.MemoryMappedFiles;
-using System.IO.Pipes;
 using System.Linq;
 using System.Management;
 using System.Reflection;
@@ -17,16 +19,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
-using EasyHook;
-using MaterialSkin;
-using MaterialSkin.Controls;
-using Microsoft.VisualBasic.FileIO;
-using Microsoft.Win32;
 using WPFFolderBrowser;
+using static ETCTool.FileDecryptMainFun;
 using static ETCTool.NativeApi;
 using static ETCTool.Variables;
 using Timer = System.Timers.Timer;
-using static ETCTool.FileDecryptMainFun;
 
 namespace ETCTool
 {
@@ -142,10 +139,7 @@ namespace ETCTool
             CLICurrentText.MouseDown += delegate //复制历史剪切板文本
             {
                 ClipbrdMonitor.Onice = false;
-                if (!OpenClipboard(IntPtr.Zero))
-                {
-                    ClipbrdMonitor.SetText(CliLog[CaxaList.SelectedIndex][1]);
-                }
+                if (!OpenClipboard(IntPtr.Zero)) ClipbrdMonitor.SetText(CliLog[CaxaList.SelectedIndex][1]);
                 CloseClipboard();
             };
             AutoSaveLog = new BindingList<string[]>();
@@ -239,7 +233,7 @@ namespace ETCTool
                     if (setting.RunMode)
                         ShowInTaskbar = false;
             };
-            this.FormClosing += delegate { FileDecryptFun(false); };
+            FormClosing += delegate { FileDecryptFun(false); };
         }
 
         private bool CheckAutoRun()
@@ -986,7 +980,7 @@ namespace ETCTool
         {
             if (start)
             {
-                Variables.AutoPerformClickCount = Variables.setting.AutoPerformClickCount;
+                Variables.AutoPerformClickCount = setting.AutoPerformClickCount;
                 PlmMonitorTimeSpan = new Timer(10000)
                 {
                     AutoReset = true,
@@ -1007,7 +1001,7 @@ namespace ETCTool
                             {
                                 string ChannelName = null;
                                 var path = Environment.GetFolderPath(Environment.SpecialFolder
-                            .CommonApplicationData);
+                                    .CommonApplicationData);
                                 RemoteHooking.IpcCreateServer<PlmHookInterface>(ref ChannelName,
                                     WellKnownObjectMode.SingleCall);
                                 Config.DependencyPath = $"{path}\\EtcTool\\";
@@ -1016,7 +1010,7 @@ namespace ETCTool
                                     Pid,
                                     InjectionOptions.Default,
                                     $"{path}\\EtcTool\\PlmInject.dll",
-                                   $"{path}\\EtcTool\\PlmInject.dll",
+                                    $"{path}\\EtcTool\\PlmInject.dll",
                                     ChannelName);
                                 PlmPid.Add(Pid, ChannelName);
                             }
@@ -1186,6 +1180,5 @@ namespace ETCTool
         }
 
         #endregion 鼠标控制窗体
-
     }
 }

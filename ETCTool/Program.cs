@@ -24,15 +24,18 @@ namespace ETCTool
             {
                 try
                 {
-                    var remoteDataHandle = (RemoteDataHandle)Activator.GetObject(typeof(RemoteDataHandle), "ipc://EtcToolChannel/RemoteDataHandle");
+                    var remoteDataHandle = (RemoteDataHandle)Activator.GetObject(typeof(RemoteDataHandle),
+                        "ipc://EtcToolChannel/RemoteDataHandle");
                     foreach (var item in remoteDataHandle.CopyData)
                     {
                         var TempFile = $"{args[1]}{item.Key}".Replace("\"", "");
                         File.WriteAllBytes(TempFile, item.Value);
-                        remoteDataHandle.Info($"{TempFile}粘贴完成");
+                        remoteDataHandle.Info($"文件[{Path.GetFileName(TempFile)}]粘贴完成");
                     }
+
                     UpdateWindow(GetWindowDC(GetDesktopWindow()));
-                    SHChangeNotify(HChangeNotifyEventID.SHCNE_ALLEVENTS, HChangeNotifyFlags.SHCNF_FLUSH, IntPtr.Zero, IntPtr.Zero);
+                    SHChangeNotify(HChangeNotifyEventID.SHCNE_ALLEVENTS, HChangeNotifyFlags.SHCNF_FLUSH, IntPtr.Zero,
+                        IntPtr.Zero);
                     remoteDataHandle.CopyData.Clear();
                     GC.Collect();
                 }
@@ -40,6 +43,7 @@ namespace ETCTool
                 {
                     MessageBox.Show(E.Message);
                 }
+
                 return;
             }
 

@@ -35,14 +35,14 @@ namespace ETCTool
 
         public void Info(string v)
         {
-            Variables.MainForm.PlmMonitorLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->{v}", $""});
+            Variables.MainForm.PlmMonitorLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->{v}", $"" });
         }
 
         public void AutoPerformClick(IntPtr hwnd)
         {
             if (Variables.CheckAutoPerformClick)
             {
-                if (Variables.AutoPerformClickCount != 0)
+                if (Variables.AutoPerformClickCount > 0)
                 {
                     ThreadPool.QueueUserWorkItem(state =>
                     {

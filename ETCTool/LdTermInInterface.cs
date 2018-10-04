@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
 
 namespace ETCTool
 {
@@ -32,13 +27,13 @@ namespace ETCTool
             if (operaMode == "Open")
             {
                 Variables.MainForm.OntherLog.Add(
-                    new[] { $"{DateTime.Now:hh:mm:ss}->打开文件{filePath}", $"" });
+                    new[] { $"{DateTime.Now:hh:mm:ss}->文件[{Path.GetFileName(filePath)}]打开完毕", $"" });
                 Process.Start(filePath);
             }
             else
             {
                 Variables.MainForm.OntherLog.Add(
-                    new[] { $"{DateTime.Now:hh:mm:ss}->解密文件{filePath}", $"" });
+                    new[] { $"{DateTime.Now:hh:mm:ss}->文件[{Path.GetFileName(filePath)}]解密完毕", $"" });
             }
         }
     }

@@ -136,13 +136,9 @@ namespace ETCTool
                         case "Open":
                             {
                                 if (FilePath.Count != 1)
-                                {
                                     remoteDataHandle.Info("只支持打开一个文件");
-                                }
                                 else
-                                {
                                     remoteDataHandle.Open(FilePath.First());
-                                }
                             }
                             break;
 
@@ -189,6 +185,7 @@ namespace ETCTool
                 Variables.MainForm.OntherLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->发生未知错误在获得数据时", "" });
                 return;
             }
+
             var fe = new FORMATETC
             {
                 cfFormat = 15,

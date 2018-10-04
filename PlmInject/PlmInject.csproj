@@ -61,6 +61,7 @@
     <ProjectReference Include="..\ETCTool\ETCTool.csproj">
       <Project>{d897d5c1-6af2-4c58-b3e4-583b015301b2}</Project>
       <Name>ETCTool</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
