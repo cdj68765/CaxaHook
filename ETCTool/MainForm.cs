@@ -81,44 +81,49 @@ namespace ETCTool
             #region 初始化日志库
 
             CliLog = new BindingList<string[]>();
+
             CliLog.ListChanged += (s, d) =>
-            {
-                if (d.ListChangedType == ListChangedType.ItemDeleted) return;
-                var Item = CliLog[d.NewIndex];
-                var FindCount = CliLog.Count(x => x[1] == Item[1] && x[1] != "");
-                if (FindCount > 1)
-                    for (var i = 0; i < FindCount - 1; i++)
-                    {
-                        var Find = CliLog.FirstOrDefault(x => x[1] == Item[1] && x[1] != "");
-                        if (Find != null)
-                        {
-                            CliLog.Remove(Find);
-                            MainTabClipbrdStation.BeginInvoke(new Action(() =>
-                            {
-                                CaxaList.Items.Remove(Find[0] + Find[1]);
-                            }));
-                        }
-                    }
+             {
+                 if (d.ListChangedType == ListChangedType.ItemAdded)
+                 {
+                     var Item = CliLog[d.NewIndex];
+                     var FindCount = CliLog.Count(x => x[1] == Item[1] && x[1] != "");
+                     if (FindCount > 1)
+                     {
+                         for (var i = 0; i < FindCount - 1; i++)
+                         {
+                             var Find = CliLog.FirstOrDefault(x => x[1] == Item[1] && x[1] != "");
+                             if (Find != null)
+                             {
+                                 CliLog.Remove(Find);
+                                 MainTabClipbrdStation.BeginInvoke(new Action(() =>
+                                 {
+                                     CaxaList.Items.Remove(Find[0] + Find[1]);
+                                 }));
+                             }
+                         }
+                     }
 
-                MainTabClipbrdStation.BeginInvoke(new Action(() =>
-                {
-                    MainTabClipbrdStation.Text = Item[0] + Item[1];
-                    if (CliRadio.Checked)
-                    {
-                        if (CaxaList.Items.Count == CliLog.Count)
-                        {
-                            CaxaList.Items.Add(MainTabClipbrdStation.Text);
-                        }
-                        else
-                        {
-                            CaxaList.Items.Clear();
-                            foreach (var VARIABLE in CliLog) CaxaList.Items.Add(VARIABLE[0] + VARIABLE[1]);
-                        }
+                     MainTabClipbrdStation.BeginInvoke(new Action(() =>
+                     {
+                         MainTabClipbrdStation.Text = Item[0] + Item[1];
+                         if (CliRadio.Checked)
+                         {
+                             if (CaxaList.Items.Count == CliLog.Count)
+                             {
+                                 CaxaList.Items.Add(MainTabClipbrdStation.Text);
+                             }
+                             else
+                             {
+                                 CaxaList.Items.Clear();
+                                 foreach (var VARIABLE in CliLog) CaxaList.Items.Add(VARIABLE[0] + VARIABLE[1]);
+                             }
 
-                        CaxaList.SelectedIndex = CaxaList.Items.Count - 1;
-                    }
-                }));
-            };
+                             CaxaList.SelectedIndex = CaxaList.Items.Count - 1;
+                         }
+                     }));
+                 }
+             };
             CliRadio.CheckedChanged += delegate
             {
                 if (CliRadio.Checked)
@@ -570,6 +575,7 @@ namespace ETCTool
         private class ClipbrdMonitor : Form
         {
             public static bool Onice = true;
+            private string TempString;
 
             public ClipbrdMonitor()
             {
@@ -644,10 +650,7 @@ namespace ETCTool
                             var Temp = GetText(13);
                             if (!string.IsNullOrEmpty(Temp))
                             {
-                                ThreadPool.QueueUserWorkItem(obj =>
-                                {
-                                    Variables.MainForm.CliLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->获得字符:", Temp });
-                                });
+                                TempString = Temp;
                                 SetText(Temp);
                                 Onice = false;
                             }
@@ -657,6 +660,7 @@ namespace ETCTool
                 else if (!Onice)
                 {
                     Onice = true;
+                    ThreadPool.QueueUserWorkItem(obj => { Variables.MainForm.CliLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->获得字符:", TempString }); });
                 }
                 else
                 {
