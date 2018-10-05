@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Runtime.Remoting.Channels.Ipc;
+using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
-
+using System.Windows.Forms;
+using System.Linq;
 namespace ETCTool
 {
     internal class Variables
@@ -16,8 +20,6 @@ namespace ETCTool
         internal static bool CheckAutoPerformClick;
         internal static int AutoPerformClickCount;
         internal static NativeApi.Point TheLastMouseCursor;
-        internal static bool FileDecryptStart;
-        internal static IpcClientChannel ChannelServices;
     }
 
     [Serializable]
@@ -95,6 +97,7 @@ namespace ETCTool
 
         public StringCollection FormSize { get; set; }
 
+        public StringCollection FileCollect { get; set; }
         public string AutoSavePath
         {
             get => _AutoSavePath;
@@ -172,7 +175,6 @@ namespace ETCTool
                 {
                     return new BinaryFormatter().Deserialize(fileStream) as Setting;
                 }
-
             return new Setting();
         }
 
@@ -196,4 +198,112 @@ namespace ETCTool
             });
         }
     }
+    [Serializable]
+    public struct FileData
+    {
+        public string Time;
+        public string File;
+        public byte[] Data;
+    }
+
+    public class HisFileData
+    {
+        static byte[] StructToBytes(FileData structObj)
+        {
+            using (var SaveStream = new MemoryStream())
+            {
+                new BinaryFormatter().Serialize(SaveStream, structObj);
+                return SaveStream.ToArray();
+            }
+        }
+
+        //byte[]转换为struct
+        static FileData BytesToStruct(byte[] bytes)
+        {
+            return (FileData) new BinaryFormatter().Deserialize(new MemoryStream(bytes));
+
+        }
+
+        public static void Save(FileData fileData)
+        {
+            ThreadPool.QueueUserWorkItem(state =>
+            {
+                var path =
+                    $"{Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)}\\EtcTool\\SaveDate.dat";
+                try
+                {
+                    if (!File.Exists(path))
+                    {
+                        Variables.setting.FileCollect = new StringCollection();
+                    }
+                    using (var fileStream =
+                        new FileStream(path, FileMode.Append,FileAccess.Write))
+                    {
+                        var TempByte = StructToBytes(fileData);
+                        Variables.setting.FileCollect.Add(
+                            $"{fileData.Time}|{fileData.File}|{fileStream.Position}|{TempByte.Length}");
+                        Variables.setting.Save();
+                        fileStream.Write(TempByte, 0, TempByte.Length);
+                    }
+
+                    Variables.MainForm.BeginInvoke(new Action(() =>
+                    {
+                        if (Variables.MainForm.DecryptRadio.Checked) return;
+                        Variables.MainForm.OntherList.Items.Clear();
+                        foreach (var VARIABLE in Variables.setting.FileCollect)
+                        {
+                            Variables.MainForm.OntherList.Items.Add(VARIABLE);
+                        }
+                    }));
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.Message);
+                    Variables.setting.FileCollect = new StringCollection();
+                    try
+                    {
+                        File.Delete(path);
+                    }
+                    catch (Exception exception)
+                    {
+                    }
+                 
+                }
+            });
+        }
+
+        public static FileData Open(string DateIndex)
+        {
+            try
+            {
+                var path =
+                    $"{Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)}\\EtcTool\\SaveDate.dat";
+                if (File.Exists(path))
+                {
+                    using (var fileStream =
+                        new FileStream(path, FileMode.OpenOrCreate))
+                    {
+                        var StringSplit = DateIndex.Split('|');
+                        var TempByte = new byte[int.Parse(StringSplit[3])];
+                        fileStream.Position = int.Parse(StringSplit[2]);
+                        fileStream.Read(TempByte, 0, int.Parse(StringSplit[3]));
+                        return BytesToStruct(TempByte);
+                    }
+                }
+                else
+                {
+                    Variables.setting.FileCollect = new StringCollection();
+                    Variables.setting.Save();
+                }
+
+            }
+            catch (Exception e)
+            {
+                new MessageBoxForm(e.Message, MessageBoxButtons.OK, 5).ShowDialog();
+            }
+
+            return new FileData();
+        }
+    }
+
 }

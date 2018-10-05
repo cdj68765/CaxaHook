@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.ServiceProcess;
 using System.Threading;
 using System.Windows.Forms;
+using Microsoft.VisualBasic.FileIO;
 using static ETCTool.NativeApi;
 
 namespace ETCTool
@@ -29,13 +30,17 @@ namespace ETCTool
                     foreach (var item in remoteDataHandle.CopyData)
                     {
                         var TempFile = $"{args[1]}{item.Key}".Replace("\"", "");
-                        File.WriteAllBytes(TempFile, item.Value);
+                        if (File.Exists(TempFile))
+                        {
+                            FileSystem.DeleteFile(TempFile, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
+                        }
+                        Thread.Sleep(500);
+                        FileSystem.WriteAllBytes(TempFile, item.Value, false);
                         remoteDataHandle.Info($"文件[{Path.GetFileName(TempFile)}]粘贴完成");
                     }
 
-                    UpdateWindow(GetWindowDC(GetDesktopWindow()));
-                    SHChangeNotify(HChangeNotifyEventID.SHCNE_ALLEVENTS, HChangeNotifyFlags.SHCNF_FLUSH, IntPtr.Zero,
-                        IntPtr.Zero);
+                   // UpdateWindow(GetWindowDC(GetDesktopWindow()));
+                    SHChangeNotify(HChangeNotifyEventID.SHCNE_ASSOCCHANGED, HChangeNotifyFlags.SHCNF_IDLIST, IntPtr.Zero,IntPtr.Zero);
                     remoteDataHandle.CopyData.Clear();
                     GC.Collect();
                 }

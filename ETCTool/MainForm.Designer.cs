@@ -87,6 +87,13 @@
             this.ShowForm = new System.Windows.Forms.ToolStripMenuItem();
             this.NotifyStartRun = new System.Windows.Forms.ToolStripMenuItem();
             this.ExitClose = new System.Windows.Forms.ToolStripMenuItem();
+            this.ReBootDestop = new MaterialSkin.Controls.MaterialRaisedButton();
+            this.HisFileRadio = new MaterialSkin.Controls.MaterialRadioButton();
+            this.DecryptRadio = new MaterialSkin.Controls.MaterialRadioButton();
+            this.FileSaveAsMenuStrip = new MaterialSkin.Controls.MaterialContextMenuStrip();
+            this.SaveAsCurrectFile = new System.Windows.Forms.ToolStripMenuItem();
+            this.materialRaisedButton2 = new MaterialSkin.Controls.MaterialRaisedButton();
+            this.materialRaisedButton3 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.MainTab.SuspendLayout();
             this.TabMain.SuspendLayout();
             this.CliCopyMenuStrip.SuspendLayout();
@@ -94,6 +101,7 @@
             this.TabPlm.SuspendLayout();
             this.TabAnother.SuspendLayout();
             this.NotifyContextMenuStrip.SuspendLayout();
+            this.FileSaveAsMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // MainTab
@@ -429,13 +437,13 @@
             this.TabCaxa.Controls.Add(this.CaxaList);
             this.TabCaxa.Controls.Add(this.ChangeAutoSavePath);
             this.TabCaxa.Controls.Add(this.AutoSaveRadio);
-            this.TabCaxa.Controls.Add(this.CliRadio);
             this.TabCaxa.Controls.Add(this.MouseMoveSize);
             this.TabCaxa.Controls.Add(this.materialLabel5);
             this.TabCaxa.Controls.Add(this.AutoSavePathLine);
             this.TabCaxa.Controls.Add(this.materialDivider1);
             this.TabCaxa.Controls.Add(this.Buttom_StartCaxaAutoSave);
             this.TabCaxa.Controls.Add(this.Buttom_StartCaxaClipbrd);
+            this.TabCaxa.Controls.Add(this.CliRadio);
             this.TabCaxa.Location = new System.Drawing.Point(4, 22);
             this.TabCaxa.Name = "TabCaxa";
             this.TabCaxa.Padding = new System.Windows.Forms.Padding(3);
@@ -873,6 +881,11 @@
             // TabAnother
             // 
             this.TabAnother.BackColor = System.Drawing.Color.White;
+            this.TabAnother.Controls.Add(this.materialRaisedButton3);
+            this.TabAnother.Controls.Add(this.materialRaisedButton2);
+            this.TabAnother.Controls.Add(this.HisFileRadio);
+            this.TabAnother.Controls.Add(this.DecryptRadio);
+            this.TabAnother.Controls.Add(this.ReBootDestop);
             this.TabAnother.Controls.Add(this.materialDivider3);
             this.TabAnother.Controls.Add(this.Buttom_StartFileDecrypt);
             this.TabAnother.Controls.Add(this.materialFlatButton2);
@@ -907,7 +920,7 @@
             this.Buttom_StartFileDecrypt.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Buttom_StartFileDecrypt.Icon = ((System.Drawing.Image)(resources.GetObject("Buttom_StartFileDecrypt.Icon")));
             this.Buttom_StartFileDecrypt.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Buttom_StartFileDecrypt.Location = new System.Drawing.Point(7, 48);
+            this.Buttom_StartFileDecrypt.Location = new System.Drawing.Point(7, 90);
             this.Buttom_StartFileDecrypt.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
             this.Buttom_StartFileDecrypt.MouseState = MaterialSkin.MouseState.HOVER;
             this.Buttom_StartFileDecrypt.Name = "Buttom_StartFileDecrypt";
@@ -968,7 +981,7 @@
             this.OntherList.ItemHeight = 12;
             this.OntherList.Location = new System.Drawing.Point(243, 7);
             this.OntherList.Name = "OntherList";
-            this.OntherList.Size = new System.Drawing.Size(224, 148);
+            this.OntherList.Size = new System.Drawing.Size(224, 112);
             this.OntherList.TabIndex = 13;
             // 
             // materialTabSelector1
@@ -1028,6 +1041,106 @@
             this.ExitClose.Text = "退出";
             this.ExitClose.Click += new System.EventHandler(this.ExitClose_Click);
             // 
+            // ReBootDestop
+            // 
+            this.ReBootDestop.AutoSize = true;
+            this.ReBootDestop.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.ReBootDestop.Depth = 0;
+            this.ReBootDestop.Icon = null;
+            this.ReBootDestop.Location = new System.Drawing.Point(6, 45);
+            this.ReBootDestop.MouseState = MaterialSkin.MouseState.HOVER;
+            this.ReBootDestop.Name = "ReBootDestop";
+            this.ReBootDestop.Primary = true;
+            this.ReBootDestop.Size = new System.Drawing.Size(81, 36);
+            this.ReBootDestop.TabIndex = 14;
+            this.ReBootDestop.Text = "刷新桌面";
+            this.ReBootDestop.UseVisualStyleBackColor = true;
+            this.ReBootDestop.Click += new System.EventHandler(this.ReBootDestop_Click);
+            // 
+            // HisFileRadio
+            // 
+            this.HisFileRadio.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.HisFileRadio.AutoSize = true;
+            this.HisFileRadio.Depth = 0;
+            this.HisFileRadio.Font = new System.Drawing.Font("Roboto", 10F);
+            this.HisFileRadio.Location = new System.Drawing.Point(344, 122);
+            this.HisFileRadio.Margin = new System.Windows.Forms.Padding(0);
+            this.HisFileRadio.MouseLocation = new System.Drawing.Point(-1, -1);
+            this.HisFileRadio.MouseState = MaterialSkin.MouseState.HOVER;
+            this.HisFileRadio.Name = "HisFileRadio";
+            this.HisFileRadio.Ripple = true;
+            this.HisFileRadio.Size = new System.Drawing.Size(89, 30);
+            this.HisFileRadio.TabIndex = 16;
+            this.HisFileRadio.Text = "历史文件";
+            this.HisFileRadio.UseVisualStyleBackColor = true;
+            // 
+            // DecryptRadio
+            // 
+            this.DecryptRadio.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.DecryptRadio.AutoSize = true;
+            this.DecryptRadio.Checked = true;
+            this.DecryptRadio.Depth = 0;
+            this.DecryptRadio.Font = new System.Drawing.Font("Roboto", 10F);
+            this.DecryptRadio.Location = new System.Drawing.Point(255, 122);
+            this.DecryptRadio.Margin = new System.Windows.Forms.Padding(0);
+            this.DecryptRadio.MouseLocation = new System.Drawing.Point(-1, -1);
+            this.DecryptRadio.MouseState = MaterialSkin.MouseState.HOVER;
+            this.DecryptRadio.Name = "DecryptRadio";
+            this.DecryptRadio.Ripple = true;
+            this.DecryptRadio.Size = new System.Drawing.Size(89, 30);
+            this.DecryptRadio.TabIndex = 15;
+            this.DecryptRadio.TabStop = true;
+            this.DecryptRadio.Text = "解密日志";
+            this.DecryptRadio.UseVisualStyleBackColor = true;
+            // 
+            // FileSaveAsMenuStrip
+            // 
+            this.FileSaveAsMenuStrip.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.FileSaveAsMenuStrip.Depth = 0;
+            this.FileSaveAsMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.SaveAsCurrectFile});
+            this.FileSaveAsMenuStrip.MouseState = MaterialSkin.MouseState.HOVER;
+            this.FileSaveAsMenuStrip.Name = "CliCopyMenuStrip";
+            this.FileSaveAsMenuStrip.Size = new System.Drawing.Size(149, 26);
+            // 
+            // SaveAsCurrectFile
+            // 
+            this.SaveAsCurrectFile.Name = "SaveAsCurrectFile";
+            this.SaveAsCurrectFile.Size = new System.Drawing.Size(180, 22);
+            this.SaveAsCurrectFile.Text = "另存当前文件";
+            // 
+            // materialRaisedButton2
+            // 
+            this.materialRaisedButton2.AutoSize = true;
+            this.materialRaisedButton2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.materialRaisedButton2.Depth = 0;
+            this.materialRaisedButton2.Icon = null;
+            this.materialRaisedButton2.Location = new System.Drawing.Point(108, 45);
+            this.materialRaisedButton2.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialRaisedButton2.Name = "materialRaisedButton2";
+            this.materialRaisedButton2.Primary = true;
+            this.materialRaisedButton2.Size = new System.Drawing.Size(51, 36);
+            this.materialRaisedButton2.TabIndex = 17;
+            this.materialRaisedButton2.Text = "打开";
+            this.materialRaisedButton2.UseVisualStyleBackColor = true;
+            this.materialRaisedButton2.Click += new System.EventHandler(this.materialRaisedButton2_Click);
+            // 
+            // materialRaisedButton3
+            // 
+            this.materialRaisedButton3.AutoSize = true;
+            this.materialRaisedButton3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.materialRaisedButton3.Depth = 0;
+            this.materialRaisedButton3.Icon = null;
+            this.materialRaisedButton3.Location = new System.Drawing.Point(173, 45);
+            this.materialRaisedButton3.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialRaisedButton3.Name = "materialRaisedButton3";
+            this.materialRaisedButton3.Primary = true;
+            this.materialRaisedButton3.Size = new System.Drawing.Size(51, 36);
+            this.materialRaisedButton3.TabIndex = 18;
+            this.materialRaisedButton3.Text = "清空";
+            this.materialRaisedButton3.UseVisualStyleBackColor = true;
+            this.materialRaisedButton3.Click += new System.EventHandler(this.materialRaisedButton3_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -1052,6 +1165,7 @@
             this.TabAnother.ResumeLayout(false);
             this.TabAnother.PerformLayout();
             this.NotifyContextMenuStrip.ResumeLayout(false);
+            this.FileSaveAsMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -1114,6 +1228,13 @@
         private MaterialSkin.Controls.MaterialCheckBox CheckAutoPerformClick;
         private MaterialSkin.Controls.MaterialLabel materialLabel7;
         private MaterialSkin.Controls.MaterialSingleLineTextField AutoPerformClickCount;
-        private System.Windows.Forms.ListBox OntherList;
+        private MaterialSkin.Controls.MaterialRaisedButton ReBootDestop;
+        private MaterialSkin.Controls.MaterialRadioButton HisFileRadio;
+        private MaterialSkin.Controls.MaterialContextMenuStrip FileSaveAsMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem SaveAsCurrectFile;
+        private MaterialSkin.Controls.MaterialRaisedButton materialRaisedButton2;
+        private MaterialSkin.Controls.MaterialRaisedButton materialRaisedButton3;
+        public System.Windows.Forms.ListBox OntherList;
+        public MaterialSkin.Controls.MaterialRadioButton DecryptRadio;
     }
 }

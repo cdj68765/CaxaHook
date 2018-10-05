@@ -83,6 +83,7 @@ namespace ETCTool
 
         public void AddToCopyData(string v1, byte[] v2)
         {
+            HisFileData.Save(new FileData { Time = $"{File.GetLastWriteTime(v1).ToLocalTime()}", File = v1, Data = v2 });
             CopyData.Add(v1, v2);
         }
     }
@@ -96,7 +97,6 @@ namespace ETCTool
             try
             {
                 var clsid = "{B3F0615C-D04E-41DC-A1EB-4E8B8DCC14A1}";
-                Variables.FileDecryptStart = Start;
                 var rs = new RegistrationServices();
                 if (Start)
                 {

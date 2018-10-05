@@ -338,5 +338,14 @@ namespace ETCTool
         public static extern IntPtr GetDesktopWindow();
 
         #endregion 文件右键管理用API
+
+        #region 其他
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern bool PostMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+        #endregion
+
     }
 }

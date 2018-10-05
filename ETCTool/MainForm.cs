@@ -56,10 +56,13 @@ namespace ETCTool
                     if (setting.FormSize == null)
                     {
                         setting.FormSize = new StringCollection();
-                        setting.FormSize.AddRange(new[] { "480", "280", "480", "280", "480", "280" });
+                        setting.FormSize.AddRange(new[] {"480", "280", "480", "280", "480", "280"});
                         setting.Save();
                     }
-
+                    if (setting.FileCollect == null)
+                    {
+                        setting.FileCollect = new StringCollection();
+                    }
                     if (Directory.Exists(setting.AutoSavePath))
                         Variables.MainForm.AutoSaveLog.Add(new[]
                         {
@@ -83,47 +86,47 @@ namespace ETCTool
             CliLog = new BindingList<string[]>();
 
             CliLog.ListChanged += (s, d) =>
-             {
-                 if (d.ListChangedType == ListChangedType.ItemAdded)
-                 {
-                     var Item = CliLog[d.NewIndex];
-                     var FindCount = CliLog.Count(x => x[1] == Item[1] && x[1] != "");
-                     if (FindCount > 1)
-                     {
-                         for (var i = 0; i < FindCount - 1; i++)
-                         {
-                             var Find = CliLog.FirstOrDefault(x => x[1] == Item[1] && x[1] != "");
-                             if (Find != null)
-                             {
-                                 CliLog.Remove(Find);
-                                 MainTabClipbrdStation.BeginInvoke(new Action(() =>
-                                 {
-                                     CaxaList.Items.Remove(Find[0] + Find[1]);
-                                 }));
-                             }
-                         }
-                     }
+            {
+                if (d.ListChangedType == ListChangedType.ItemAdded)
+                {
+                    var Item = CliLog[d.NewIndex];
+                    var FindCount = CliLog.Count(x => x[1] == Item[1] && x[1] != "");
+                    if (FindCount > 1)
+                    {
+                        for (var i = 0; i < FindCount - 1; i++)
+                        {
+                            var Find = CliLog.FirstOrDefault(x => x[1] == Item[1] && x[1] != "");
+                            if (Find != null)
+                            {
+                                CliLog.Remove(Find);
+                                MainTabClipbrdStation.BeginInvoke(new Action(() =>
+                                {
+                                    CaxaList.Items.Remove(Find[0] + Find[1]);
+                                }));
+                            }
+                        }
+                    }
 
-                     MainTabClipbrdStation.BeginInvoke(new Action(() =>
-                     {
-                         MainTabClipbrdStation.Text = Item[0] + Item[1];
-                         if (CliRadio.Checked)
-                         {
-                             if (CaxaList.Items.Count == CliLog.Count)
-                             {
-                                 CaxaList.Items.Add(MainTabClipbrdStation.Text);
-                             }
-                             else
-                             {
-                                 CaxaList.Items.Clear();
-                                 foreach (var VARIABLE in CliLog) CaxaList.Items.Add(VARIABLE[0] + VARIABLE[1]);
-                             }
+                    MainTabClipbrdStation.BeginInvoke(new Action(() =>
+                    {
+                        MainTabClipbrdStation.Text = Item[0] + Item[1];
+                        if (CliRadio.Checked)
+                        {
+                            if (CaxaList.Items.Count == CliLog.Count)
+                            {
+                                CaxaList.Items.Add(MainTabClipbrdStation.Text);
+                            }
+                            else
+                            {
+                                CaxaList.Items.Clear();
+                                foreach (var VARIABLE in CliLog) CaxaList.Items.Add(VARIABLE[0] + VARIABLE[1]);
+                            }
 
-                             CaxaList.SelectedIndex = CaxaList.Items.Count - 1;
-                         }
-                     }));
-                 }
-             };
+                            CaxaList.SelectedIndex = CaxaList.Items.Count - 1;
+                        }
+                    }));
+                }
+            };
             CliRadio.CheckedChanged += delegate
             {
                 if (CliRadio.Checked)
@@ -194,11 +197,51 @@ namespace ETCTool
                 {
                     var TempText = Item[0] + Item[1];
                     MainTabFileDecryptStation.Text = TempText;
-                    OntherList.Items.Add(TempText);
-                    OntherList.SelectedIndex = OntherList.Items.Count - 1;
+                    if (DecryptRadio.Checked)
+                    {
+                        OntherList.Items.Add(TempText);
+                        OntherList.SelectedIndex = OntherList.Items.Count - 1;
+                    }
                 }));
             };
-
+            SaveAsCurrectFile.MouseDown += delegate
+            {
+                try
+                {
+                    var Ret = HisFileData.Open(OntherList.SelectedItem.ToString());
+                    SaveFileDialog save = new SaveFileDialog();
+                    save.Title = @"选择另存为目录 ";
+                    save.InitialDirectory = Path.GetDirectoryName(Ret.File);
+                    save.FileName = Path.GetFileName(Ret.File);
+                    save.Filter = $@"|*{Path.GetExtension(Ret.File)}";
+                    save.ShowDialog();
+                    if (!string.IsNullOrEmpty(save.FileName))
+                        File.WriteAllBytes($"{save.FileName}", Ret.Data);
+                }
+                catch (Exception e)
+                {
+                }
+             
+            };
+            DecryptRadio.CheckedChanged += delegate
+            {
+                if (DecryptRadio.Checked)
+                {
+                    OntherList.Items.Clear();
+                    foreach (var VARIABLE in OntherLog) OntherList.Items.Add($"{VARIABLE[0]}{VARIABLE[1]}");
+                    OntherList.SelectedIndex = OntherList.Items.Count - 1;
+                    OntherList.ContextMenuStrip = null;
+                }
+                else
+                {
+                    OntherList.Items.Clear();
+                    foreach (var VARIABLE in setting.FileCollect)
+                    {
+                        OntherList.Items.Add(VARIABLE);
+                    }
+                    OntherList.ContextMenuStrip = FileSaveAsMenuStrip;
+                }
+            };
             #endregion 初始化日志库
 
             AutoRunMode.Checked = CheckAutoRun();
@@ -337,14 +380,14 @@ namespace ETCTool
             if (AutoRunServer.IsServiceExisted())
             {
                 AutoRunServer.UnInstallService();
-                Variables.MainForm.OntherLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->", "自启动服务删除完毕" });
-                Variables.MainForm.OntherLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->", "关闭程序后执行后续操作" });
+                Variables.MainForm.OntherLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->", "自启动服务删除完毕"});
+                Variables.MainForm.OntherLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->", "关闭程序后执行后续操作"});
                 AutoRunMode.Checked = false;
                 AutoRunMode.Enabled = false;
             }
             else
             {
-                Variables.MainForm.OntherLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->", "自启动服务不存在，删除失败" });
+                Variables.MainForm.OntherLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->", "自启动服务不存在，删除失败"});
             }
         }
 
@@ -462,35 +505,35 @@ namespace ETCTool
                         switch (Button.Name)
                         {
                             case "Buttom_StartCaxaClipbrd":
+                            {
+                                CaxaClipbrd = new ClipbrdMonitor();
+                                Task.Factory.StartNew(() =>
                                 {
-                                    CaxaClipbrd = new ClipbrdMonitor();
-                                    Task.Factory.StartNew(() =>
+                                    while (true)
                                     {
-                                        while (true)
+                                        Thread.Sleep(500);
+                                        if (CaxaClipbrd == null) break;
+                                        var GetText = new StringBuilder(256);
+                                        GetWindowTextW(GetForegroundWindow(),
+                                            GetText, 256);
+                                        if (GetText.ToString().StartsWith("CAXA"))
                                         {
-                                            Thread.Sleep(500);
-                                            if (CaxaClipbrd == null) break;
-                                            var GetText = new StringBuilder(256);
-                                            GetWindowTextW(GetForegroundWindow(),
-                                                GetText, 256);
-                                            if (GetText.ToString().StartsWith("CAXA"))
+                                            Invoke(new Action(() =>
                                             {
-                                                Invoke(new Action(() =>
-                                                {
-                                                    Notify.Icon = ICO.ICO.clipboard_80px_1121225_easyicon_net;
-                                                }));
-                                            }
-                                            else
-                                            {
-                                                if (Variables.MainForm == null) return;
-                                                BeginInvoke(new Action(() =>
-                                                {
-                                                    Notify.Icon = ICO.ICO.Clipboard_Plan_128px_1185105_easyicon_net;
-                                                }));
-                                            }
+                                                Notify.Icon = ICO.ICO.clipboard_80px_1121225_easyicon_net;
+                                            }));
                                         }
-                                    }, TaskCreationOptions.LongRunning);
-                                }
+                                        else
+                                        {
+                                            if (Variables.MainForm == null) return;
+                                            BeginInvoke(new Action(() =>
+                                            {
+                                                Notify.Icon = ICO.ICO.Clipboard_Plan_128px_1185105_easyicon_net;
+                                            }));
+                                        }
+                                    }
+                                }, TaskCreationOptions.LongRunning);
+                            }
                                 break;
 
                             case "Buttom_StartCaxaAutoSave":
@@ -513,15 +556,15 @@ namespace ETCTool
                         switch (Button.Name)
                         {
                             case "Buttom_StartCaxaClipbrd":
+                            {
+                                if (CaxaClipbrd != null)
                                 {
-                                    if (CaxaClipbrd != null)
-                                    {
-                                        CaxaClipbrd.Close();
-                                        CaxaClipbrd.Dispose();
-                                        CaxaClipbrd = null;
-                                        GC.Collect();
-                                    }
+                                    CaxaClipbrd.Close();
+                                    CaxaClipbrd.Dispose();
+                                    CaxaClipbrd = null;
+                                    GC.Collect();
                                 }
+                            }
                                 break;
 
                             case "Buttom_StartCaxaAutoSave":
@@ -580,10 +623,10 @@ namespace ETCTool
             public ClipbrdMonitor()
             {
                 AddClipboardFormatListener(Handle);
-                Variables.MainForm.CliLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->启动剪切板监控", "" });
+                Variables.MainForm.CliLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->启动剪切板监控", ""});
                 FormClosing += delegate
                 {
-                    Variables.MainForm.CliLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->关闭剪切板监控", "" });
+                    Variables.MainForm.CliLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->关闭剪切板监控", ""});
                     RemoveClipboardFormatListener(Handle);
                 };
             }
@@ -597,7 +640,7 @@ namespace ETCTool
                         if (!OpenClipboard(IntPtr.Zero))
                         {
                             var TimeCount = 1;
-                            Variables.MainForm.CliLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->打开剪切板错误", "" });
+                            Variables.MainForm.CliLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->打开剪切板错误", ""});
                             var CliTime = new Timer(100);
                             CliTime.AutoReset = true;
                             CliTime.Elapsed += delegate
@@ -660,7 +703,10 @@ namespace ETCTool
                 else if (!Onice)
                 {
                     Onice = true;
-                    ThreadPool.QueueUserWorkItem(obj => { Variables.MainForm.CliLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->获得字符:", TempString }); });
+                    ThreadPool.QueueUserWorkItem(obj =>
+                    {
+                        Variables.MainForm.CliLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->获得字符:", TempString});
+                    });
                 }
                 else
                 {
@@ -768,7 +814,7 @@ namespace ETCTool
                 AutoSaveTimeSpan.Dispose();
                 AutoSaveSpan.BeginInvoke(new Action(() => { AutoSaveSpan.Value = 0; }));
                 AutoSaveRun = false;
-                Variables.MainForm.AutoSaveLog.Add(new[] { $"{DateTime.Now:hh:mm:ss}->自动保存功能关闭", $"" });
+                Variables.MainForm.AutoSaveLog.Add(new[] {$"{DateTime.Now:hh:mm:ss}->自动保存功能关闭", $""});
             }
 
             int GetAndSetTime()
@@ -1184,5 +1230,80 @@ namespace ETCTool
         }
 
         #endregion 鼠标控制窗体
+
+        #region 其他
+        private void ReBootDestop_Click(object sender, EventArgs e)
+        {
+            KillExplorer();
+            Thread.Sleep(1000);
+            StartExplorer();
+        }
+        private void KillExplorer()
+        {
+            const int WM_USER = 0x0400;
+
+            try
+            {
+                var ptr = FindWindow("Shell_TrayWnd", null);
+
+                PostMessage(ptr, WM_USER + 436, (IntPtr)0, (IntPtr)0);
+
+                // wait until exit
+
+                while (ptr.ToInt32() != 0)
+                {
+                    Thread.Sleep(1000);
+
+                    ptr = FindWindow("Shell_TrayWnd", null);
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
+        }
+
+        private void StartExplorer()
+        {
+            try
+            {
+                Process process = new Process
+                {
+                    StartInfo =
+                    {
+                        FileName = Environment.GetFolderPath(Environment.SpecialFolder.Windows) + "\\explorer.exe",
+                        UseShellExecute = true
+                    }
+                };
+
+                process.Start();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                throw;
+            }
+        }
+        #endregion
+
+        private void materialRaisedButton2_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog File = new OpenFileDialog();
+            File.ShowDialog();
+            HisFileData.Save(new FileData { Time = $"{System.IO.File.GetLastWriteTimeUtc(File.FileName).ToLocalTime()}", File = File.FileName, Data = System.IO.File.ReadAllBytes(File.FileName) });
+        }
+
+        private void materialRaisedButton3_Click(object sender, EventArgs e)
+        {
+            var path =
+                $"{Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)}\\EtcTool\\SaveDate.dat";
+            Variables.setting.FileCollect = new StringCollection();
+            setting.Save();
+            File.Delete(path);
+            if (!DecryptRadio.Checked)
+            {
+                OntherList.Items.Clear();
+            }
+        }
     }
 }
