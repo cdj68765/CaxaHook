@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using Microsoft.VisualBasic.FileIO;
+using static ETCTool.NativeApi;
 
 namespace ETCTool
 {
@@ -17,22 +18,21 @@ namespace ETCTool
         {
             try
             {
-                HisFileData.Save(new FileData{ Time = $"{File.GetLastWriteTime(filePath).ToLocalTime()}", File = filePath, Data = v });
+                HisFileData.Save(new FileData { Time = $"{File.GetLastWriteTime(filePath).ToLocalTime()}", File = filePath, Data = v });
                 FileSystem.DeleteFile(filePath, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
                 Thread.Sleep(500);
                 FileSystem.WriteAllBytes(filePath, v, false);
 
-
-            if (operaMode == "Open")
-            {
-                Variables.MainForm.OntherLog.Add(
-                    new[] { $"{DateTime.Now:hh:mm:ss}->文件[{Path.GetFileName(filePath)}]打开完毕", $"" });
-                Process.Start(filePath);
-            }
-            else
-            {
-                Variables.MainForm.OntherLog.Add(
-                    new[] { $"{DateTime.Now:hh:mm:ss}->文件[{Path.GetFileName(filePath)}]解密完毕", $"" });
+                if (operaMode == "Open")
+                {
+                    Variables.MainForm.OntherLog.Add(
+                        new[] { $"{DateTime.Now:hh:mm:ss}->文件[{Path.GetFileName(filePath)}]打开完毕", $"" });
+                    Process.Start(filePath);
+                }
+                else
+                {
+                    Variables.MainForm.OntherLog.Add(
+                        new[] { $"{DateTime.Now:hh:mm:ss}->文件[{Path.GetFileName(filePath)}]解密完毕", $"" });
                 }
             }
             catch (Exception e)
@@ -40,6 +40,11 @@ namespace ETCTool
                 Variables.MainForm.OntherLog.Add(
                     new[] { $"{DateTime.Now:hh:mm:ss}->{e.Message}", $"" });
                 return;
+            }
+            finally
+            {
+                UpdateWindow(GetWindowDC(GetDesktopWindow()));
+                SHChangeNotify(HChangeNotifyEventID.SHCNE_ASSOCCHANGED, HChangeNotifyFlags.SHCNF_IDLIST, IntPtr.Zero, IntPtr.Zero);
             }
         }
     }

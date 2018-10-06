@@ -38,15 +38,17 @@ namespace ETCTool
                         FileSystem.WriteAllBytes(TempFile, item.Value, false);
                         remoteDataHandle.Info($"文件[{Path.GetFileName(TempFile)}]粘贴完成");
                     }
-
-                   // UpdateWindow(GetWindowDC(GetDesktopWindow()));
-                    SHChangeNotify(HChangeNotifyEventID.SHCNE_ASSOCCHANGED, HChangeNotifyFlags.SHCNF_IDLIST, IntPtr.Zero,IntPtr.Zero);
                     remoteDataHandle.CopyData.Clear();
                     GC.Collect();
                 }
                 catch (Exception E)
                 {
                     MessageBox.Show(E.Message);
+                }
+                finally
+                {
+                    UpdateWindow(GetWindowDC(GetDesktopWindow()));
+                    SHChangeNotify(HChangeNotifyEventID.SHCNE_ASSOCCHANGED, HChangeNotifyFlags.SHCNF_IDLIST, IntPtr.Zero, IntPtr.Zero);
                 }
 
                 return;
